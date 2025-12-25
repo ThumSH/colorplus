@@ -1,72 +1,215 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { Menu, X, Phone, Mail, MapPin } from "lucide-react";
+import Image from "next/image";
+import { Cinzel } from "next/font/google";
 
-const navLinks = [
+// --- UPDATED LINKS: BASED ON PDF STRUCTURE ---
+const primaryLinks = [
   { name: "Home", href: "/" },
-  { name: "About us", href: "/about" },
-  { name: "Gallery", href: "/gallery" },
+  { name: "Company Profile", href: "/about" }, // Renamed from "About Us" to match doc title [cite: 4]
+  { name: "Our Services", href: "/services" }, // Reflects "Services" section [cite: 59]
+  { name: "Products", href: "/products" },     // Added to cover Mens/Ladies/Kids wear [cite: 122]
+  { name: "Techniques", href: "/technique" }, // Added to cover Print/Transfer techniques [cite: 86]
 ];
+
+const secondaryLinks = [
+  { name: "Contact Us", href: "/contact" },
+];
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
+  // Handle Scroll Effect
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 0);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle Body/Nav Padding locking
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const navElement = navRef.current;
+
+    if (!open) {
+      body.style.overflow = "";
+      body.style.paddingRight = "";
+      if (navElement) navElement.style.paddingRight = "";
+      return;
+    }
+
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+
+    body.style.overflow = "hidden";
+    body.style.paddingRight = `${scrollbarWidth}px`;
+    
+    if (navElement) navElement.style.paddingRight = `${scrollbarWidth}px`;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      body.style.overflow = "";
+      body.style.paddingRight = "";
+      if (navElement) navElement.style.paddingRight = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${
-        isScrolled ? "bg-black/60 backdrop-blur-md" : "bg-linear-to-b from-black/80 to-transparent"
-      }`}
-    >
-      {/* Left: Logo */}
-      <Link href="/" className="flex flex-col items-start group">
-          <div className="flex items-center gap-1">
-            {/* The Red Icon Element */}
-            <div className="w-0 h-0 border-l-8 border-l-transparent border-b-14 border-b-red-600 border-r-8 border-r-transparent" />
-            <div className="w-0 h-0 border-l-8 border-l-transparent border-b-14 border-b-red-600 border-r-8 border-r-transparent -ml-1" />
-            <span className="text-2xl font-sans tracking-widest font-bold text-gray-200 group-hover:text-white transition-colors">
-              COLOR<span className="text-white">PLUS</span>
-            </span>
+    <>
+      {/* TOP BAR */}
+      <nav
+        ref={navRef}
+        className={`fixed top-0 left-0 right-0 h-24 flex items-center justify-center transition-colors duration-300
+        ${
+          isScrolled
+            ? "bg-black/1 backdrop-blur-md border-b border-white/5"
+            : "bg-linear-gradient-to-b from-white/900 backdrop-blur-md  to-transparent"
+        }
+        z-9999`}
+      >
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="absolute left-6 md:left-12 text-gray-300 hover:text-white transition-colors p-2 cursor-pointer group"
+          aria-label="Open Menu"
+        >
+          <Menu size={32} className="group-hover:scale-110 transition-transform" />
+        </button>
+
+        <Link href="/" className="flex flex-col items-center group select-none">
+          {/* Logo Placeholder - Ensure the path matches your public folder */}
+          <div className="relative h-16 w-auto aspect-6/3">
+             {/* You might want to use the CP Logo from Page 1 here */}
+             <Image
+                src="/CP.webp" 
+                alt="Colour Plus Logo"
+                width={180}
+                height={100}
+                className="object-cover drop-shadow-lg"
+                priority
+             />
           </div>
-          <span className="text-[9px] uppercase tracking-[0.3em] text-gray-400 ml-1">
-            Printing Excellence
+          <span
+            className={`${cinzel.className} text-[10px] md:text-[10px] tracking-[0.2em] text-gray-200 mt-1 group-hover:text-white transition-colors`}
+          >
+            COLOR PLUS PRINTING SYSTEMS
           </span>
         </Link>
 
-      {/* Center: Navigation Links */}
-      <div className="hidden md:flex items-center gap-8">
-        {navLinks.map((link) => (
-          <Link
-            key={link.name}
-            href={link.href}
-            className="text-sm font-bold text-gray-300 hover:text-red-500 transition-colors uppercase tracking-widest"
-          >
-            {link.name}
-          </Link>
-        ))}
-      </div>
+        {/* Desktop Quick Contact (Optional - good for conversion) */}
+        <div className="absolute right-6 md:right-12 hidden md:block">
+            <Link 
+                href="/contact" 
+                className="text-xs font-bold tracking-widest uppercase text-white border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-all"
+            >
+              Contact us
+            </Link>
+        </div>
+      </nav>
 
-      {/* Right: Contact Button */}
-     <div className="flex justify-end">
-  <Link 
-    href="/contact" 
-    // Changes: rounded-sm (industrial), added shadow glow, adjusted padding
-    className="group flex items-center gap-3 bg-red-600 text-white px-4 py-5 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-red-700 transition-all duration-300 shadow-[0_0_10px_rgba(220,38,38,0.4)] hover:shadow-[0_0_20px_rgba(220,38,38,0.6)]"
-  >
-    {/* Icon rotates slightly on hover */}
-    <Phone size={16} className="group-hover:rotate-12 transition-transform duration-300" />
-    <span>Contact Us</span>
-  </Link>
-</div>
-    </nav>
+      {/* BACKDROP */}
+      <div
+        className={`fixed inset-0 z-9998 bg-black/80 backdrop-blur-sm transition-opacity duration-300
+        ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setOpen(false)}
+      />
+
+      {/* DRAWER */}
+      <aside
+        className={`fixed top-0 left-0 h-full w-[85%] max-w-100 bg-[#121212] border-r border-white/10 shadow-2xl z-9999
+        transform transition-transform duration-300 ease-out
+        ${open ? "translate-x-0" : "-translate-x-full pointer-events-none"}`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!open}
+      >
+        <div className="flex flex-col h-full p-8 md:p-12 relative overflow-hidden">
+            
+          {/* Background decoration in menu */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex justify-between items-center mb-12 relative z-10">
+            <span className="text-gray-500 text-xs font-bold tracking-widest uppercase">Menu</span>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="text-gray-400 hover:text-white transition-colors p-2 hover:rotate-90 duration-300"
+              aria-label="Close Menu"
+            >
+              <X size={28} />
+            </button>
+          </div>
+
+          {/* Primary Navigation */}
+          <div className="flex flex-col gap-6 relative z-10">
+            {primaryLinks.map((link, i) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="text-2xl font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4 group"
+              >
+                <span className="text-xs font-bold text-gray-700 group-hover:text-red-500 transition-colors">0{i+1}</span>
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          <hr className="border-gray-800 my-8 relative z-10" />
+
+          {/* Contact Details from Profile [cite: 21, 22, 149] */}
+          <div className="flex flex-col gap-5 relative z-10">
+             <div className="text-gray-400 text-sm flex items-start gap-3">
+                <MapPin size={16} className="mt-1 text-gray-500" />
+                <span>564/A, Athurugiriya Road,<br/>Kottawa, Sri Lanka.</span>
+             </div>
+             
+             <a href="tel:0094112781525" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors">
+                <Phone size={16} className="text-gray-500" />
+                (00 94) 112781525
+             </a>
+
+             <a href="mailto:colourplus@sltnet.lk" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors">
+                <Mail size={16} className="text-gray-500" />
+                colourplus@sltnet.lk
+             </a>
+          </div>
+
+          <div className="mt-auto pt-8 flex flex-col gap-4 relative z-10">
+             {secondaryLinks.map((link) => (
+                <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="text-sm font-bold text-white bg-white/5 hover:bg-white/10 p-4 text-center rounded-sm uppercase tracking-widest transition-colors border border-white/5"
+                >
+                {link.name}
+                </Link>
+            ))}
+            <div className="text-center text-gray-700 text-[10px] tracking-widest uppercase mt-4">
+               © 2025 Colour Plus Printing Systems
+            </div>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 }

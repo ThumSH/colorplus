@@ -4,31 +4,39 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
+// UPDATED DATA BASED ON COMPANY PROFILE
 const productSlides = [
   { 
     id: 1, 
-    image: "/a.webp", 
-    label: "Vibrant Plastisol",
-    headline: ["WEAR YOUR", "IDENTITY."], 
-    description: "High-definition screen printing for brands that demand perfection. Our plastisol inks deliver bold, opaque colors that last a lifetime.",
-    highlightColor: "from-red-200 to-red-500" 
+    // You should use an image of the factory or high-quality general print work here
+    image: "/print.webp", 
+    label: "Established 2009", 
+    headline: ["SCREEN PRINTING", "Perfection."], 
+    // Source: [cite: 3, 13, 17]
+    description: "From design to finish, we offer the best in exceptional quality for the textile industry.",
+    highlightColor: "from-blue-400 to-cyan-300" 
   },
   { 
     id: 2, 
-    image: "/b.webp", 
-    label: "Soft-Hand Waterbase",
-    headline: ["FEEL THE", "DIFFERENCE."],
-    description: "Experience the softest touch in the industry. Our water-based eco-inks dye the fabric directly for a vintage, breathable finish.",
-    highlightColor: "from-blue-200 to-blue-500"
+    // You should use a close-up image of a textured print (Puff, Foil, or High Build) here
+    image: "/tech.webp", 
+    label: "Born From Experience", 
+    headline: ["MASTERING THE", "TECHNIQUE."],
+    // Source: [cite: 62, 88-96]
+    description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Plastisol prints.",
+    highlightColor: "from-orange-400 to-red-500"
   },
   { 
     id: 3, 
-    image: "/c.webp", 
-    label: "Specialty Metallic",
-    headline: ["SHINE ABOVE", "THE NOISE."],
-    description: "Stand out on the rack with premium metallic foils.",
-    highlightColor: "from-emerald-200 to-teal-500"
+    // You should use an image showing branded apparel (e.g., CK or Hugo Boss) here
+    image: "/brand.webp", 
+    label: "Global Export Quality",
+    headline: ["TRUSTED BY", "ICONS."],
+    // Source: [cite: 24, 25-40]
+    description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Ralph Lauren. Exporting excellence to the USA, UK, and Italy.",
+    highlightColor: "from-emerald-400 to-teal-300"
   },
 ];
 
@@ -38,7 +46,7 @@ export default function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % productSlides.length);
-    }, 4000); // 4000ms is usually better for reading time
+    }, 5000); // Increased to 5000ms to give users time to read the new descriptions
     return () => clearInterval(timer); 
   }, []);
 
@@ -46,9 +54,6 @@ export default function Hero() {
     <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
       
       {/* --- 1. OPTIMIZED BACKGROUND STACK --- */}
-      {/* Performance Fix: We render ALL images and toggle opacity. 
-          This prevents the browser from "destroying" the image node every 3 seconds.
-      */}
       <div className="absolute inset-0 w-full h-full">
         {productSlides.map((slide, index) => {
           const isActive = index === currentSlide;
@@ -62,14 +67,14 @@ export default function Hero() {
               }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
               className="absolute inset-0 w-full h-full"
-              style={{ zIndex: isActive ? 1 : 0 }} // Ensure active is clickable if needed
+              style={{ zIndex: isActive ? 1 : 0 }} 
             >
               <Image 
                 src={slide.image} 
                 alt={slide.label}
                 fill
                 className="object-cover"
-                priority={index === 0} // Only prioritize the first image
+                priority={index === 0} 
                 sizes="100vw"
               />
             </motion.div>
@@ -78,18 +83,17 @@ export default function Hero() {
       </div>
 
       {/* --- 2. STATIC OVERLAYS --- */}
-      {/* Texture moved OUTSIDE the loop so it doesn't re-render constantly */}
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none"></div>
       
-      {/* Gradient Overlays (Corrected 'bg-linear' to 'bg-gradient') */}
-      <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-black/40 z-10 pointer-events-none" />
+      {/* Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none" />
 
       {/* --- 3. HERO CONTENT --- */}
       <div className="relative z-20 container mx-auto px-6 md:px-12 flex flex-col items-start justify-center h-full pt-12">
         
         {/* TEXT AREA */}
-        <div className="h-auto min-h-75 flex flex-col justify-center relative w-full"> 
+        <div className="h-[450px] md:h-[550px] flex flex-col justify-center relative w-full"> 
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
@@ -108,10 +112,9 @@ export default function Hero() {
               </div>
               
               {/* Headline */}
-              <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-2xl">
+              <h1 className="text-5xl md:text-7xl lg:text-9xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-2xl">
                 {productSlides[currentSlide].headline[0]} <br />
-                {/* Fixed bg-linear to bg-gradient */}
-                <span className={`text-transparent bg-clip-text bg-linear-to-r ${productSlides[currentSlide].highlightColor}`}>
+                <span className={`text-transparent bg-clip-text bg-gradient-to-r ${productSlides[currentSlide].highlightColor}`}>
                   {productSlides[currentSlide].headline[1]}
                 </span>
               </h1>
@@ -131,28 +134,30 @@ export default function Hero() {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="flex flex-wrap gap-4 mt-2"
         >
-          <button className="bg-red-600 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
-            Start Project
+          <Link href="/contact" className="bg-blue-700 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-blue-800 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
+            Start Your Project
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
           
-          <button className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-sm md:text-base">
-            View Gallery
-          </button>
+          <Link href="/services" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-sm md:text-base">
+            Our Techniques
+          </Link>
         </motion.div>
 
       </div>
 
       {/* --- 4. SLIDE CONTROLS --- */}
       <div className="absolute bottom-12 right-6 md:right-12 z-30 flex gap-4 items-center">
-        <span className="text-white/50 text-sm font-bold tracking-widest uppercase hidden md:block">Select Style</span>
+        <span className="text-white/50 text-sm font-bold tracking-widest uppercase hidden md:block">
+            0{currentSlide + 1} / 0{productSlides.length}
+        </span>
         <div className="flex gap-2">
             {productSlides.map((_, index) => (
             <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`h-1 transition-all duration-500 rounded-none ${
-                index === currentSlide ? "w-12 bg-red-600" : "w-6 bg-white/30 hover:bg-white/60"
+                index === currentSlide ? "w-12 bg-blue-600" : "w-6 bg-white/30 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
             />

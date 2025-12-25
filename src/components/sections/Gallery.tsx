@@ -1,121 +1,186 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Plus, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { useRef } from "react";
 
-// Updated Data with Real Images
+// --- UPDATED DATA: BASED ON COLOUR PLUS PORTFOLIO & TECHNIQUES ---
 const projects = [
   {
     id: 1,
-    client: "Urban Outfitters",
-    type: "Discharge Print",
-    // Image: Streetwear / Hoodie vibe
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
-    height: "h-[400px]",
+    client: "Calvin Klein", // [cite: 27]
+    type: "High-Density Plastisol", // [cite: 89, 93]
+    desc: "Premium tactile prints with sharp edges and durability.",
+    // Image: Minimalist/Fashion
+    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1064&auto=format&fit=crop",
+    height: "h-[500px] md:h-[600px]",
+    colSpan: "col-span-1",
   },
   {
     id: 2,
-    client: "Nike Sportswear",
-    type: "High-Density Puff",
-    // Image: Sporty / Texture focus
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1064&auto=format&fit=crop",
-    height: "h-[600px]",
+    client: "Eddie Bauer", // [cite: 26]
+    type: "Vintage Soft-Hand", // [cite: 85]
+    desc: "Breathable water-based inks perfect for outdoor apparel.",
+    // Image: Outdoor/Lifestyle
+    image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1069&auto=format&fit=crop",
+    height: "h-[400px] md:h-[500px]",
+    colSpan: "col-span-1",
   },
   {
     id: 3,
-    client: "Local Brewery",
-    type: "Vintage Soft Hand",
-    // Image: Lifestyle / Casual tee
-    image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1069&auto=format&fit=crop",
-    height: "h-[500px]",
+    client: "True Religion", // [cite: 30]
+    type: "Metallic Foil Transfer", // [cite: 92, 101]
+    desc: "Eye-catching reflective finishes for high-end streetwear.",
+    // Image: Edgy/Urban
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
+    height: "h-[400px] md:h-[500px]",
+    colSpan: "col-span-1",
   },
   {
     id: 4,
-    client: "Band Merch",
-    type: "Halftone CMYK",
-    // Image: Dark / Concert vibe
+    client: "Mothercare", // [cite: 42]
+    type: "Eco-Friendly Pigment", // [cite: 88]
+    desc: "Chemical-free, safe prints for baby and children's wear.",
+    // Image: Soft/Bright
     image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1064&auto=format&fit=crop",
-    height: "h-[400px]",
+    height: "h-[500px] md:h-[600px]",
+    colSpan: "col-span-1",
   },
 ];
 
 export default function Gallery() {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const headerY = useTransform(scrollYProgress, [0, 0.3], [100, 0]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+
   return (
-    <section id="gallery" className="bg-[#121212] py-24 relative">
+    <section ref={sectionRef} id="gallery" className="bg-[#121212] py-24 relative overflow-hidden">
+      
+      {/* Background Grid Texture */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ 
+          backgroundImage: "linear-gradient(90deg, #FFF 1px, transparent 0), linear-gradient(180deg, #FFF 1px, transparent 0)",
+          backgroundSize: "40px 40px"
+        }}
+      />
       
       {/* Header */}
-      <div className="container mx-auto px-6 md:px-12 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <motion.div 
+        className="container mx-auto px-6 md:px-12 mb-20 md:mb-32 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10"
+        style={{ y: headerY, opacity: headerOpacity }}
+      >
         <div>
-          <span className="text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-2 block">
+          <motion.span 
+            className="text-red-500 text-xs font-bold tracking-[0.2em] uppercase mb-4 block"
+            initial={{ x: -50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             Portfolio
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black text-white leading-none">
-            SELECTED <br /> WORKS.
+          </motion.span>
+          <h2 className="text-4xl md:text-7xl font-black text-white leading-[0.9]">
+            SELECTED
+            <span className="block text-transparent bg-clip-text bg-linear-to-r from-gray-500 to-gray-800">
+              WORKS.
+            </span>
           </h2>
         </div>
         
-        <p className="text-gray-400 max-w-sm text-sm md:text-base">
-          A curated selection of our finest prints. Zoom in to see the ink deposit and fabric texture.
-        </p>
-      </div>
+        <motion.p 
+          className="text-gray-400 max-w-sm text-sm md:text-base leading-relaxed"
+          initial={{ x: 50, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          From high-density plastisols for Calvin Klein to safe, eco-friendly pigments for Mothercare. A showcase of our technical versatility.
+        </motion.p>
+      </motion.div>
 
-      {/* Masonry Grid */}
+      {/* --- ZIG-ZAG LAYOUT --- */}
       <div className="container mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          
+        <div className="flex flex-col gap-24 md:gap-48">
           {projects.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
-              className={`relative group rounded-xl overflow-hidden cursor-pointer ${item.height} ${index === 1 || index === 2 ? 'md:translate-y-12' : ''}`}
-            >
-              
-              {/* IMAGE CONTAINER */}
-              <div className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-110">
-                <Image 
-                  src={item.image} 
-                  alt={item.type}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                />
-                {/* Subtle dark tint to make white text readable if image is bright */}
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500"></div>
-              </div>
-
-              {/* Overlay (Hidden by default, appears on hover) */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="text-red-500 text-xs font-bold uppercase tracking-widest mb-1">
-                    {item.type}
-                  </p>
-                  <h3 className="text-white text-xl font-bold">
-                    {item.client}
-                  </h3>
-                </div>
-                
-                {/* Plus Icon in top right */}
-                <div className="absolute top-4 right-4 bg-white text-black p-2 rounded-full rotate-90 group-hover:rotate-0 transition-all duration-300">
-                  <Plus size={20} />
-                </div>
-              </div>
-
-            </motion.div>
+            <GalleryItem key={item.id} item={item} index={index} />
           ))}
-
         </div>
-        
+
         {/* View All Button */}
-        <div className="mt-24 flex justify-center">
-            <button className="border-b border-gray-600 text-gray-400 pb-1 hover:text-white hover:border-white transition-colors uppercase tracking-widest text-sm">
-                View Full Gallery
-            </button>
+        <div className="mt-32 flex justify-center">
+          <motion.button 
+            className="group flex items-center gap-3 text-white uppercase tracking-widest text-sm font-bold"
+            whileHover={{ gap: "20px" }}
+          >
+            View Full Gallery
+            <span className="bg-white text-black rounded-full p-2 transition-all group-hover:bg-red-500 group-hover:text-white">
+              <ArrowUpRight size={16} />
+            </span>
+          </motion.button>
         </div>
       </div>
     </section>
+  );
+}
+
+// --- SUB-COMPONENT FOR INDIVIDUAL ITEMS ---
+function GalleryItem({ item, index }: { item: typeof projects[0], index: number }) {
+  const isReversed = index % 2 !== 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ 
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+        delay: 0.1 // Slight delay for everything
+      }}
+      className="group grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center"
+    >
+      {/* Image Card */}
+      <div 
+        className={`relative w-full ${item.height} overflow-hidden rounded-sm bg-gray-900 cursor-pointer ${isReversed ? 'md:order-2' : ''}`}
+      >
+        <Image 
+          src={item.image} 
+          alt={item.client}
+          fill
+          className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 opacity-80 group-hover:opacity-100"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        
+        {/* Overlay Gradient */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        {/* Plus Icon Floating */}
+        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full text-white">
+            <Plus size={24} />
+          </div>
+        </div>
+      </div>
+
+      {/* Info Content (Outside Image for cleaner look) */}
+      <div className={`relative ${isReversed ? 'md:order-1' : ''}`}>
+        <span className="text-red-500 text-xs font-bold tracking-widest uppercase mb-1 block">
+           0{index + 1} / {item.type}
+        </span>
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-gray-200 transition-colors">
+          {item.client}
+        </h3>
+        <p className="text-gray-500 text-sm max-w-xs leading-relaxed">
+          {item.desc}
+        </p>
+      </div>
+    </motion.div>
   );
 }

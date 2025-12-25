@@ -110,7 +110,7 @@ export default function GalleryPage() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
                 className={`group relative overflow-hidden rounded-xl bg-[#1a1a1a] cursor-pointer ${
-                  project.size === "tall" ? "row-span-2 h-[600px]" : "h-[400px]"
+                  project.size === "tall" ? "row-span-2 h-150" : "h-100"
                 }`}
               >
 <div className="relative w-full h-full"> {/* Parent must be relative */}

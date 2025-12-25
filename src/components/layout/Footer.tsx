@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Instagram, Linkedin, Facebook } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Instagram, Linkedin, Facebook, MapPin, Phone, Mail } from "lucide-react";
+import { Cinzel } from "next/font/google";
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
 
 export default function Footer() {
   return (
@@ -13,16 +20,23 @@ export default function Footer() {
           <div>
             <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-6">
               LETS PRINT <br />
-              <span className="text-red-600">SOMETHING.</span>
+              <span className="text-red-600">EXCELLENCE.</span>
             </h2>
-            <p className="text-gray-400 max-w-md">
-              Ready to elevate your brand merchandise? Get a quote today and see the difference quality makes.
+            <p className="text-gray-400 max-w-md text-lg">
+              Ready to elevate your brand with export-quality printing? Get a quote today and experience the difference.
             </p>
           </div>
-          
-          <button className="bg-white text-black px-10 py-5 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors flex items-center gap-3">
-            Get a Quote <ArrowRight />
-          </button>
+          <div className="mb-2">
+             <Link 
+                href="/contact" 
+                className="group flex items-center gap-4 text-xl font-bold uppercase tracking-widest hover:gap-6 transition-all"
+             >
+                Start a Project
+                <span className="bg-white text-black rounded-full p-3 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                   <ArrowRight size={24} />
+                </span>
+             </Link>
+          </div>
         </div>
 
         {/* MIDDLE SECTION: Links */}
@@ -30,65 +44,97 @@ export default function Footer() {
           
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
-             <div className="flex items-center gap-1 mb-6">
-                <div className="w-0 h-0 border-l-[6px] border-l-transparent border-b-10 border-b-red-600 border-r-[6px] border-r-transparent" />
-                <div className="w-0 h-0 border-l-[6px] border-l-transparent border-b-10 border-b-red-600 border-r-[6px] border-r-transparent -ml-1" />
-                <span className="text-xl font-bold tracking-widest text-gray-200">
-                  COLOR<span className="text-white">PLUS</span>
-                </span>
-             </div>
-             <p className="text-gray-500 text-sm">
-               Premium screen printing services based in Sri Lanka. delivering worldwide.
+             <Link href="/" className="block relative h-16 w-auto aspect-5/3 mb-4">
+                 <Image
+                    src="/CP.webp" 
+                    alt="Colour Plus Logo"
+                    width={160}
+                    height={100}
+                    className="object-contain drop-shadow-lg opacity-90 hover:opacity-100 transition-opacity"
+                    priority
+                 />
+             </Link>
+             <span
+                className={`${cinzel.className} text-[10px] tracking-[0.2em] text-gray-400 block mb-6`}
+             >
+                PRINTING SYSTEMS (PVT) LTD
+             </span>
+             <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
+                Screen printing at its finest. Established in 2009, serving global brands with superlative quality and compliance.
              </p>
           </div>
 
           {/* Links Columns */}
           <div>
-            <h4 className="font-bold text-white mb-6 uppercase tracking-wider">Company</h4>
+            <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Company</h4>
             <ul className="space-y-4 text-gray-400 text-sm">
-              <li><Link href="#" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Our Process</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Sustainability</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Careers</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors hover:translate-x-1 inline-block">About Us</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Our Services</Link></li>
+              <li><Link href="/products" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Product Portfolio</Link></li>
+              <li><Link href="/techniques" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Print Techniques</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-white mb-6 uppercase tracking-wider">Services</h4>
+            <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Capabilities</h4>
             <ul className="space-y-4 text-gray-400 text-sm">
-              <li><Link href="#" className="hover:text-white transition-colors">Screen Printing</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Embroidery</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Relabeling</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Fulfillment</Link></li>
+              <li><Link href="/techniques" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Direct Screen Printing</Link></li>
+              <li><Link href="/techniques" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Heat Transfers</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Designing Services</Link></li>
+              <li><Link href="/services" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Accessory Sourcing</Link></li>
             </ul>
           </div>
 
+          {/* Contact Column  */}
           <div>
-            <h4 className="font-bold text-white mb-6 uppercase tracking-wider">Connect</h4>
-            <div className="flex gap-4 mb-6">
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-red-600 transition-colors">
-                <Instagram size={18} />
+            <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Contact Us</h4>
+            <div className="space-y-4 text-gray-400 text-sm">
+               <div className="flex items-start gap-3">
+                  <MapPin size={16} className="mt-1 shrink-0 text-red-600" />
+                  <span className="leading-relaxed">
+                     564/A, Athurugiriya Road, <br/>Kottawa, Sri Lanka.
+                  </span>
+               </div>
+               
+               <div className="flex items-center gap-3">
+                  <Phone size={16} className="shrink-0 text-blue-600" />
+                  <a href="tel:0094112781525" className="hover:text-white transition-colors">
+                     (00 94) 112781525
+                  </a>
+               </div>
+
+               <div className="flex items-center gap-3">
+                  <Mail size={16} className="shrink-0 text-emerald-600" />
+                  <a href="mailto:colourplus@sltnet.lk" className="hover:text-white transition-colors">
+                     colourplus@sltnet.lk
+                  </a>
+               </div>
+            </div>
+
+            {/* Social Icons Placeholder */}
+            <div className="flex gap-4 mt-8">
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <Instagram size={14} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 transition-colors">
-                <Linkedin size={18} />
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <Linkedin size={14} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-500 transition-colors">
-                <Facebook size={18} />
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <Facebook size={14} />
               </a>
             </div>
-            <p className="text-gray-500 text-sm">hello@colorplus.com</p>
-            <p className="text-gray-500 text-sm">+94 77 123 4567</p>
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
+        {/* BOTTOM BAR 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-900 text-gray-600 text-xs uppercase tracking-wider">
-          <p>&copy; 2025 ColorPlus Printing. All rights reserved.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-gray-400">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-400">Terms of Service</a>
+            <Link href="/privacy" className="hover:text-gray-400">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-gray-400">Terms of Service</Link>
           </div>
         </div>
+        */}
+        <p>&copy; 2025 Colour Plus Printing Systems (Pvt) Ltd.</p>
 
       </div>
     </footer>
