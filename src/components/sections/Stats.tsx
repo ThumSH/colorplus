@@ -127,7 +127,7 @@ interface StatCardProps {
   index: number;
 }
 
-const StatCard = ({ stat, index }: StatCardProps) => {
+const StatCard = ({ stat }: StatCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -136,28 +136,28 @@ const StatCard = ({ stat, index }: StatCardProps) => {
     { border: string; glow: string; bg: string; text: string }
   > = {
     red: {
-      border: "hover:border-red-600/50",
-      glow: "group-hover:shadow-red-500/20",
-      bg: "from-red-500/20 via-red-500/10 to-transparent",
-      text: "text-red-500",
+      border: "hover:border-cyan-500/50",
+      glow: "group-hover:shadow-cyan-500/20",
+      bg: "from-cyan-500/20 via-cyan-500/10 to-transparent",
+      text: "text-cyan-500",
     },
     blue: {
-      border: "hover:border-blue-600/50",
+      border: "hover:border-blue-500/50",
       glow: "group-hover:shadow-blue-500/20",
       bg: "from-blue-500/20 via-blue-500/10 to-transparent",
       text: "text-blue-500",
     },
     emerald: {
-      border: "hover:border-emerald-600/50",
-      glow: "group-hover:shadow-emerald-500/20",
-      bg: "from-emerald-500/20 via-emerald-500/10 to-transparent",
-      text: "text-emerald-500",
+      border: "hover:border-slate-400/50",
+      glow: "group-hover:shadow-slate-400/20",
+      bg: "from-slate-400/20 via-slate-400/10 to-transparent",
+      text: "text-slate-400",
     },
     purple: {
-      border: "hover:border-purple-600/50",
-      glow: "group-hover:shadow-purple-500/20",
-      bg: "from-purple-500/20 via-purple-500/10 to-transparent",
-      text: "text-purple-500",
+      border: "hover:border-gray-500/50",
+      glow: "group-hover:shadow-gray-500/20",
+      bg: "from-gray-500/20 via-gray-500/10 to-transparent",
+      text: "text-gray-500",
     },
   };
 
@@ -175,12 +175,12 @@ const StatCard = ({ stat, index }: StatCardProps) => {
         scale: 1.02,
         transition: { type: "spring", stiffness: 300 },
       }}
-      className={`group relative bg-[#1a1a1a] p-8 rounded-2xl border border-white/5 ${colors.border} transition-all duration-300 shadow-2xl ${colors.glow} flex flex-col justify-between min-h-[240px] overflow-hidden cursor-pointer`}
+      className={`group relative bg-[#1a1a1a] p-8 rounded-2xl border border-white/5 ${colors.border} transition-all duration-300 shadow-2xl ${colors.glow} flex flex-col justify-between min-h-60 overflow-hidden cursor-pointer`}
       style={{ transformStyle: "preserve-3d" }}
     >
       {/* Animated gradient background */}
       <motion.div
-        className={`absolute inset-0 bg-gradient-to-br ${colors.bg} opacity-0 group-hover:opacity-100`}
+        className={`absolute inset-0 bg-linear-to-br ${colors.bg} opacity-0 group-hover:opacity-100`}
         initial={{ opacity: 0, scale: 0.8 }}
         whileHover={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -188,7 +188,7 @@ const StatCard = ({ stat, index }: StatCardProps) => {
 
       {/* Scan line effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"
+        className="absolute inset-0 bg-linear-to-b from-transparent via-white/5 to-transparent"
         initial={{ y: "-100%" }}
         animate={isHovered ? { y: "100%" } : { y: "-100%" }}
         transition={{ duration: 1, ease: "linear" }}
@@ -263,7 +263,7 @@ const StatCard = ({ stat, index }: StatCardProps) => {
 
       {/* Corner glow */}
       <motion.div
-        className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl"
+        className="absolute top-0 right-0 w-20 h-20 bg-linear-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl"
         initial={{ scale: 0 }}
         whileHover={{ scale: 1 }}
         transition={{ duration: 0.3 }}
@@ -300,14 +300,14 @@ export default function Stats() {
       className="bg-[#121212] pt-12 pb-24 relative overflow-hidden"
     >
       {/* Top edge fade/blend */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#121212] to-transparent z-20" />
+      <div className="absolute top-0 left-0 right-0 h-16 bg-linear-to-b from-[#121212] to-transparent z-20" />
 
       {/* Bottom edge fade/blend */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#121212] to-transparent z-20" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#121212] to-transparent z-20" />
 
       {/* Large animated circles */}
       <motion.div
-        className="absolute top-1/4 -left-20 w-[500px] h-[500px] rounded-full bg-red-500/10 blur-[100px]"
+        className="absolute top-1/4 -left-20 w-125 h-125 rounded-full bg-cyan-500/10 blur-[100px]"
         animate={{
           scale: [1, 1.2, 1],
           x: [0, 50, 0],
@@ -316,7 +316,7 @@ export default function Stats() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[100px]"
+        className="absolute bottom-1/4 -right-20 w-125 h-125 rounded-full bg-slate-500/10 blur-[100px]"
         animate={{
           scale: [1.2, 1, 1.2],
           x: [0, -50, 0],
@@ -352,8 +352,8 @@ export default function Stats() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="text-red-500 animate-pulse" size={16} />
-            <span className="text-red-500 font-bold tracking-[0.2em] uppercase text-sm md:text-base">
+            <Sparkles className="text-blue-500 animate-pulse" size={16} />
+            <span className="text-blue-500 font-bold tracking-[0.2em] uppercase text-sm md:text-base">
               Company Statistics
             </span>
           </div>
@@ -372,7 +372,7 @@ export default function Stats() {
             </div>
             <div className="overflow-hidden">
               <motion.span
-                className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600 pb-2"
+                className="inline-block text-transparent bg-clip-text bg-linear-to-r from-gray-200 to-gray-600 pb-2"
                 initial={{ y: "100%" }}
                 whileInView={{ y: 0 }}
                 viewport={{ once: true }}

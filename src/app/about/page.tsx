@@ -76,7 +76,7 @@ export default function AboutPage() {
           style={{ y: heroY, opacity: heroOpacity }}
         >
           <Image
-            src="https://images.unsplash.com/photo-1626245353164-9ca1e72e276e?q=80&w=2072&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop" 
             alt="Colour Plus Factory"
             fill
             className="object-cover opacity-40"
@@ -258,7 +258,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
             >
                <Image 
-                 src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop"
+                 src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop"
                  alt="Global Logistics"
                  fill
                  className="object-cover"

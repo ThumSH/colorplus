@@ -111,10 +111,10 @@ export default function ProductsPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.5]);
 
   return (
-    <main ref={containerRef} className="bg-[#050505] min-h-screen pt-24">
+    <main ref={containerRef} className="bg-[#050505] min-h-screen">
       
       {/* --- HERO HEADER --- */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden mb-12">
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden mb-12">
         <motion.div 
           className="absolute inset-0 z-0"
           style={{ scale: heroScale, opacity: heroOpacity }}
@@ -130,7 +130,7 @@ export default function ProductsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-red-500 font-bold tracking-[0.2em] text-xs uppercase mb-4 inline-block border border-red-500/20 bg-red-500/5 px-3 py-1 rounded-full">
+            <span className="text-blue-500 font-bold tracking-[0.2em] text-xs uppercase mb-4 inline-block border border-blue-500/20 bg-blue-500/5 px-3 py-1 rounded-full">
               Production Capabilities
             </span>
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6">
@@ -218,7 +218,7 @@ export default function ProductsPage() {
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
                     <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                      <Tag size={12} className="text-red-500" />
+                      <Tag size={12} className="text-blue-500" />
                       {product.category}
                     </span>
                   </div>
@@ -226,7 +226,7 @@ export default function ProductsPage() {
 
                 {/* Content Area */}
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-500 transition-colors">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">
                     {product.title}
                   </h3>
                   <p className="text-gray-400 text-sm mb-6 line-clamp-2">

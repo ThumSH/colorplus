@@ -10,25 +10,25 @@ const steps = [
   {
     id: "01",
     title: "Consultation & Sourcing",
-    desc: "We start by understanding your needs. Beyond printing, we offer value-added services like sourcing accessories from China & Hong Kong to reduce your costs[cite: 23, 60].",
+    desc: "We start by understanding your needs. Beyond printing, we offer value-added services like sourcing accessories from China & Hong Kong to reduce your costs.",
     icon: <FileText size={28} />,
   },
   {
     id: "02",
     title: "In-House Design",
-    desc: "Our internal design team prepares your concept. We handle everything from artwork separation to color matching using chemical-free inks[cite: 54, 65].",
+    desc: "Our internal design team prepares your concept. We handle everything from artwork separation to color matching using chemical-free inks.",
     icon: <PenTool size={28} />,
   },
   {
     id: "03",
     title: "Vertical Production",
-    desc: "All operations—from mixing inks to printing and finishing—are conducted entirely within our 7,000 sq ft factory in Kottawa to ensure consistency[cite: 64, 141].",
+    desc: "All operations—from mixing inks to printing and finishing—are conducted entirely within our 7,000 sq ft factory in Kottawa to ensure consistency.",
     icon: <Factory size={28} />,
   },
   {
     id: "04",
     title: "QC & Global Export",
-    desc: "After rigorous Quality Control, we pack and ship. We regularly export to the USA, UK, Italy, and the Middle East, meeting international standards[cite: 24, 56].",
+    desc: "After rigorous Quality Control, we pack and ship. We regularly export to the USA, UK, Italy, and the Middle East, meeting international standards.",
     icon: <Globe size={28} />,
   },
 ];
@@ -55,10 +55,10 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
       {/* --- CONNECTING LINE (Desktop Only) --- */}
       {/* Placed behind the icon. It spans to the right to connect to the next item */}
       {index < totalSteps - 1 && (
-        <div className="hidden md:block absolute top-8 left-8 w-full h-[2px] bg-white/5 z-0">
+        <div className="hidden md:block absolute top-8 left-8 w-full h-0.5 bg-white/5 z-0">
           {/* Animated Progress Line moving right */}
           <motion.div
-            className="h-full bg-gradient-to-r from-red-600/50 to-transparent w-full origin-left"
+            className="h-full bg-linear-to-r from-blue-600/50 to-transparent w-full origin-left"
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
@@ -70,11 +70,11 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
       {/* --- ICON BUBBLE --- */}
       <div className="relative z-10 mb-6">
         <motion.div
-          className="w-16 h-16 rounded-2xl bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-white group-hover:border-red-600 transition-all duration-300 shadow-2xl relative overflow-hidden"
+          className="w-16 h-16 rounded-2xl bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-white group-hover:border-blue-600 transition-all duration-300 shadow-2xl relative overflow-hidden"
           animate={isHovered ? { y: -5 } : { y: 0 }}
         >
-          {/* Red Glow Background on Hover */}
-          <div className="absolute inset-0 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Blue Glow Background on Hover */}
+          <div className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Icon (scales slightly on hover) */}
           <motion.div 
@@ -86,14 +86,14 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
         </motion.div>
 
         {/* Small hanging number badge */}
-        <div className="absolute -bottom-3 -right-3 bg-[#121212] border border-white/10 text-xs font-bold text-gray-500 py-1 px-2 rounded-md group-hover:text-red-500 group-hover:border-red-500/50 transition-colors duration-300">
+        <div className="absolute -bottom-3 -right-3 bg-[#121212] border border-white/10 text-xs font-bold text-gray-500 py-1 px-2 rounded-md group-hover:text-blue-500 group-hover:border-blue-500/50 transition-colors duration-300">
            {step.id}
         </div>
       </div>
 
       {/* --- CONTENT --- */}
       <div className="relative z-10 max-w-xs">
-        <h3 className="text-xl font-black text-white uppercase tracking-wide mb-3 flex items-center gap-2 md:justify-start justify-center group-hover:text-red-500 transition-colors duration-300">
+        <h3 className="text-xl font-black text-white uppercase tracking-wide mb-3 flex items-center gap-2 md:justify-start justify-center group-hover:text-blue-500 transition-colors duration-300">
           {step.title}
           <motion.div
             animate={{ x: isHovered ? 5 : 0, opacity: isHovered ? 1 : 0 }}
@@ -115,7 +115,7 @@ export default function Process() {
   const sectionRef = useRef(null);
   const imageRef = useRef(null);
 
-  const { scrollYProgress: sectionProgress } = useScroll({
+  useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
   });
@@ -133,7 +133,7 @@ export default function Process() {
     <section ref={sectionRef} id="process" className="bg-[#121212] py-24 relative overflow-hidden border-t border-white/5">
       
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/5 via-[#121212] to-[#121212] opacity-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-white/5 via-[#121212] to-[#121212] opacity-50 pointer-events-none" />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         
@@ -145,12 +145,12 @@ export default function Process() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <span className="inline-flex items-center gap-2 text-red-500 text-xs font-bold tracking-[0.2em] uppercase mb-4 py-1 px-3 border border-red-500/20 bg-red-500/5 rounded-sm">
+          <span className="inline-flex items-center gap-2 text-blue-500 text-xs font-bold tracking-[0.2em] uppercase mb-4 py-1 px-3 border border-blue-500/20 bg-blue-500/5 rounded-sm">
             <Sparkles size={12} />
             The Workflow
           </span>
           <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
-            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Process.</span>
+            Our <span className="text-transparent bg-clip-text bg-linear-to-r from-gray-200 to-gray-500">Process.</span>
           </h2>
         </motion.div>
 
@@ -161,7 +161,7 @@ export default function Process() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative w-full h-[300px] md:h-[450px] rounded-2xl overflow-hidden mb-24 border border-white/10 shadow-2xl group"
+          className="relative w-full h-75 md:h-112.5 rounded-2xl overflow-hidden mb-24 border border-white/10 shadow-2xl group"
         >
           {/* Parallax Image Layer */}
           <motion.div className="absolute inset-0 w-full h-full" style={{ y: imageY, scale: imageScale }}>
@@ -179,7 +179,7 @@ export default function Process() {
           
           {/* Animated Scan Line */}
           <motion.div 
-            className="absolute top-0 left-0 w-full h-[2px] bg-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.5)]"
+            className="absolute top-0 left-0 w-full h-0.5 bg-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.5)]"
             animate={{ top: ["0%", "100%", "0%"] }}
             transition={{ duration: 8, ease: "linear", repeat: Infinity }}
           />

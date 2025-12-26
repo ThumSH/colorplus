@@ -26,7 +26,7 @@ const productSlides = [
     headline: ["MASTERING THE", "TECHNIQUE."],
     // Source: [cite: 62, 88-96]
     description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Plastisol prints.",
-    highlightColor: "from-orange-400 to-red-500"
+    highlightColor: "from-blue-200 to-cyan-500"
   },
   { 
     id: 3, 
@@ -36,7 +36,7 @@ const productSlides = [
     headline: ["TRUSTED BY", "ICONS."],
     // Source: [cite: 24, 25-40]
     description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Ralph Lauren. Exporting excellence to the USA, UK, and Italy.",
-    highlightColor: "from-emerald-400 to-teal-300"
+    highlightColor: "from-blue-100 to-cyan-700"
   },
 ];
 
@@ -86,14 +86,14 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none"></div>
       
       {/* Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none" />
 
       {/* --- 3. HERO CONTENT --- */}
       <div className="relative z-20 container mx-auto px-6 md:px-12 flex flex-col items-start justify-center h-full pt-12">
         
         {/* TEXT AREA */}
-        <div className="h-[450px] md:h-[550px] flex flex-col justify-center relative w-full"> 
+        <div className="h-112.5 md:h-137.5 flex flex-col justify-center relative w-full"> 
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
@@ -114,7 +114,7 @@ export default function Hero() {
               {/* Headline */}
               <h1 className="text-5xl md:text-7xl lg:text-9xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-2xl">
                 {productSlides[currentSlide].headline[0]} <br />
-                <span className={`text-transparent bg-clip-text bg-gradient-to-r ${productSlides[currentSlide].highlightColor}`}>
+                <span className={`text-transparent bg-clip-text bg-linear-to-r ${productSlides[currentSlide].highlightColor}`}>
                   {productSlides[currentSlide].headline[1]}
                 </span>
               </h1>
@@ -135,7 +135,7 @@ export default function Hero() {
           className="flex flex-wrap gap-4 mt-2"
         >
           <Link href="/contact" className="bg-blue-700 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-blue-800 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
-            Start Your Project
+            Get a Qoute
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
           

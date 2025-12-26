@@ -42,8 +42,8 @@ const printTechniques = [
   {
     title: "Foil Prints",
     desc: "Heat-pressed metallic foil for a mirror-like, premium reflective finish.",
-    icon: <Zap size={32} className="text-red-400" />,
-    color: "red"
+    icon: <Zap size={32} className="text-blue-400" />,
+    color: "blue"
   }
 ];
 
@@ -99,12 +99,21 @@ export default function ServicesPage() {
   const containerRef = useRef(null);
   
   return (
-    <main ref={containerRef} className="bg-[#050505] min-h-screen pt-24">
+    <main ref={containerRef} className="bg-[#050505] min-h-screen">
       
       {/* --- HERO HEADER --- */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-[100px] pointer-events-none" />
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1766191327403-ac1f4947e8f8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Screen printing machine detail"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/60" />
+
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
           <motion.h1 
@@ -113,13 +122,13 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tight"
           >
-            Print <span className="text-transparent bg-clip-text bg-linear-to-r from-red-500 to-orange-500">Solutions.</span>
+            Print <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-500">Solutions.</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-gray-400 max-w-2xl mx-auto text-lg md:text-xl"
+            className="text-gray-300 max-w-2xl mx-auto text-lg md:text-xl"
           >
             We utilize techniques as per your requirement that are both affordable and ideal when it comes to ensuring the best quality output.
           </motion.p>
@@ -132,7 +141,7 @@ export default function ServicesPage() {
           
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-white mb-2">Direct Screen Printing</h2>
-            <div className="h-1 w-20 bg-red-500 rounded-full" />
+            <div className="h-1 w-20 bg-blue-500 rounded-full" />
           </div>
 
           <motion.div 

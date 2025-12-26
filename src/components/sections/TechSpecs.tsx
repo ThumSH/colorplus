@@ -69,7 +69,7 @@ export default function TechSpecs() {
   return (
     <section className="bg-[#0a0a0a] py-24 relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-900/5 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-blue-900/5 to-transparent pointer-events-none" />
 
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -87,12 +87,12 @@ export default function TechSpecs() {
               </span>
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
                 Quality that meets <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400">
                   International Standards.
                 </span>
               </h2>
               <p className="text-gray-400 text-lg mb-10 leading-relaxed">
-                In todays competitive world, we prioritize value-added services. From chemical-free safety to supply chain reliability, we are built for the global market [cite: 60-65].
+                In todays competitive world, we prioritize value-added services. From chemical-free safety to supply chain reliability, we are built for the global market.
               </p>
             </motion.div>
 
@@ -101,7 +101,7 @@ export default function TechSpecs() {
               {features.map((item, i) => (
                 <motion.div 
                   key={item.id}
-                  className="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors duration-300"
+                  className="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/2 hover:bg-white/5 transition-colors duration-300"
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -132,7 +132,7 @@ export default function TechSpecs() {
               <div className="mb-8 flex items-center justify-between">
                 <div>
                   <h3 className="text-2xl font-bold text-white">Production Composition</h3>
-                  <p className="text-gray-500 text-sm">Monthly Output Distribution [cite: 69]</p>
+                  <p className="text-gray-500 text-sm">Monthly Output Distribution</p>
                 </div>
                 <ShieldCheck className="text-white/20" size={48} />
               </div>
@@ -160,8 +160,8 @@ export default function TechSpecs() {
             </motion.div>
 
             {/* Decorative Elements behind card */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl -z-0" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl -z-0" />
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl z-0" />
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl z-0" />
           </div>
 
         </div>

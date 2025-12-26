@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Plus, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 
 // --- UPDATED DATA: BASED ON COLOUR PLUS PORTFOLIO & TECHNIQUES ---
@@ -78,7 +79,7 @@ export default function Gallery() {
       >
         <div>
           <motion.span 
-            className="text-red-500 text-xs font-bold tracking-[0.2em] uppercase mb-4 block"
+            className="text-blue-500 text-xs font-bold tracking-[0.2em] uppercase mb-4 block"
             initial={{ x: -50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
@@ -113,18 +114,19 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* View All Button */}
+        <Link href= "/products">
         <div className="mt-32 flex justify-center">
           <motion.button 
             className="group flex items-center gap-3 text-white uppercase tracking-widest text-sm font-bold"
             whileHover={{ gap: "20px" }}
           >
-            View Full Gallery
-            <span className="bg-white text-black rounded-full p-2 transition-all group-hover:bg-red-500 group-hover:text-white">
+            View Full Products
+            <span className="bg-white text-black rounded-full p-2 transition-all group-hover:bg-blue-500 group-hover:text-white">
               <ArrowUpRight size={16} />
             </span>
           </motion.button>
         </div>
+      </Link>
       </div>
     </section>
   );
@@ -171,7 +173,7 @@ function GalleryItem({ item, index }: { item: typeof projects[0], index: number 
 
       {/* Info Content (Outside Image for cleaner look) */}
       <div className={`relative ${isReversed ? 'md:order-1' : ''}`}>
-        <span className="text-red-500 text-xs font-bold tracking-widest uppercase mb-1 block">
+        <span className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-1 block">
            0{index + 1} / {item.type}
         </span>
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-gray-200 transition-colors">

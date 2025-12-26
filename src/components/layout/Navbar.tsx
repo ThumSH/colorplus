@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
-import { Cinzel } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 // --- UPDATED LINKS: BASED ON PDF STRUCTURE ---
 const primaryLinks = [
@@ -19,9 +19,9 @@ const secondaryLinks = [
   { name: "Contact Us", href: "/contact" },
 ];
 
-const cinzel = Cinzel({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "700"],
 });
 
 export default function Navbar() {
@@ -80,8 +80,8 @@ export default function Navbar() {
         className={`fixed top-0 left-0 right-0 h-24 flex items-center justify-center transition-colors duration-300
         ${
           isScrolled
-            ? "bg-black/1 backdrop-blur-md border-b border-white/5"
-            : "bg-linear-gradient-to-b from-white/900 backdrop-blur-md  to-transparent"
+            ? "bg-black/80 backdrop-blur-md border-b border-white/5"
+            : "bg-linear-to-b from-black/50 to-transparent"
         }
         z-9999`}
       >
@@ -108,7 +108,7 @@ export default function Navbar() {
              />
           </div>
           <span
-            className={`${cinzel.className} text-[10px] md:text-[10px] tracking-[0.2em] text-gray-200 mt-1 group-hover:text-white transition-colors`}
+            className={`${poppins.className} text-[10px] md:text-[10px] tracking-[0.2em] text-gray-200 mt-1 group-hover:text-white transition-colors`}
           >
             COLOR PLUS PRINTING SYSTEMS
           </span>
@@ -118,7 +118,7 @@ export default function Navbar() {
         <div className="absolute right-6 md:right-12 hidden md:block">
             <Link 
                 href="/contact" 
-                className="text-xs font-bold tracking-widest uppercase text-white border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-all"
+                className="text-xs font-bold tracking-widest uppercase text-white border border-white/20 px-4 py-2 hover:bg-blue-500 hover:border-blue-500 transition-all"
             >
               Contact us
             </Link>
@@ -165,10 +165,12 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-2xl font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4 group"
+                className="relative group text-xl font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4"
               >
-                <span className="text-xs font-bold text-gray-700 group-hover:text-red-500 transition-colors">0{i+1}</span>
+                <span className="text-xs font-bold text-gray-700 group-hover:text-blue-500 transition-colors">0{i+1}</span>
                 {link.name}
+                {/* Underline effect */}
+                <span className="absolute -bottom-0.5 left-0 w-full h-px bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out" />
               </Link>
             ))}
           </div>
@@ -184,7 +186,7 @@ export default function Navbar() {
              
              <a href="tel:0094112781525" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors">
                 <Phone size={16} className="text-gray-500" />
-                (00 94) 112781525
+                (+94) 112781525
              </a>
 
              <a href="mailto:colourplus@sltnet.lk" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors">
@@ -199,13 +201,13 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-sm font-bold text-white bg-white/5 hover:bg-white/10 p-4 text-center rounded-sm uppercase tracking-widest transition-colors border border-white/5"
+                className="text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 p-4 text-center rounded-sm uppercase tracking-widest transition-colors"
                 >
                 {link.name}
                 </Link>
             ))}
-            <div className="text-center text-gray-700 text-[10px] tracking-widest uppercase mt-4">
-               © 2025 Colour Plus Printing Systems
+            <div className="text-center text-gray-600 text-[10px] tracking-widest uppercase mt-4">
+               © {new Date().getFullYear()} Colour Plus Printing Systems
             </div>
           </div>
         </div>
