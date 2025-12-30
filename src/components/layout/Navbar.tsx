@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X, Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
+import { usePathname } from "next/navigation";
 
 
 const primaryLinks = [
@@ -28,6 +29,19 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+
+    const pathname = usePathname();
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // If we are already on the home page, just scroll to top smoothly.
+    if (pathname === "/") {
+      e.preventDefault(); 
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
 
   // Handle Scroll Effect
   useEffect(() => {
@@ -94,19 +108,21 @@ export default function Navbar() {
           <Menu size={32} className="group-hover:scale-110 transition-transform" />
         </button>
 
-        <Link href="/" className="flex flex-col items-center group select-none">
-          {/* Logo Placeholder - Ensure the path matches your public folder */}
+        <Link
+          href="/"
+          className="flex flex-col items-center group select-none"
+          onClick={handleLogoClick}
+        >
           <div className="relative h-16 w-auto aspect-6/3">
-             {/* You might want to use the CP Logo from Page 1 here */}
-             <Image
-                src="/CP.webp" 
-                alt="Colour Plus Logo"
-                width={180}
-                height={100}
-                className="object-cover drop-shadow-lg"
-                priority
-             />
-          </div>
+  <Image
+    src="/CP.webp" 
+    alt="Colour Plus Logo"
+    width={180}
+    height={100}
+    className="object-cover drop-shadow-[0_0_8px_rgba(255,255,255,0.35)] hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.9),0_0_30px_rgba(59,130,246,0.2)] transition-all duration-500 hover:scale-105"
+    priority
+  />
+</div>
           <span
             className={`${poppins.className} text-[10px] md:text-[10px] tracking-[0.2em] text-gray-200 mt-1 group-hover:text-white transition-colors`}
           >
@@ -114,7 +130,6 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Quick Contact (Optional - good for conversion) */}
         <div className="absolute right-6 md:right-12 hidden md:block">
             <Link 
                 href="/contact" 
@@ -125,14 +140,12 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* BACKDROP */}
       <div
         className={`fixed inset-0 z-9998 bg-black/80 backdrop-blur-sm transition-opacity duration-300
         ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => setOpen(false)}
       />
 
-      {/* DRAWER */}
       <aside
         className={`fixed top-0 left-0 h-full w-[85%] max-w-100 bg-[#121212] border-r border-white/10 shadow-2xl z-9999
         transform transition-transform duration-300 ease-out
@@ -143,7 +156,6 @@ export default function Navbar() {
       >
         <div className="flex flex-col h-full p-8 md:p-12 relative overflow-hidden">
             
-          {/* Background decoration in menu */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex justify-between items-center mb-12 relative z-10">
@@ -158,7 +170,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Primary Navigation */}
           <div className="flex flex-col gap-6 relative z-10">
             {primaryLinks.map((link, i) => (
               <Link
@@ -169,7 +180,6 @@ export default function Navbar() {
               >
                 <span className="text-xs font-bold text-gray-700 group-hover:text-blue-500 transition-colors">0{i+1}</span>
                 {link.name}
-                {/* Underline effect */}
                 <span className="absolute -bottom-0.5 left-0 w-full h-px bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out" />
               </Link>
             ))}
@@ -177,7 +187,6 @@ export default function Navbar() {
 
           <hr className="border-gray-800 my-8 relative z-10" />
 
-          {/* Contact Details from Profile [cite: 21, 22, 149] */}
           <div className="flex flex-col gap-5 relative z-10">
              <div className="text-gray-400 text-sm flex items-start gap-3 tracking-widest uppercase">
                 <MapPin size={16} className="mt-1 text-gray-500" />

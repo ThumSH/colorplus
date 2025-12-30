@@ -17,7 +17,7 @@ const contactInfo = [
   {
     id: 2,
     title: "Call Us",
-    content: "(00 94) 112781525",
+    content: "(+94) 112781525",
     link: "tel:0094112781525",
     icon: <Phone size={24} />,
     color: "bg-green-500",

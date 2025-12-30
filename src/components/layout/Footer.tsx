@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Instagram, Linkedin, Facebook, MapPin, Phone, Mail } from "lucide-react";
@@ -11,11 +12,22 @@ const poppins = Poppins({
 });
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault(); 
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <footer className="bg-black text-white pt-24 pb-12 border-t border-white/10">
       <div className="container mx-auto px-6 md:px-12">
         
-        {/* TOP SECTION: CTA */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-gray-800 pb-20 mb-16 gap-10">
           <div>
             <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-6">
@@ -39,12 +51,14 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* MIDDLE SECTION: Links */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           
-          {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
-             <Link href="/" className="block relative h-16 w-auto aspect-5/3 mb-4">
+             <Link
+                href="/"
+                className="block relative h-16 w-auto aspect-5/3 mb-4"
+                onClick={handleLogoClick}
+              >
                  <Image
                     src="/CP.webp" 
                     alt="Colour Plus Logo"
@@ -64,7 +78,6 @@ export default function Footer() {
              </p>
           </div>
 
-          {/* Links Columns */}
           <div>
             <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Company</h4>
             <ul className="space-y-4 text-gray-400 text-sm">
@@ -85,7 +98,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Column  */}
           <div>
             <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Contact Us</h4>
             <div className="space-y-4 text-gray-400 text-sm">
@@ -111,7 +123,6 @@ export default function Footer() {
                </div>
             </div>
 
-            {/* Social Icons Placeholder */}
             <div className="flex gap-4 mt-8">
               <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
                 <Instagram size={14} />
@@ -125,8 +136,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        {/* BOTTOM BAR */}
         <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left pt-8 mt-16 border-t border-gray-800 text-gray-500 text-xs">
           <p className="mb-4 md:mb-0 order-2 md:order-1">
             &copy; {new Date().getFullYear()} Colour Plus Printing Systems (Pvt) Ltd. All Rights Reserved.

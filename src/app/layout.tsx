@@ -7,7 +7,9 @@ export const metadata: Metadata = {
   title: "Color Plus Printing Systems",
   description: "Printing Systems",
   icons: {
-    icon: "/Logo.svg",
+    icon: "/logo.svg",
+    shortcut: '/logo.svg', // For older browsers
+    apple: '/logo.svg', // For when users add to homescreen on iOS
   },
 
 };
