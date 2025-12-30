@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { ClipboardList, LayoutTemplate, Printer, PackageCheck, DraftingCompass, ArrowUpRight, type LucideProps } from "lucide-react";
 import Link from "next/link";
 
-// --- DATA ---
 const processSteps: {
   icon: ComponentType<LucideProps>;
   title: string;

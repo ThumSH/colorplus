@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -21,7 +21,7 @@ const brands = [
   { name: "RBK", src: "/3.svg" },
   { name: "Kohls", src: "/6.svg" },
   { name: "Columbia", src: "/9.svg" },
-  { name: "Lucky Brand", src: "/8.svg" },
+  { name: "Diesel", src: "/8.svg" },
   { name: "Ralph Lauren", src: "/4.svg" },
   { name: "Tommy Hilfiger", src: "/2.svg" },
   { name: "Mothercare", src: "/12.svg" },
@@ -39,9 +39,9 @@ const TechnicalBackground = () => {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* 1. Atmospheric Glows (Updated with Subtle Blue Shades) */}
       {/* Top Left: Deep Sky Blue wash */}
-      <div className="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] bg-sky-900/30 rounded-full blur-[180px] mix-blend-screen" />
+      <div className="absolute top-[-20%] left-[-10%] w-175 h-175 bg-sky-900/30 rounded-full blur-[180px] mix-blend-screen" />
       {/* Bottom Right: Slightly different deep blue shade */}
-      <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-sky-800/20 rounded-full blur-[150px] mix-blend-screen" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-150 h-150 bg-sky-800/20 rounded-full blur-[150px] mix-blend-screen" />
 
       {/* 2. Technical Circuit/Grid Pattern Overlay - Neutral white fill */}
       <div className="absolute inset-0 opacity-[0.1]"

@@ -6,13 +6,13 @@ import { Menu, X, Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
 
-// --- UPDATED LINKS: BASED ON PDF STRUCTURE ---
+
 const primaryLinks = [
   { name: "Home", href: "/" },
-  { name: "Company Profile", href: "/about" }, // Renamed from "About Us" to match doc title [cite: 4]
-  { name: "Our Services", href: "/services" }, // Reflects "Services" section [cite: 59]
-  { name: "Products", href: "/products" },     // Added to cover Mens/Ladies/Kids wear [cite: 122]
-  { name: "Techniques", href: "/technique" }, // Added to cover Print/Transfer techniques [cite: 86]
+  { name: "Company Profile", href: "/about" }, 
+  { name: "Our Services", href: "/services" }, 
+  { name: "Products", href: "/products" },    
+  { name: "Techniques", href: "/technique" }, 
 ];
 
 const secondaryLinks = [
@@ -151,7 +151,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-gray-400 hover:text-white transition-colors p-2 hover:rotate-90 duration-300"
+              className="text-gray-400 hover:text-white transition-all p-2 hover:rotate-180 duration-500"
               aria-label="Close Menu"
             >
               <X size={28} />
@@ -165,7 +165,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="relative group text-xl font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4"
+                className="relative group tracking-widest uppercase text-xl font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4"
               >
                 <span className="text-xs font-bold text-gray-700 group-hover:text-blue-500 transition-colors">0{i+1}</span>
                 {link.name}
@@ -179,17 +179,17 @@ export default function Navbar() {
 
           {/* Contact Details from Profile [cite: 21, 22, 149] */}
           <div className="flex flex-col gap-5 relative z-10">
-             <div className="text-gray-400 text-sm flex items-start gap-3">
+             <div className="text-gray-400 text-sm flex items-start gap-3 tracking-widest uppercase">
                 <MapPin size={16} className="mt-1 text-gray-500" />
                 <span>564/A, Athurugiriya Road,<br/>Kottawa, Sri Lanka.</span>
              </div>
              
-             <a href="tel:0094112781525" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors">
+             <a href="tel:0094112781525" className="text-gray-400 text-sm flex items-center gap-3 tracking-widest uppercase hover:text-white transition-colors">
                 <Phone size={16} className="text-gray-500" />
                 (+94) 112781525
              </a>
 
-             <a href="mailto:colourplus@sltnet.lk" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors">
+             <a href="mailto:colourplus@sltnet.lk" className="text-gray-400 text-sm flex items-center gap-3 hover:text-white transition-colors tracking-widest uppercase">
                 <Mail size={16} className="text-gray-500" />
                 colourplus@sltnet.lk
              </a>
