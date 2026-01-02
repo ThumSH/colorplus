@@ -1,55 +1,147 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   motion,
-  useInView,
   useMotionValue,
   useSpring,
-  Variants,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
-// Added specific icons for the new data points
-import { Plus, TrendingUp, Factory, Maximize, Globe, Award, LucideIcon, Sparkles } from "lucide-react";
+import {
+  Plus,
+  Factory,
+  Maximize,
+  Globe,
+  Award,
+  Sparkles,
+} from "lucide-react";
 
-// --- UPDATED STATS DATA: BASED ON COLOUR PLUS PROFILE ---
+/* ------------------------------------------------------------------ */
+/*  DOT COMPONENT (HOOKS LIVE HERE – RULES OF HOOKS SAFE)              */
+/* ------------------------------------------------------------------ */
+
+type CurveDot = {
+  t: number;
+  x: number;
+  y: number;
+  size: number;
+};
+
+type DotProps = {
+  dot: CurveDot;
+  progress: MotionValue<number>;
+};
+
+const SCurveDot = ({ dot, progress }: DotProps) => {
+  const opacity = useTransform(
+    progress,
+    [dot.t - 0.08, dot.t],
+    [0, 1]
+  );
+
+  const scale = useTransform(
+    progress,
+    [dot.t - 0.08, dot.t],
+    [0.3, 1]
+  );
+
+  return (
+    <motion.div
+      className="absolute rounded-full bg-sky-400"
+      style={{
+        left: `${dot.x}%`,
+        top: `${dot.y}%`,
+        width: dot.size,
+        height: dot.size,
+        opacity,
+        scale,
+        transform: "translate(-50%, -50%)",
+        boxShadow: `0 0 ${dot.size * 2}px rgba(56,189,248,0.55)`,
+      }}
+    />
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/*  SCROLL-DRIVEN S-CURVE BACKGROUND                                   */
+/* ------------------------------------------------------------------ */
+
+const SCurveDotsBackground = ({
+  progress,
+}: {
+  progress: MotionValue<number>;
+}) => {
+  const dots = useMemo<CurveDot[]>(() => {
+    const totalDots = 26;
+
+    return Array.from({ length: totalDots }).map((_, i) => {
+      const t = i / (totalDots - 1);
+
+      // Top-left → Bottom-right progression
+      const x = -10 + t * 120;
+      const baseY = -10 + t * 120;
+
+      // TRUE S-curve sway
+      const sway = Math.sin(t * Math.PI * 2) * 18;
+      const y = baseY + sway;
+
+      // Dot size variation
+      const size = 5 + Math.sin(t * Math.PI) * 6;
+
+      return { t, x, y, size };
+    });
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      {dots.map((dot, i) => (
+        <SCurveDot key={i} dot={dot} progress={progress} />
+      ))}
+    </div>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/*  STATS DATA                                                         */
+/* ------------------------------------------------------------------ */
+
 const stats = [
-  { 
-    id: 1, 
-    label: "Monthly Capacity", 
-    value: 300, // Represents 300,000
-    suffix: "k+", 
-    icon: Factory, 
-    color: "blue" // Blue for industrial/production
+  {
+    id: 1,
+    label: "Monthly Capacity",
+    value: 500,
+    suffix: "k+",
+    icon: Factory,
   },
-  { 
-    id: 2, 
-    label: "Sq. Ft. Facility", 
-    value: 7000, 
-    suffix: "+", 
-    icon: Maximize, 
-    color: "emerald" // Emerald for physical space/footprint
+  {
+    id: 2,
+    label: "Sq. Ft. Facility",
+    value: 10000,
+    suffix: "+",
+    icon: Maximize,
   },
-  { 
-    id: 3, 
-    label: "Global Brands Served", 
-    value: 15, 
-    suffix: "+", 
-    icon: Globe, 
-    color: "red" // Red for international reach/brands
+  {
+    id: 3,
+    label: "Global Brands Served",
+    value: 15,
+    suffix: "+",
+    icon: Globe,
   },
-  { 
-    id: 4, 
-    label: "Years of Excellence", 
-    value: 16, // 2025 - 2009
-    suffix: "+", 
-    icon: Award, 
-    color: "purple" // Purple for prestige/history
+  {
+    id: 4,
+    label: "Years of Excellence",
+    value: 16,
+    suffix: "+",
+    icon: Award,
   },
 ];
 
-// --- COUNTER LOGIC (Unchanged) ---
+/* ------------------------------------------------------------------ */
+/*  COUNTER                                                            */
+/* ------------------------------------------------------------------ */
+
 function Counter({ value, suffix }: { value: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(0);
@@ -57,13 +149,10 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
     damping: 30,
     stiffness: 60,
   });
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
-    if (isInView) {
-      motionValue.set(value);
-    }
-  }, [isInView, value, motionValue]);
+    motionValue.set(value);
+  }, [value, motionValue]);
 
   useEffect(() => {
     return springValue.on("change", (latest) => {
@@ -74,332 +163,98 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   }, [springValue]);
 
   return (
-    <span className="flex items-baseline">
-      <span ref={ref} className="tabular-nums tracking-tight">
-        0
-      </span>
+    <span className="flex items-baseline gap-1">
+      <span ref={ref} className="tabular-nums tracking-tight">0</span>
       <span>{suffix}</span>
     </span>
   );
 }
 
-// --- ANIMATION VARIANTS (Unchanged) ---
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12 },
-  },
-};
+/* ------------------------------------------------------------------ */
+/*  MAIN COMPONENT                                                     */
+/* ------------------------------------------------------------------ */
 
-const itemVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 50,
-    scale: 0.9,
-    rotateX: 20,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    rotateX: 0,
-    transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
-      type: "spring",
-      stiffness: 80,
-    },
-  },
-};
-
-type StatColor = "red" | "blue" | "emerald" | "purple";
-
-interface StatCardProps {
-  stat: {
-    id: number;
-    label: string;
-    value: number;
-    suffix: string;
-    icon: LucideIcon;
-    color: string;
-  };
-  index: number;
-}
-
-const StatCard = ({ stat }: StatCardProps) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const colorClasses: Record<
-    StatColor,
-    { border: string; glow: string; bg: string; text: string }
-  > = {
-    red: {
-      border: "hover:border-cyan-500/50",
-      glow: "group-hover:shadow-cyan-500/20",
-      bg: "from-cyan-500/20 via-cyan-500/10 to-transparent",
-      text: "text-cyan-500",
-    },
-    blue: {
-      border: "hover:border-blue-500/50",
-      glow: "group-hover:shadow-blue-500/20",
-      bg: "from-blue-500/20 via-blue-500/10 to-transparent",
-      text: "text-blue-500",
-    },
-    emerald: {
-      border: "hover:border-slate-400/50",
-      glow: "group-hover:shadow-slate-400/20",
-      bg: "from-slate-400/20 via-slate-400/10 to-transparent",
-      text: "text-slate-400",
-    },
-    purple: {
-      border: "hover:border-gray-500/50",
-      glow: "group-hover:shadow-gray-500/20",
-      bg: "from-gray-500/20 via-gray-500/10 to-transparent",
-      text: "text-gray-500",
-    },
-  };
-
-  const colors = colorClasses[stat.color as StatColor];
-  const IconComponent = stat.icon;
-
-  return (
-    <motion.div
-      ref={cardRef}
-      variants={itemVariants}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{
-        y: -10,
-        scale: 1.02,
-        transition: { type: "spring", stiffness: 300 },
-      }}
-      className={`group relative bg-[#1a1a1a] p-8 rounded-2xl border border-white/5 ${colors.border} transition-all duration-300 shadow-2xl ${colors.glow} flex flex-col justify-between min-h-60 overflow-hidden cursor-pointer`}
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      {/* Animated gradient background */}
-      <motion.div
-        className={`absolute inset-0 bg-linear-to-br ${colors.bg} opacity-0 group-hover:opacity-100`}
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileHover={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-      />
-
-      {/* Scan line effect */}
-      <motion.div
-        className="absolute inset-0 bg-linear-to-b from-transparent via-white/5 to-transparent"
-        initial={{ y: "-100%" }}
-        animate={isHovered ? { y: "100%" } : { y: "-100%" }}
-        transition={{ duration: 1, ease: "linear" }}
-      />
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white/40 rounded-full"
-            initial={{
-              x: `${30 + i * 30}%`,
-              y: "100%",
-              opacity: 0,
-            }}
-            animate={
-              isHovered
-                ? {
-                    y: "-20%",
-                    opacity: [0, 1, 0],
-                  }
-                : {}
-            }
-            transition={{
-              duration: 2 + i * 0.5,
-              repeat: isHovered ? Infinity : 0,
-              delay: i * 0.3,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Static Icons Section */}
-      <div className="mb-6 relative z-10 flex items-center gap-3">
-        <Plus className={`${colors.text} w-6 h-6 stroke-[4px]`} />
-        <IconComponent className={`${colors.text} w-8 h-8`} />
-      </div>
-
-      <div className="relative z-10">
-        <motion.p
-          className="text-gray-400 text-sm font-medium mb-3 leading-relaxed group-hover:text-gray-200 transition-colors"
-          initial={{ opacity: 0.7 }}
-          whileHover={{ opacity: 1 }}
-        >
-          {stat.label}
-        </motion.p>
-
-        <motion.div
-          className="text-4xl md:text-5xl font-black text-white mb-6"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 300 }}
-        >
-          <Counter value={stat.value} suffix={stat.suffix} />
-        </motion.div>
-      </div>
-
-      {/* Animated progress bar */}
-      <motion.div
-        className="relative z-10 w-12 h-1 bg-gray-800 rounded-full overflow-hidden"
-        whileHover={{ width: "100%" }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
-        <motion.div
-          className={`h-full ${colors.text.replace("text", "bg")}`}
-          initial={{ scaleX: 0 }}
-          whileHover={{ scaleX: 1 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          style={{ originX: 0 }}
-        />
-      </motion.div>
-
-      {/* Corner glow */}
-      <motion.div
-        className="absolute top-0 right-0 w-20 h-20 bg-linear-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl"
-        initial={{ scale: 0 }}
-        whileHover={{ scale: 1 }}
-        transition={{ duration: 0.3 }}
-      />
-
-      {/* Trending indicator */}
-      <motion.div
-        className="absolute top-4 right-4 opacity-0 group-hover:opacity-100"
-        initial={{ scale: 0, rotate: -45 }}
-        whileHover={{ scale: 1, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 200 }}
-      >
-        <TrendingUp className={`w-5 h-5 ${colors.text}`} />
-      </motion.div>
-    </motion.div>
-  );
-};
-
-// --- MAIN COMPONENT ---
 export default function Stats() {
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll progress bound ONLY to this section
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 0.9]);
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.85, 1],
+    [0, 1, 1, 0]
+  );
 
   return (
     <section
       ref={sectionRef}
-      className="bg-[#121212] pt-12 pb-24 relative overflow-hidden"
+      className="relative bg-slate-950 py-10 overflow-hidden border-y border-white/5"
     >
-      {/* Top edge fade/blend */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-linear-to-b from-[#121212] to-transparent z-20" />
+      {/* Scroll-driven dotted S-curve */}
+      <SCurveDotsBackground progress={scrollYProgress} />
 
-      {/* Bottom edge fade/blend */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#121212] to-transparent z-20" />
-
-      {/* Large animated circles */}
-      <motion.div
-        className="absolute top-1/4 -left-20 w-125 h-125 rounded-full bg-cyan-500/10 blur-[100px]"
-        animate={{
-          scale: [1, 1.2, 1],
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 -right-20 w-125 h-125 rounded-full bg-slate-500/10 blur-[100px]"
-        animate={{
-          scale: [1.2, 1, 1.2],
-          x: [0, -50, 0],
-          y: [0, 30, 0],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-      />
-
-      {/* Animated Plus Grid Pattern */}
-      <motion.div
-        className="absolute inset-0 opacity-[0.08]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          y: useTransform(scrollYProgress, [0, 1], [0, -50]),
-        }}
-      />
+      {/* Edge fades */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-slate-950 to-transparent z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-slate-950 to-transparent z-10" />
 
       <motion.div
-        className="container mx-auto px-6 md:px-12 relative z-10"
-        style={{ y, opacity, scale }}
+        className="container mx-auto px-6 md:px-12 relative z-20"
+        style={{ y, opacity }}
       >
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-16"
-        >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="text-blue-500 animate-pulse" size={16} />
-            <span className="text-blue-500 font-bold tracking-[0.2em] uppercase text-sm md:text-base">
-              Company Statistics
+        <div className="text-center mb-24">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 mb-8 backdrop-blur-sm">
+            <Sparkles className="text-sky-400 w-4 h-4" />
+            <span className="text-[10px] font-black tracking-[0.3em] text-sky-400 uppercase">
+              Impact Metrics
             </span>
           </div>
 
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[0.9] tracking-tight">
-            <div className="overflow-hidden">
-              <motion.span
-                className="inline-block pb-2"
-                initial={{ y: "100%" }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              >
-                OUR IMPACT
-              </motion.span>
-            </div>
-            <div className="overflow-hidden">
-              <motion.span
-                className="inline-block text-transparent bg-clip-text bg-linear-to-r from-gray-200 to-gray-600 pb-2"
-                initial={{ y: "100%" }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                IN NUMBERS.
-              </motion.span>
-            </div>
+          <h2 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter uppercase leading-none">
+            Scale and <br />
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-200 to-indigo-400">
+              Reliability.
+            </span>
           </h2>
-        </motion.div>
+        </div>
 
-        {/* Stats Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          {stats.map((stat, index) => (
-            <StatCard key={stat.id} stat={stat} index={index} />
-          ))}
-        </motion.div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-350 mx-auto">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={stat.id}
+                whileHover={{ y: -8 }}
+                transition={{ type: "spring", stiffness: 250, damping: 20 }}
+                className="group relative bg-slate-900/40 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:border-sky-500/50 transition-all duration-500 min-h-65 flex flex-col justify-between overflow-hidden shadow-2xl"
+              >
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-sky-500">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <Plus className="text-sky-500/50 w-4 h-4" />
+                </div>
+
+                <div className="relative z-10 mt-auto">
+                  <p className="text-slate-400 text-sm font-bold mb-2 uppercase tracking-widest group-hover:text-white transition-colors">
+                    {stat.label}
+                  </p>
+                  <div className="text-4xl md:text-5xl font-black text-white tracking-tight">
+                    <Counter value={stat.value} suffix={stat.suffix} />
+                  </div>
+                </div>
+
+                <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </motion.div>
+            );
+          })}
+        </div>
       </motion.div>
     </section>
   );

@@ -16,7 +16,7 @@ const productSlides = [
     headline: ["SCREEN PRINTING", "Perfection."], 
     // Source: [cite: 3, 13, 17]
     description: "From design to finish, we offer the best in exceptional quality for the textile industry.",
-    highlightColor: "from-blue-400 to-cyan-300" 
+    highlightColor: "from-sky-400 to-cyan-300" 
   },
   { 
     id: 2, 
@@ -26,7 +26,7 @@ const productSlides = [
     headline: ["MASTERING THE", "TECHNIQUE."],
     // Source: [cite: 62, 88-96]
     description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Plastisol prints.",
-    highlightColor: "from-blue-200 to-cyan-500"
+    highlightColor: "from-sky-200 to-cyan-500"
   },
   { 
     id: 3, 
@@ -36,7 +36,7 @@ const productSlides = [
     headline: ["TRUSTED BY", "ICONS."],
     // Source: [cite: 24, 25-40]
     description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Ralph Lauren. Exporting excellence to the USA, UK, and Italy.",
-    highlightColor: "from-blue-100 to-cyan-700"
+    highlightColor: "from-sky-100 to-cyan-700"
   },
 ];
 
@@ -51,7 +51,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
       
       {/* --- 1. OPTIMIZED BACKGROUND STACK --- */}
       <div className="absolute inset-0 w-full h-full">
@@ -85,6 +85,9 @@ export default function Hero() {
       {/* --- 2. STATIC OVERLAYS --- */}
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none"></div>
       
+      {/* New: Color Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br" />
+
       {/* Gradient Overlays */}
       <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none" />
@@ -106,13 +109,13 @@ export default function Hero() {
               {/* Label */}
               <div className="flex items-center gap-4 mb-6">
                  <div className="h-0.5 w-8 bg-white/50"></div>
-                 <span className="text-white/80 font-bold tracking-[0.2em] uppercase text-xs md:text-sm">
+                 <span className="text-white/80 font-bold tracking-[0.2em] uppercase text-xs">
                    {productSlides[currentSlide].label}
                  </span>
               </div>
               
               {/* Headline */}
-              <h1 className="text-5xl md:text-7xl lg:text-9xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-2xl">
+              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-2xl">
                 {productSlides[currentSlide].headline[0]} <br />
                 <span className={`text-transparent bg-clip-text bg-linear-to-r ${productSlides[currentSlide].highlightColor}`}>
                   {productSlides[currentSlide].headline[1]}
@@ -120,7 +123,7 @@ export default function Hero() {
               </h1>
 
               {/* Description */}
-              <p className="text-gray-200 text-lg md:text-xl max-w-lg leading-relaxed drop-shadow-md">
+              <p className="text-gray-200 text-base md:text-lg max-w-lg leading-relaxed drop-shadow-md">
                 {productSlides[currentSlide].description}
               </p>
             </motion.div>
@@ -134,7 +137,7 @@ export default function Hero() {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="flex flex-wrap gap-4 mt-2"
         >
-          <Link href="/contact" className="bg-blue-700 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-blue-800 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
+          <Link href="/contact" className="bg-sky-600 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-sky-700 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
             Get a Qoute
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -157,7 +160,7 @@ export default function Hero() {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`h-1 transition-all duration-500 rounded-none ${
-                index === currentSlide ? "w-12 bg-blue-600" : "w-6 bg-white/30 hover:bg-white/60"
+                index === currentSlide ? "w-12 bg-sky-500" : "w-6 bg-white/30 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
             />

@@ -4,62 +4,45 @@ import { motion, useInView } from "framer-motion";
 import { Leaf, Globe, ShieldCheck, Database, CheckCircle2 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 
-// --- DATA FROM PROFILE  ---
+// --- DATA ---
 const inkData = [
-  { label: "Water Base / Rubber", percentage: 50, color: "bg-blue-500" },
-  { label: "Plastisol", percentage: 20, color: "bg-red-500" },
-  { label: "Glitter", percentage: 10, color: "bg-purple-500" },
-  { label: "Specialty (Foil/Flock)", percentage: 20, color: "bg-emerald-500" }, // Aggregated small % for cleaner UI
+  { label: "Water Base / Rubber", percentage: 50, color: "bg-sky-500" },
+  { label: "Silicon", percentage: 40, color: "bg-purple-600" },
+  { label: "Glitter", percentage: 10, color: "bg-green-600" },
+  { label: "Specialty (Foil/Flock)", percentage: 20, color: "bg-cyan-500" },
 ];
 
-// --- FEATURES FROM PROFILE [cite: 24, 65, 66] ---
 const features = [
-  {
-    id: 1,
-    title: "Eco-Friendly Inks",
-    desc: "All inks are free of hazardous chemicals and imported from reputed suppliers.",
-    icon: <Leaf className="text-emerald-400" size={24} />,
-  },
-  {
-    id: 2,
-    title: "Global Export Standard",
-    desc: "Trusted by brands in the USA, UK, Italy, and the Middle East.",
-    icon: <Globe className="text-blue-400" size={24} />,
-  },
-  {
-    id: 3,
-    title: "Supply Chain Security",
-    desc: "We maintain a guaranteed 4-month stock of raw materials at all times.",
-    icon: <Database className="text-amber-400" size={24} />,
-  },
+  { id: 1, title: "Eco-Friendly Inks", desc: "Hazardous-chemical free.", icon: <Leaf className="text-cyan-400" size={24} /> },
+  { id: 2, title: "Global Standard", desc: "Trusted by USA & EU brands.", icon: <Globe className="text-sky-400" size={24} /> },
+  { id: 3, title: "Supply Chain", desc: "4-month raw material stock.", icon: <Database className="text-sky-400" size={24} /> },
 ];
 
-// --- ANIMATED BAR COMPONENT ---
 const SkillBar = ({ label, percentage, color, delay }: { label: string, percentage: number, color: string, delay: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    if (isInView) {
-      // Small timeout to ensure smoother start
-      setTimeout(() => setWidth(percentage), delay * 1000); 
-    }
+    if (isInView) setTimeout(() => setWidth(percentage), delay * 1000); 
   }, [isInView, percentage, delay]);
 
   return (
-    <div ref={ref} className="mb-6">
-      <div className="flex justify-between mb-2">
-        <span className="text-white font-medium text-sm tracking-wide">{label}</span>
-        <span className="text-gray-400 text-sm font-mono">{width}%</span>
+    <div ref={ref} className="mb-5">
+      <div className="flex justify-between mb-1">
+        <span className="text-slate-300 font-medium text-xs uppercase tracking-wider">{label}</span>
+        <span className="text-sky-400 text-xs font-mono">{width}%</span>
       </div>
-      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+      <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-white/5">
         <motion.div 
-          className={`h-full ${color}`}
+          className={`h-full ${color} relative`}
           initial={{ width: 0 }}
           animate={{ width: `${width}%` }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-        />
+        >
+             {/* Tiny dot pattern overlay on the bar itself */}
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        </motion.div>
       </div>
     </div>
   );
@@ -67,101 +50,94 @@ const SkillBar = ({ label, percentage, color, delay }: { label: string, percenta
 
 export default function TechSpecs() {
   return (
-    <section className="bg-[#0a0a0a] py-24 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-blue-900/5 to-transparent pointer-events-none" />
+    <section className="bg-slate-950 py-24 relative overflow-hidden">
+      
+      {/* --- DOT MATRIX BACKGROUND --- */}
+      <div className="absolute inset-0 z-0 bg-linear-to-br from-cyan-950/40 via-slate-950 to-slate-950" />
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
+         <div className="absolute h-full w-full bg-[radial-gradient(#38bdf8_1.5px,transparent_1.5px)] bg-size-[30px_30px] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+      </div>
 
-      <div className="container mx-auto px-6 md:px-12">
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
-          {/* LEFT: TEXT & FEATURES */}
+          {/* LEFT: CONTENT */}
           <div>
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <span className="text-blue-500 font-bold tracking-[0.2em] text-xs uppercase mb-4 block">
-                Technical Mastery
+              <span className="text-sky-500 font-bold tracking-[0.2em] text-xs uppercase mb-4 block">
+                The Chemistry
               </span>
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                Quality that meets <br />
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400">
-                  International Standards.
+                Quality starts with <br />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-cyan-600">
+                  the perfect drop.
                 </span>
               </h2>
               <p className="text-gray-400 text-lg mb-10 leading-relaxed">
-                In todays competitive world, we prioritize value-added services. From chemical-free safety to supply chain reliability, we are built for the global market.
+                We dont just print; we engineer the ink. Using our internal experties, our dots connect to form the bigger picture.
               </p>
             </motion.div>
 
-            {/* Feature List */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               {features.map((item, i) => (
                 <motion.div 
                   key={item.id}
-                  className="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/2 hover:bg-white/5 transition-colors duration-300"
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  className="flex items-center gap-4 p-4 rounded-xl border border-sky-500/10 bg-sky-900/5 hover:bg-sky-900/10 transition-colors duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.2, duration: 0.5 }}
+                  transition={{ delay: i * 0.2 }}
                 >
-                  <div className="mt-1 bg-white/5 p-2 rounded-lg">
+                  <div className="bg-sky-500/10 p-3 rounded-full text-sky-400">
                     {item.icon}
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-lg mb-1">{item.title}</h4>
-                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                    <h4 className="text-white font-bold text-base">{item.title}</h4>
+                    <p className="text-gray-500 text-sm">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT: CHART VISUALIZATION */}
+          {/* RIGHT: SPECS CARD */}
           <div className="relative">
-            {/* Glassmorphic Card */}
             <motion.div 
-              className="bg-[#121212] border border-white/10 p-8 md:p-10 rounded-3xl shadow-2xl relative z-10"
+              className="bg-[#0F172A]/90 backdrop-blur-xl border border-sky-500/20 p-8 rounded-3xl shadow-2xl relative z-10"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
             >
-              <div className="mb-8 flex items-center justify-between">
+              {/* Card Header */}
+              <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-white">Production Composition</h3>
-                  <p className="text-gray-500 text-sm">Monthly Output Distribution</p>
+                  <h3 className="text-xl font-bold text-white">Ink Composition</h3>
+                  <p className="text-gray-500 text-xs">Monthly Output Distribution</p>
                 </div>
-                <ShieldCheck className="text-white/20" size={48} />
+                <ShieldCheck className="text-sky-500" size={32} />
               </div>
 
-              {/* Data Bars */}
               <div className="space-y-2">
                 {inkData.map((data, index) => (
-                  <SkillBar 
-                    key={index}
-                    label={data.label}
-                    percentage={data.percentage}
-                    color={data.color}
-                    delay={index * 0.2}
-                  />
+                  <SkillBar key={index} {...data} delay={index * 0.2} />
                 ))}
               </div>
 
-              {/* Bottom Quote/Badge */}
-              <div className="mt-8 pt-8 border-t border-white/10 flex items-center gap-3">
-                 <CheckCircle2 className="text-green-500" />
-                 <p className="text-gray-400 text-sm">
-                   Certified safe & hazardous-chemical free inks.
+              <div className="mt-6 pt-6 flex items-start gap-3 bg-sky-500/5 p-4 rounded-lg">
+                 <CheckCircle2 className="text-sky-500 shrink-0" size={18} />
+                 <p className="text-gray-400 text-xs leading-relaxed">
+                   All inks are Oeko-Tex Standard 100 compliant & hazardous-chemical free.
                  </p>
               </div>
             </motion.div>
-
-            {/* Decorative Elements behind card */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl z-0" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl z-0" />
+            
+            {/* Glow Behind */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-sky-500/10 blur-[80px] -z-10" />
           </div>
 
         </div>
