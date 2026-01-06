@@ -42,7 +42,7 @@ const FloatingDotsBackgroundComponent = () => {
       {dots.map((dot, i) => (
         <div
           key={i}
-          className="absolute rounded-full bg-sky-500/30 animate-float"
+          className="absolute rounded-full bg-sky-500/30 animate-about-float"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
@@ -57,12 +57,12 @@ const FloatingDotsBackgroundComponent = () => {
         />
       ))}
       <style jsx global>{`
-        @keyframes float-dot {
+        @keyframes about-float-dot {
           0%, 100% { transform: translateY(0) scale(1); }
           50% { transform: translateY(-20px) scale(1.2); }
         }
-        .animate-float {
-          animation: float-dot ease-in-out infinite;
+        .animate-about-float {
+          animation: about-float-dot ease-in-out infinite;
         }
       `}</style>
     </div>
@@ -190,7 +190,7 @@ export default function AboutPage() {
           className="absolute inset-0 z-0"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-9 via-slate-2/8 to-sky-950/60 z-10" />
+          <div className="absolute inset-0 bg-linear-to-br from-slate-9 via-slate-2/8 to-sky-950/60 z-10" />
           <Image
             src="/io.webp" 
             alt="Colour Plus Factory"
@@ -222,7 +222,7 @@ export default function AboutPage() {
               className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.9]"
             >
               SCREEN PRINTING <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-violet-400 animate-gradient bg-300%">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-violet-400 animate-gradient bg-300%">
                 AT ITS FINEST.
               </span>
             </motion.h1>
@@ -261,7 +261,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-10 rounded-3xl border border-white/10 hover:border-sky-500/50 transition-all duration-500 shadow-2xl shadow-sky-500/5">
                 <div className="absolute -top-3 -left-3 w-12 h-12 bg-sky-500/20 rounded-full blur-md" />
                 <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-4 uppercase tracking-tight">
@@ -284,7 +284,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-br from-violet-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-10 rounded-3xl border border-white/10 hover:border-violet-500/50 transition-all duration-500 shadow-2xl shadow-violet-500/5">
                 <div className="absolute -top-3 -right-3 w-12 h-12 bg-violet-500/20 rounded-full blur-md" />
                 <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-4 uppercase tracking-tight">
@@ -304,7 +304,7 @@ export default function AboutPage() {
       </section>
 
       {/* --- OPERATIONAL EXCELLENCE GRID --- */}
-      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
+      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12">
           
           <motion.div 
@@ -319,7 +319,7 @@ export default function AboutPage() {
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-              Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Choose Us?</span>
+              Why <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Choose Us?</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto font-light">
               Built on a foundation of capacity, compliance, and quality that sets industry standards.
@@ -342,7 +342,7 @@ export default function AboutPage() {
                  viewport={{ once: true }}
                  transition={{ delay: i * 0.1 }}
                >
-                 <div className={`absolute inset-0 bg-gradient-to-br from-${stat.color}-500/10 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500`} />
+                 <div className={`absolute inset-0 bg-linear-to-br from-${stat.color}-500/10 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500`} />
                  <div className="relative p-8 bg-slate-900/60 backdrop-blur-md rounded-2xl text-center border border-white/10 hover:border-sky-500/30 transition-all duration-500">
                    <div className={`inline-flex p-4 rounded-xl bg-${stat.color}-500/20 border border-${stat.color}-500/30 mb-6`}>
                      <stat.icon className={`text-${stat.color}-400`} size={28} />
@@ -373,7 +373,7 @@ export default function AboutPage() {
                 variants={fadeInUp}
                 className="group relative"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500" />
+                <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500" />
                 <div className={`relative bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:${val.border} transition-all duration-500 h-full`}>
                   <div className={`mb-6 ${val.bg} w-fit p-4 rounded-xl border ${val.border}`}>
                     <val.icon size={24} className={val.color} />
@@ -410,7 +410,7 @@ export default function AboutPage() {
                 </div>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-8 tracking-tight leading-tight">
                   Worldwide <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Excellence.</span>
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Excellence.</span>
                 </h2>
                 
                 <div className="space-y-8">
@@ -458,13 +458,13 @@ export default function AboutPage() {
              </motion.div>
 
              <motion.div 
-               className="relative h-[600px] rounded-3xl overflow-hidden"
+               className="relative h-150 rounded-3xl overflow-hidden"
                initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
              >
-                <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/20 via-transparent to-violet-500/20 z-10" />
+                <div className="absolute inset-0 bg-linear-to-tr from-sky-500/20 via-transparent to-violet-500/20 z-10" />
                 <Image 
                   src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop"
                   alt="Global Logistics"
@@ -472,7 +472,7 @@ export default function AboutPage() {
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent flex items-end justify-center p-12 z-20">
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent flex items-end justify-center p-12 z-20">
                   <div className="text-center">
                     <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-4">
                       <Globe className="text-sky-400 animate-spin-slow" size={20} />

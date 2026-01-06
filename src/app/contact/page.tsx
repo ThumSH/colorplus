@@ -41,7 +41,7 @@ const FloatingDotsBackgroundComponent = () => {
       {dots.map((dot, i) => (
         <div
           key={i}
-          className="absolute rounded-full bg-sky-400/40 animate-float"
+          className="absolute rounded-full bg-sky-400/40 animate-contact-float"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
@@ -56,12 +56,12 @@ const FloatingDotsBackgroundComponent = () => {
         />
       ))}
       <style jsx global>{`
-        @keyframes float-dot {
+        @keyframes contact-float-dot {
           0%, 100% { transform: translateY(0) scale(1); }
           50% { transform: translateY(-20px) scale(1.2); }
         }
-        .animate-float {
-          animation: float-dot ease-in-out infinite;
+        .animate-contact-float {
+          animation: contact-float-dot ease-in-out infinite;
         }
       `}</style>
     </div>
@@ -119,8 +119,8 @@ export default function ContactPage() {
       
       {/* Backgrounds */}
       <FloatingDotsBackground />
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-150 h-150 bg-sky-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-125 h-125 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* --- HERO SECTION --- */}
       <section className="relative py-20 md:py-28">
@@ -139,7 +139,7 @@ export default function ContactPage() {
 
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-none">
               START YOUR <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-200 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-200 to-indigo-400">
                 NEXT PROJECT.
               </span>
             </h1>
@@ -243,7 +243,7 @@ export default function ContactPage() {
           </div>
 
           {/* RIGHT: Map */}
-          <div className="relative min-h-[400px] lg:min-h-full bg-slate-900">
+          <div className="relative min-h-100 lg:min-h-full bg-slate-900">
             <iframe 
               src="https://maps.google.com/?q=564/A, Athurugiriya Road, Kottawa, Sri Lanka&output=embed" 
               width="100%" 

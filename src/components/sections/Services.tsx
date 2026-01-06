@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { Droplets } from "lucide-react";
 import Image from "next/image";
 
-// --- HIGHLIGHT ANIMATION (Unchanged) ---
+// --- 1. UTILITY COMPONENTS (Text Highlight) ---
 const Highlight = ({ children, gradient }: { children: React.ReactNode; gradient: string }) => {
   return (
     <span className="relative inline-block font-bold">
@@ -26,50 +26,70 @@ const Highlight = ({ children, gradient }: { children: React.ReactNode; gradient
   );
 };
 
-// --- UPDATED: WAVY DOTS PATTERN SVG ---
-const WavyDotsPattern = ({ color = "#38bdf8" }: { color?: string }) => {
-  const dots = useMemo(() => {
-    const rows = 15;
-    const cols = 30;
-    const items = [];
-    
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const u = j / (cols - 1);
-        const v = i / (rows - 1);
-        
-        const x = u * 100; 
-        const wave = Math.sin(u * Math.PI * 3 + v * Math.PI * 2) * 2.5;
-        const y = v * 100 + wave;
-        const opacity = 0.15 + (Math.sin(u * Math.PI * 2) + 1) * 0.15;
+// --- 2. BACKGROUND COMPONENTS (The Fix for Isolated Corners) ---
 
-        items.push(
-          <circle
-            key={`${i}-${j}`}
-            cx={`${x.toFixed(4)}%`}
-            cy={`${y.toFixed(4)}%`}
-            r={2}
-            fill={color}
-            opacity={opacity.toFixed(4)}
-          />
-        );
-      }
-    }
-    return items;
-  }, [color]);
+// A. The Base Grid: Fills the corners with subtle technical texture
+const BaseGrid = () => (
+  <div className="absolute inset-0 z-0 pointer-events-none">
+    <div 
+      className="absolute inset-0 opacity-[0.03]"
+      style={{ 
+          backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+      }} 
+    />
+    {/* Fade out the grid at the very top/bottom edges */}
+    <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-transparent to-slate-950" />
+  </div>
+);
 
+// B. Ambient Corners: Adds colored depth to the corners so they aren't pitch black
+const AmbientCorners = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    {/* Top Left - Deep Blue */}
+    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-900/10 blur-[120px] rounded-full mix-blend-screen" />
+    {/* Bottom Right - Deep Cyan */}
+    <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-cyan-900/10 blur-[120px] rounded-full mix-blend-screen" />
+  </div>
+);
+
+// C. The Oval Hex Mesh: Your Centerpiece
+const OvalHexMesh = () => {
   return (
-    <svg
-      className="absolute inset-0 h-full w-full"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {dots}
-    </svg>
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
+      <motion.div 
+        className="w-full h-full absolute inset-0"
+        initial={{ scale: 1, opacity: 0.4 }}
+        animate={{ scale: 1.05, opacity: 0.5 }}
+        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+        style={{
+          maskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)"
+        }}
+      >
+        <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="hex-mesh" x="0" y="0" width="30" height="26" patternUnits="userSpaceOnUse">
+              <path d="M15 0L28 7.5V22.5L15 30L2 22.5V7.5L15 0Z" fill="none" stroke="#0ea5e9" strokeWidth="1" strokeOpacity="0.6" />
+              <circle cx="15" cy="15" r="1.5" fill="#38bdf8" fillOpacity="0.5" />
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#hex-mesh)" />
+        </svg>
+      </motion.div>
+      {/* Oval Glow Behind Mesh */}
+      <div 
+        className="absolute inset-0 bg-sky-500/5 blur-[100px]" 
+        style={{
+          maskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)"
+        }}
+      />
+    </div>
   );
 };
 
-
-// --- OLD DOTS TEXTURE (KEPT FOR HERO SECTION) ---
+// D. Dots Texture (For Hero Section)
 const DotsTexture = () => {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
@@ -89,17 +109,17 @@ const DotsTexture = () => {
            priority
          />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/40 to-slate-950" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-950/40 to-slate-950" />
     </div>
   );
 };
 
-// --- DATA (Unchanged) ---
+// --- 3. DATA ---
 const howWeWorkSteps = [
   {
     image: "/1-1.webp",
     title: "Versatile Print Techniques",
-    description: "We utilize techniques tailored to your requirements, including Pigment, High Build, Puff, Gel, and Flock prints to ensure the best quality and execution in delivering ",
+    description: "We utilize techniques tailored to your requirements, including Pigment, High Build, Puff, Gel, Silicone and Flock prints to ensure the best quality and performance execution.",
   },
   {
     image: "/1.2.webp",
@@ -110,7 +130,7 @@ const howWeWorkSteps = [
         <Highlight gradient="bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-400">
           Rubber Hot Split
         </Highlight>
-        , Sublimation,{" "}
+        , Silicone,{" "}
         <Highlight gradient="bg-gradient-to-r from-blue-600 via-indigo-500 to-sky-400">
           Flock
         </Highlight>
@@ -129,26 +149,26 @@ const howWeWorkSteps = [
   {
     image: "/1.3.webp",
     title: "Global Compliance",
-    description: "We use inks free of hazardous chemicals. Our process meets the demands of exports to the USA, UK, and Italy.",
+    description: "We use inks free of hazardous chemicals. Our process meets our client's demands to export to the USA, UK, and Europe.",
   },
   {
     image: "/1.4.webp",
     title: "High Capacity Output",
-    description: "Our 10,000 sq ft factory delivers a capacity output of 500,000 pieces per month to meet customer demands.",
+    description: "Our 10,000 sq ft factory delivers a capacity output of 300,000 - 500,000 pieces per month to meet customer demands.",
   },
 ];
 
-// --- ANIMATION VARIANTS (Unchanged) ---
+// --- 4. ANIMATION VARIANTS ---
 const cardVariants: Variants = {
   offscreen: { opacity: 0, y: 30 },
   onscreen: (i: number = 0) => ({
-    opacity: 10,
+    opacity: 1,
     y: 0,
     transition: { type: "spring", stiffness: 100, damping: 20, delay: i * 0.1 },
   }),
 };
 
-// --- COMPONENT: CURVED CONNECTOR (Unchanged) ---
+// --- 5. CONNECTORS ---
 const CurvedConnector = ({ isLeftToRight }: { isLeftToRight: boolean }) => {
     return (
       <div className="relative w-full h-48 pointer-events-none hidden md:block -my-16 z-0 overflow-visible">
@@ -193,7 +213,6 @@ const CurvedConnector = ({ isLeftToRight }: { isLeftToRight: boolean }) => {
     );
 };
 
-// --- COMPONENT: MOBILE CONNECTOR (Unchanged) ---
 const MobileConnector = () => (
     <div className="md:hidden flex justify-center h-20 -my-4 relative z-0">
         <motion.div
@@ -221,33 +240,37 @@ const MobileConnector = () => (
     </div>
 );
 
-// --- SUB-COMPONENT: HOW WE WORK (UPDATED WITH SCROLL ANIMATION) ---
+// --- 6. MAIN SECTIONS ---
+
 function HowWeWork() {
   const containerRef = useRef(null);
   
-  // Track scroll progress of this specific section
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"] // Start animation when section enters viewport
+    offset: ["start end", "end start"]
   });
 
-  // Map scroll progress to x-position and opacity
-  // Starts 300px to the left and fades in as you scroll down
-  const x = useTransform(scrollYProgress, [0, 0.4], [-300, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+  // Fades the mesh in as you scroll down
+  const meshOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
 
   return (
     <section ref={containerRef} className="relative z-10 bg-slate-950 px-4 sm:px-6 pb-32 overflow-hidden">
       
-      {/* --- UPDATED: ANIMATED WAVY DOTS PATTERN --- */}
-      {/* This motion.div holds the SVG and applies the scroll-linked animation */}
+      {/* --- BACKGROUND LAYERS --- */}
+      {/* 1. Base Grid (Fills the corners) */}
+      <BaseGrid />
+      
+      {/* 2. Ambient Color (Softens the corners) */}
+      <AmbientCorners />
+
+      {/* 3. Oval Hex Mesh (Center Stage) */}
       <motion.div 
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{ x, opacity }}
+        className="absolute inset-0 z-0"
+        style={{ opacity: meshOpacity }}
       >
-        <WavyDotsPattern color="#0ea5e9" /> {/* Using primary sky color */}
+        <OvalHexMesh />
       </motion.div>
-      {/* --------------------------------------- */}
+      {/* ------------------------- */}
 
       <div className="mx-auto max-w-7xl relative pt-20">
         <motion.div 
@@ -260,7 +283,7 @@ function HowWeWork() {
             How We <span className="text-sky-500">Work</span>
           </h3>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Our streamlined process ensures quality and efficiency at every step
+            Our streamlined process ensures Quality, Consistency and efficiency at every step
           </p>
         </motion.div>
         
@@ -282,42 +305,42 @@ function HowWeWork() {
                     ${!isEven ? "md:flex-row-reverse" : ""}`}
                 >
                   
-                  {/* IMAGE SIDE (Unchanged) */}
+                  {/* IMAGE SIDE */}
                   <div className={`w-full md:w-1/2 flex ${isEven ? 'justify-start md:justify-end' : 'justify-start'} px-4`}>
                       <motion.div
-                        className="relative w-full max-w-xl aspect-[4/3] rounded-3xl bg-slate-900 shadow-2xl overflow-hidden group"
+                        className="relative w-full max-w-xl aspect-4/3 rounded-3xl bg-slate-900 shadow-2xl overflow-hidden group"
                         whileHover={{ y: -10 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                       >
                           {/* Animated Gradient Border */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 via-blue-600 to-sky-500 opacity-30 group-hover:opacity-100 transition-opacity duration-700" />
+                          <div className="absolute inset-0 bg-linear-to-br from-cyan-500 via-blue-600 to-sky-500 opacity-30 group-hover:opacity-100 transition-opacity duration-700" />
                           
                           {/* Inner Container */}
-                          <div className="absolute inset-[2px] bg-slate-950 rounded-[22px] overflow-hidden z-10">
-                              {/* Background Grid Pattern */}
-                              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50" />
-                              
-                              <Image
-                                  src={step.image}
-                                  alt={step.title}
-                                  fill
-                                  className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
-                                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                  priority={index < 2}
-                              />
-                              
-                              {/* Overlay Gradient */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
+                          <div className="absolute inset-0.5 bg-slate-950 rounded-[22px] overflow-hidden z-10">
+                            {/* Background Grid Pattern */}
+                            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[32px_32px] opacity-50" />
+                            
+                            <Image
+                                src={step.image}
+                                alt={step.title}
+                                fill
+                                className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                priority={index < 2}
+                            />
+                            
+                            {/* Overlay Gradient */}
+                            <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-transparent to-transparent opacity-80" />
 
-                              {/* Number Badge */}
-                              <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl w-14 h-14 flex items-center justify-center group-hover:bg-sky-500/20 group-hover:border-sky-500/50 transition-colors duration-500 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]">
-                                <span className="text-2xl font-bold text-white/90 group-hover:text-sky-400 transition-colors">0{index + 1}</span>
-                              </div>
+                            {/* Number Badge */}
+                            <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl w-14 h-14 flex items-center justify-center group-hover:bg-sky-500/20 group-hover:border-sky-500/50 transition-colors duration-500 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]">
+                              <span className="text-2xl font-bold text-white/90 group-hover:text-sky-400 transition-colors">0{index + 1}</span>
+                            </div>
                           </div>
                       </motion.div>
                   </div>
 
-                  {/* TEXT SIDE (Unchanged) */}
+                  {/* TEXT SIDE */}
                   <div className={`w-full md:w-1/2 ${isEven ? "md:text-left" : "md:text-right"} px-4 md:px-8`}>
                     <motion.div
                       initial={{ opacity: 0, x: isEven ? 20 : -20 }}
@@ -326,12 +349,12 @@ function HowWeWork() {
                       transition={{ delay: 0.2 }}
                     >
                       <h3 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-blue-100 to-cyan-200">
+                        <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-200 via-blue-100 to-cyan-200">
                           {step.title}
                         </span>
                       </h3>
                       <div className="relative max-w-xl ml-0 p-8 rounded-3xl border border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-2xl overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none" />
+                        <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none" />
                         <div className="relative z-10 text-slate-300 text-lg md:text-xl leading-relaxed font-light">
                           {step.description}
                         </div>
@@ -356,7 +379,7 @@ function HowWeWork() {
   );
 }
 
-// --- MAIN EXPORT COMPONENT (Unchanged) ---
+// --- 7. EXPORT COMPONENT ---
 export default function Services() {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
@@ -366,7 +389,7 @@ export default function Services() {
     <>
       <section id="services" className="bg-slate-950 relative overflow-hidden pt-24">
         
-        {/* HERO BACKGROUND - Kept the static one for the main hero */}
+        {/* HERO BACKGROUND */}
         <DotsTexture />
 
         {/* HEADER */}
@@ -382,7 +405,7 @@ export default function Services() {
             </span>
             <h2 className="text-4xl md:text-7xl font-black text-white leading-none tracking-tight mb-6">
               Mastering<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-sky-500 to-blue-600">
                 the Press.
               </span>
             </h2>

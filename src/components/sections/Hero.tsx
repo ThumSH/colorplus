@@ -86,7 +86,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none"></div>
       
       {/* New: Color Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br" />
+      <div className="absolute inset-0 bg-linear-to-br" />
 
       {/* Gradient Overlays */}
       <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />

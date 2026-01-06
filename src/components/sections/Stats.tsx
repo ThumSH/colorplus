@@ -19,7 +19,45 @@ import {
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
-/*  DOT COMPONENT (HOOKS LIVE HERE – RULES OF HOOKS SAFE)              */
+/* REUSED OVAL HEX MESH (For Top-Right Corner)                       */
+/* ------------------------------------------------------------------ */
+
+const OvalHexMesh = () => {
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
+      <motion.div 
+        className="w-full h-full absolute inset-0"
+        initial={{ scale: 1, opacity: 0.6 }}
+        animate={{ scale: 1.05, opacity: 0.8 }}
+        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+        style={{
+          maskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)"
+        }}
+      >
+        <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="hex-mesh-stats" x="0" y="0" width="30" height="26" patternUnits="userSpaceOnUse">
+              <path d="M15 0L28 7.5V22.5L15 30L2 22.5V7.5L15 0Z" fill="none" stroke="#0ea5e9" strokeWidth="1" strokeOpacity="0.6" />
+              <circle cx="15" cy="15" r="1.5" fill="#38bdf8" fillOpacity="0.5" />
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#hex-mesh-stats)" />
+        </svg>
+      </motion.div>
+      <div 
+        className="absolute inset-0 bg-sky-500/5 blur-[100px]" 
+        style={{
+          maskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)"
+        }}
+      />
+    </div>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/* DOT COMPONENT (Updated with Lower Opacity)                        */
 /* ------------------------------------------------------------------ */
 
 type CurveDot = {
@@ -35,10 +73,11 @@ type DotProps = {
 };
 
 const SCurveDot = ({ dot, progress }: DotProps) => {
+  // UPDATED: Reduced max opacity from 1 to 0.6
   const opacity = useTransform(
     progress,
     [dot.t - 0.08, dot.t],
-    [0, 1]
+    [0, 0.6] 
   );
 
   const scale = useTransform(
@@ -58,14 +97,15 @@ const SCurveDot = ({ dot, progress }: DotProps) => {
         opacity,
         scale,
         transform: "translate(-50%, -50%)",
-        boxShadow: `0 0 ${dot.size * 2}px rgba(56,189,248,0.55)`,
+        // UPDATED: Reduced shadow opacity from 0.55 to 0.3
+        boxShadow: `0 0 ${dot.size * 2}px rgba(56,189,248,0.3)`,
       }}
     />
   );
 };
 
 /* ------------------------------------------------------------------ */
-/*  SCROLL-DRIVEN S-CURVE BACKGROUND                                   */
+/* SCROLL-DRIVEN S-CURVE BACKGROUND                                   */
 /* ------------------------------------------------------------------ */
 
 const SCurveDotsBackground = ({
@@ -78,16 +118,10 @@ const SCurveDotsBackground = ({
 
     return Array.from({ length: totalDots }).map((_, i) => {
       const t = i / (totalDots - 1);
-
-      // Top-left → Bottom-right progression
       const x = -10 + t * 120;
       const baseY = -10 + t * 120;
-
-      // TRUE S-curve sway
       const sway = Math.sin(t * Math.PI * 2) * 18;
       const y = baseY + sway;
-
-      // Dot size variation
       const size = 5 + Math.sin(t * Math.PI) * 6;
 
       return { t, x, y, size };
@@ -104,7 +138,7 @@ const SCurveDotsBackground = ({
 };
 
 /* ------------------------------------------------------------------ */
-/*  STATS DATA                                                         */
+/* STATS DATA                                                         */
 /* ------------------------------------------------------------------ */
 
 const stats = [
@@ -139,7 +173,7 @@ const stats = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  COUNTER                                                            */
+/* COUNTER                                                            */
 /* ------------------------------------------------------------------ */
 
 function Counter({ value, suffix }: { value: number; suffix: string }) {
@@ -171,13 +205,12 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  MAIN COMPONENT                                                     */
+/* MAIN COMPONENT                                                     */
 /* ------------------------------------------------------------------ */
 
 export default function Stats() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Scroll progress bound ONLY to this section
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -195,7 +228,13 @@ export default function Stats() {
       ref={sectionRef}
       className="relative bg-slate-950 py-10 overflow-hidden border-y border-white/5"
     >
-      {/* Scroll-driven dotted S-curve */}
+      {/* 1. MESH OVAL (Top Right Corner) */}
+      {/* Positioned absolute top/right, slightly shifted to act as an accent */}
+      <div className="absolute -top-1/4 -right-10 w-200 h-150 opacity-60 pointer-events-none z-0">
+         <OvalHexMesh />
+      </div>
+
+      {/* 2. Scroll-driven dotted S-curve */}
       <SCurveDotsBackground progress={scrollYProgress} />
 
       {/* Edge fades */}
@@ -207,7 +246,7 @@ export default function Stats() {
         style={{ y, opacity }}
       >
         {/* Header */}
-        <div className="text-center mb-24">
+        <div className="text-center mb-24 relative">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 mb-8 backdrop-blur-sm">
             <Sparkles className="text-sky-400 w-4 h-4" />
             <span className="text-[10px] font-black tracking-[0.3em] text-sky-400 uppercase">

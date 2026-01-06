@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight, Droplets, Layers } from "lucide-react";
+import { ArrowUpRight, Droplets } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useMemo } from "react";
+import React, { useId } from "react";
 
 // --- Types ---
 interface Project {
@@ -20,228 +20,303 @@ const projects: Project[] = [
     id: 1,
     client: "Calvin Klein",
     type: "High-Density Plastisol",
-    desc: "Premium tactile prints with sharp edges, exceptional durability, and vibrant color retention. Engineered for high-fashion durability.",
-    image: "/ckj.webp",
+    desc: "Premium tactile prints with sharp edges, exceptional durability, and vibrant color retention.",
+    image: "/19.webp",
   },
   {
     id: 2,
     client: "Eddie Bauer",
     type: "Vintage Soft-Hand",
-    desc: "Breathable water-based inks perfect for outdoor apparel. Delivering a soft-touch feel with eco-friendly performance standards.",
-    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=987&auto=format&fit=crop",
+    desc: "Breathable water-based inks perfect for outdoor apparel with eco-friendly performance standards.",
+    image: "/21.webp",
   },
   {
     id: 3,
     client: "LILLY",
     type: "Metallic Foil Transfer",
-    desc: "Eye-catching reflective finishes for high-end streetwear. Utilizing premium heat-transfer foils for a liquid-metal aesthetic.",
-    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=987&auto=format&fit=crop",
+    desc: "Eye-catching reflective finishes for high-end streetwear utilizing premium heat-transfer foils.",
+    image: "/lil.webp",
   },
   {
     id: 4,
     client: "Hugo Boss",
     type: "Eco-Friendly Pigment",
-    desc: "Sophisticated, sustainable pigment prints that combine luxury aesthetics with eco-conscious production. Delivering a premium soft-hand feel with exceptional color fastness.",
-    image: "/hb.webp",
+    desc: "Sophisticated, sustainable pigment prints that combine luxury aesthetics with eco-conscious production.",
+    image: "/boos.webp",
   },
 ];
 
-// --- 1. Optimized Background (More Visible) ---
-const InkWaveBackground = React.memo(() => {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const dots = useMemo(() => {
-    const numDots = 45; // Slightly more dots
-    return Array.from({ length: numDots }).map((_, i) => {
-      const t = i / numDots;
-      const noise = (Math.sin(i * 12.9898) * 43758.5453) % 1;
-      return {
-        x: 50 + Math.sin(t * Math.PI * 4) * 40,
-        y: t * 100,
-        // Increased Size
-        size: 6 + Math.abs(noise) * 12, 
-        // Increased Opacity for better visibility
-        opacity: 0.3 + Math.abs(noise) * 0.5, 
-        delay: t * 2,
-      };
-    });
-  }, []);
-
-  if (!mounted) {
-    return <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" />;
-  }
+// -------------------------------
+// 1) MESH BACKGROUND SYSTEM (RECTANGULAR)
+// (Modified to remove circular nature)
+// -------------------------------
+function MeshOval({
+  className = "",
+  opacity = 0.55,
+  rotate = 0,
+}: {
+  className?: string;
+  opacity?: number;
+  rotate?: number;
+}) {
+  const uid = useId();
+  const patternId = `meshPattern-${uid}`;
+  const gradId = `meshGrad-${uid}`;
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none transform-gpu">
-      {dots.map((dot, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full bg-sky-500 will-change-transform animate-pulse-slow mix-blend-screen"
-          style={{
-            left: `${dot.x}%`,
-            top: `${dot.y}%`,
-            width: `${dot.size}px`,
-            height: `${dot.size}px`,
-            opacity: dot.opacity,
-            animationDelay: `${dot.delay}s`,
-            filter: `blur(${dot.size / 4}px)`,
-            boxShadow: `0 0 ${dot.size * 2}px rgba(14, 165, 233, 0.5)`
-          }}
-        />
-      ))}
-      <style jsx global>{`
-        @keyframes pulse-slow {
-          0%, 100% { transform: scale(1) translateZ(0); opacity: 0.3; }
-          50% { transform: scale(1.3) translateZ(0); opacity: 0.7; }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 5s ease-in-out infinite;
-        }
-      `}</style>
+    // Removed rounded-full here to allow rectangular shape
+    <div 
+      className={`absolute pointer-events-none ${className}`} 
+      style={{ 
+        transform: `rotate(${rotate}deg)`,
+        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+      }}
+    >
+      {/* Removed rounded-full from the glow background */}
+      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+
+      <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          {/* Removed Mask Definition */}
+
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.65" />
+            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.55" />
+          </linearGradient>
+
+          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
+            <path
+              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
+              fill="none"
+              stroke={`url(#${gradId})`}
+              strokeWidth="1"
+              strokeOpacity="0.55"
+            />
+            <circle cx="24" cy="21" r="1.6" fill="#38bdf8" opacity="0.35" />
+          </pattern>
+        </defs>
+
+        {/* Removed mask attribute from Group */}
+        <g opacity={opacity}>
+          <rect width="300" height="300" fill={`url(#${patternId})`} />
+          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.14" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0" />
+          </radialGradient>
+          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+        </g>
+
+        {/* Removed the <ellipse> stroke outline */}
+      </svg>
+
+      {/* Removed the outer ring div */}
     </div>
   );
-});
+}
 
-InkWaveBackground.displayName = "InkWaveBackground";
+function GalleryMeshOvals() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-indigo-950/20 to-slate-950" />
 
-// --- 2. Enhanced Gallery Item (Card Layout) ---
-// --- 2. Enhanced Gallery Item (Card Layout) ---
+      <div className="absolute -top-[15%] left-[10%] w-[55%] h-[55%] bg-sky-900/10 blur-[140px] rounded-full mix-blend-screen" />
+      <div className="absolute top-[30%] -right-[10%] w-[55%] h-[55%] bg-indigo-900/10 blur-[140px] rounded-full mix-blend-screen" />
+      <div className="absolute -bottom-[20%] left-[25%] w-[60%] h-[60%] bg-cyan-900/10 blur-[160px] rounded-full mix-blend-screen" />
+
+      {/* These will now appear as rectangular mesh patches instead of ovals */}
+      <MeshOval className="top-10 left-6 w-[320px] h-80" opacity={0.62} rotate={-10} />
+      <MeshOval className="top-24 right-10 w-90 h-90" opacity={0.6} rotate={18} />
+      <MeshOval className="top-[28%] left-[36%] w-105 h-105" opacity={0.45} rotate={6} />
+
+      <MeshOval className="top-[46%] -left-20 w-115 h-115" opacity={0.5} rotate={-20} />
+      <MeshOval className="top-[52%] right-[6%] w-105 h-105" opacity={0.48} rotate={24} />
+
+      <MeshOval className="bottom-24 left-10 w-95 h-95" opacity={0.58} rotate={12} />
+      <MeshOval className="bottom-12 right-6 w-85 h-85" opacity={0.62} rotate={-14} />
+
+      <div className="absolute inset-0 bg-radial from-transparent via-transparent to-slate-950/35" />
+    </div>
+  );
+}
+
+// -------------------------------
+// 2) GALLERY ITEM (FIXED SCROLL ANIMATION)
+// -------------------------------
 const GalleryItem = React.memo(({ item, index }: { item: Project; index: number }) => {
   const isReversed = index % 2 !== 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
-      className="relative z-10 py-12"
+      initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.25 }} // ✅ starts animation earlier & smoother
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} // ✅ slower & smooth
+      className="relative z-10 py-20"
     >
-      {/* Grid Container - Fixed ClassName string */}
-      <div className={`flex flex-col lg:flex-row items-center ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
-        
-        {/* IMAGE SECTION */}
-        <div className="w-full lg:w-8/12 relative group perspective-1000">
-          <div className="relative h-125 md:h-109.5 lg:h-160.5 w-full overflow-hidden rounded-3xl border border-white/5 shadow-2xl bg-slate-900">
-             {/* Decorative Elements */}
-             <div className="absolute top-6 left-6 z-20 flex gap-2">
-                <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-sky-400">
-                  REF: 0{index + 1}
-                </div>
-             </div>
+      {/* Background glow for each item */}
+      <div
+        className={`absolute top-1/2 -translate-y-1/2 w-3/4 h-[120%] opacity-20 z-0 pointer-events-none ${
+          isReversed ? "right-0" : "left-0"
+        }`}
+      >
+        <div className="w-full h-full bg-sky-500/10 blur-[120px] rounded-full" />
+      </div>
 
-            <Image 
-              src={item.image} 
+      <div className={`flex flex-col lg:flex-row items-center gap-12 lg:gap-0 ${isReversed ? "lg:flex-row-reverse" : ""}`}>
+        {/* Image container */}
+        <motion.div
+          className="w-full lg:w-7/12 relative group z-10"
+          initial={{ opacity: 0, y: 26, scale: 0.985 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.35 }} // ✅ appears smoothly while scrolling
+          transition={{ duration: 0.95, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="relative h-96 md:h-128 lg:h-160 w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-slate-900">
+            <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-sky-500/30 rounded-tl-lg z-20" />
+            <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-sky-500/30 rounded-tr-lg z-20" />
+            <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-sky-500/30 rounded-bl-lg z-20" />
+            <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-sky-500/30 rounded-br-lg z-20" />
+
+            <div className="absolute top-6 left-6 z-20 flex gap-2">
+              <div className="bg-slate-950/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-sky-500/30 text-[10px] font-mono text-sky-400">
+                CASE_STUDY // 0{index + 1}
+              </div>
+            </div>
+
+            <Image
+              src={item.image}
               alt={item.client}
               fill
-              className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110 will-change-transform"
-              sizes="(max-width: 700px) 60vw, 40vw"
+              className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+              sizes="(max-width: 1024px) 100vw, 60vw"
             />
-          </div>
-        </div>
 
-        {/* TEXT BOX SECTION - Fixed ClassName string */}
-        <div className={`w-full lg:w-5/12 relative z-20 -mt-12 lg:mt-0 ${isReversed ? 'lg:-mr-24' : 'lg:-ml-24'}`}>
-          <motion.div 
-            whileHover={{ y: -5 }}
-            /* FLATTENED STRING BELOW TO FIX HYDRATION ERROR */
-            className="relative overflow-hidden bg-slate-900/90 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] group/card"
-          >
-            {/* Glossy sheen effect */}
-            <div className="absolute -inset-full bg-linear-to-br from-white/5 via-transparent to-transparent rotate-12 group-hover/card:translate-y-12 transition-transform duration-700 pointer-events-none" />
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='48' height='42' viewBox='0 0 48 42' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 2 L40 11 V31 L24 40 L8 31 V11 Z' fill='none' stroke='%230ea5e9' stroke-width='0.6' stroke-opacity='0.7'/%3E%3C/svg%3E")`,
+                  backgroundSize: "120px 105px",
+                }}
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Text content */}
+        <motion.div
+          className={`w-full lg:w-5/12 relative z-20 ${isReversed ? "lg:-mr-20" : "lg:-ml-20"}`}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="relative bg-slate-900/60 backdrop-blur-2xl border border-white/10 p-10 md:p-14 rounded-2xl shadow-2xl overflow-hidden">
+            <div className="absolute top-4 left-4 w-6 h-6 border-t border-l border-sky-500/20" />
+            <div className="absolute top-4 right-4 w-6 h-6 border-t border-r border-sky-500/20" />
+            <div className="absolute bottom-4 left-4 w-6 h-6 border-b border-l border-sky-500/20" />
+            <div className="absolute bottom-4 right-4 w-6 h-6 border-b border-r border-sky-500/20" />
+
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-sky-500/10 blur-[60px] rounded-full" />
 
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-6">
-                 <div className="flex items-center gap-3">
-                   <span className="flex items-center justify-center w-8 h-8 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 text-xs font-bold">
-                     {index + 1}
-                   </span>
-                   <div className="h-px w-12 bg-linear-to-r from-sky-500/50 to-transparent" />
-                 </div>
-                 <Layers className="text-slate-600 group-hover/card:text-sky-500 transition-colors duration-300" size={20} />
-              </div>
-
-              <h3 className="text-3xl md:text-5xl font-black text-white mb-2 tracking-tight uppercase">
+              <h3 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter uppercase">
                 {item.client}
               </h3>
-              
-              <p className="text-sky-400 font-mono text-sm tracking-wider uppercase mb-6 border-l-2 border-sky-500 pl-3">
+
+              <p className="text-sky-400 font-mono text-xs tracking-[0.3em] uppercase mb-8 border-l-2 border-sky-500 pl-4">
                 {item.type}
               </p>
 
-              <div className="h-px w-full bg-white/10 mb-6" />
-
-              <p className="text-gray-300 text-base md:text-lg leading-relaxed font-light">
-                {item.desc}
-              </p>
+              <p className="text-slate-300 text-lg leading-relaxed font-light">{item.desc}</p>
             </div>
-          </motion.div>
-        </div>
-
+          </div>
+        </motion.div>
       </div>
     </motion.div>
   );
 });
-
 GalleryItem.displayName = "GalleryItem";
 
-// --- 3. Main Component ---
+// -------------------------------
+// 3) MAIN COMPONENT
+// -------------------------------
 export default function Gallery() {
   return (
-    <section id="gallery" className="bg-slate-950 py-32 relative overflow-hidden transform-gpu">
-      <InkWaveBackground />
-      
-      {/* Decorative large glows */}
-      <div className="absolute top-0 right-0 w-200 h-200 bg-sky-600/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
-      <div className="absolute bottom-0 left-0 w-150 h-150 bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
+    <section id="gallery" className="bg-slate-950 py-32 relative overflow-hidden">
+      <GalleryMeshOvals />
 
-      {/* HEADER */}
-      <div className="container mx-auto px-6 md:px-12 mb-2 flex flex-col items-center text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-950/30 border border-sky-500/20 backdrop-blur-sm mb-6">
-          <Droplets className="text-sky-400" size={14} />
-          <span className="text-sky-400 text-xs font-bold tracking-[0.25em] uppercase">Showcase</span>
-        </div>
-        
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-8">
-          SELECTED
-          <span className="block text-transparent bg-clip-text bg-linear-to-b from-sky-300 via-sky-500 to-sky-800">
-            WORKS
+      {/* Header */}
+      <div className="container mx-auto px-6 relative z-10 text-center mb-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-sky-500/10 border border-sky-500/20 mb-8 backdrop-blur-md"
+        >
+          <Droplets className="text-sky-400" size={16} />
+          <span className="text-sky-400 text-[10px] font-black tracking-[0.4em] uppercase">
+            Premium Portfolio
           </span>
-        </h2>
-        
-        <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
-          Exploring the boundaries of textile printing through precision engineering and artistic direction.
-        </p>
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.95, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+          className="text-6xl md:text-8xl lg:text-9xl font-black text-white leading-[0.85] tracking-tighter mb-8"
+        >
+          SELECTED <br />
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-indigo-400">
+            WORKS.
+          </span>
+        </motion.h2>
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ delay: 0.2, duration: 1 }}
+          className="w-48 h-1 bg-linear-to-r from-transparent via-sky-500 to-transparent mx-auto rounded-full opacity-60"
+        />
       </div>
 
-      {/* GALLERY LIST */}
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="flex flex-col gap-12 lg:gap-32">
+      {/* Gallery items */}
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col gap-24 lg:gap-32">
           {projects.map((item, index) => (
             <GalleryItem key={item.id} item={item} index={index} />
           ))}
         </div>
 
-        {/* FOOTER BUTTON */}
-        <div className="mt-40 flex justify-center">
+        {/* Footer button */}
+        <motion.div
+          className="mt-40 flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        >
           <Link href="/products" passHref>
-            <motion.button 
-              className="relative group overflow-hidden bg-white text-slate-950 uppercase tracking-widest text-sm font-bold px-10 py-5 rounded-full"
+            <motion.button
+              className="relative group bg-white text-slate-950 uppercase tracking-[0.2em] text-xs font-black px-14 py-6 rounded-full overflow-hidden"
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.25 }}
             >
-              <div className="absolute inset-0 w-full h-full bg-linear-to-r from-sky-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative flex items-center gap-3">
-                View Full Collection
+              <div className="absolute inset-0 bg-linear-to-r from-sky-400 to-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex items-center gap-4 z-10">
+                View Full Archive
                 <ArrowUpRight size={18} />
               </div>
             </motion.button>
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

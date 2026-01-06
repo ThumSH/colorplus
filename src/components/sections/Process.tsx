@@ -1,20 +1,20 @@
 "use client";
 
+import React, { useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FileText, PenTool, ArrowRight, Droplets, Factory, Globe } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
 
 // Ink Drop Indicator
 const InkDrops = () => (
   <div className="flex gap-1.5">
     {[0, 0.15, 0.3].map((delay, i) => (
-      <div 
+      <div
         key={i}
         className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse"
-        style={{ 
+        style={{
           animationDelay: `${delay}s`,
-          boxShadow: '0 0 6px rgba(14, 165, 233, 0.6)'
+          boxShadow: "0 0 6px rgba(14, 165, 233, 0.6)",
         }}
       />
     ))}
@@ -49,14 +49,14 @@ const steps = [
 ];
 
 interface StepCardProps {
-  step: typeof steps[0];
+  step: (typeof steps)[0];
   index: number;
   totalSteps: number;
 }
 
 const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -78,13 +78,16 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
             viewport={{ once: true }}
             transition={{ delay: 0.5 + index * 0.2, duration: 1, ease: "easeInOut" }}
           />
-          
+
           {/* Ink drops along the line */}
           {[0.3, 0.6].map((pos, i) => (
             <motion.div
               key={i}
               className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-sky-400"
-              style={{ left: `${pos * 100}%`, boxShadow: '0 0 6px rgba(14, 165, 233, 0.8)' }}
+              style={{
+                left: `${pos * 100}%`,
+                boxShadow: "0 0 6px rgba(14, 165, 233, 0.8)",
+              }}
               initial={{ scale: 0, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
@@ -102,14 +105,10 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
         >
           {/* Ink dot pattern on hover */}
           <div className="absolute inset-0 bg-[radial-gradient(#0ea5e9_0.5px,transparent_0.5px)] bg-size-[8px_8px] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-          
-          {/* Blue glow background on hover */}
+
           <div className="absolute inset-0 bg-linear-to-br from-sky-500/80 to-sky-600/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          <motion.div 
-            className="relative z-10"
-            animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
-          >
+
+          <motion.div className="relative z-10" animate={isHovered ? { scale: 1.1 } : { scale: 1 }}>
             {step.icon}
           </motion.div>
         </motion.div>
@@ -123,65 +122,213 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
       <div className="relative z-10 max-w-xs">
         <h3 className="text-xl font-black text-white uppercase tracking-wide mb-3 flex items-center gap-2 md:justify-start justify-center group-hover:text-sky-400 transition-colors duration-300">
           {step.title}
-          <motion.div
-            animate={{ x: isHovered ? 5 : 0, opacity: isHovered ? 1 : 0 }}
-          >
+          <motion.div animate={{ x: isHovered ? 5 : 0, opacity: isHovered ? 1 : 0 }}>
             <ArrowRight size={16} />
           </motion.div>
         </h3>
-        
+
         <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
           {step.desc}
         </p>
-        
-        {/* Ink drop decoration */}
-        <div className="mt-4 flex md:justify-start justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex gap-1">
-            {[0, 0.1].map((delay, i) => (
-              <div 
-                key={i}
-                className="w-1 h-1 rounded-full bg-sky-400"
-                style={{ 
-                  animationDelay: `${delay}s`,
-                  boxShadow: '0 0 4px rgba(14, 165, 233, 0.6)'
-                }}
-              />
-            ))}
-          </div>
-        </div>
       </div>
     </motion.div>
   );
 };
 
+// --- Deterministic random (stable “random” placements, no hydration issues) ---
+const seeded = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+// --- Mesh Oval Diagram (same style as Gallery, with blurred/faded edges) ---
+const MeshOvalDiagram = React.memo(
+  ({
+    size,
+    left,
+    top,
+    rotate,
+    opacity,
+  }: {
+    size: number;
+    left: number; // percent
+    top: number; // percent
+    rotate: number;
+    opacity: number;
+  }) => {
+    const gradId = React.useId();
+    const patId = React.useId();
+
+    return (
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: `${left}%`,
+          top: `${top}%`,
+          width: `${size}px`,
+          height: `${size}px`,
+          transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+          opacity,
+          // ✅ blur the edges (feather)
+          WebkitMaskImage: "radial-gradient(circle at center, #000 55%, transparent 78%)",
+          maskImage: "radial-gradient(circle at center, #000 55%, transparent 78%)",
+          filter: "blur(0.25px)",
+        }}
+        aria-hidden="true"
+      >
+        {/* soft glow behind the mesh */}
+        <div className="absolute inset-0 rounded-full bg-sky-500/10 blur-[70px]" />
+
+        <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.65" />
+              <stop offset="55%" stopColor="#0ea5e9" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#818cf8" stopOpacity="0.5" />
+            </linearGradient>
+
+            <pattern id={patId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
+              <path
+                d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
+                fill="none"
+                stroke={`url(#${gradId})`}
+                strokeWidth="1"
+                strokeOpacity="0.6"
+              />
+              <circle cx="24" cy="21" r="1.6" fill="#38bdf8" opacity="0.28" />
+            </pattern>
+          </defs>
+
+          {/* oval clip feel */}
+          <g>
+            <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patId})`} opacity="0.9" />
+            <ellipse
+              cx="150"
+              cy="150"
+              rx="130"
+              ry="105"
+              fill="none"
+              stroke={`url(#${gradId})`}
+              strokeOpacity="0.22"
+              strokeWidth="1.2"
+            />
+          </g>
+        </svg>
+      </div>
+    );
+  }
+);
+MeshOvalDiagram.displayName = "MeshOvalDiagram";
+
+// --- Random-ish (but stable) mesh placements across the Process section ---
+// ✅ ONLY CHANGE THIS PART in your file:
+// Replace your current ProcessMeshDiagrams with this version (higher opacity)
+
+const ProcessMeshDiagrams = React.memo(() => {
+  const diagrams = useMemo(() => {
+    const count = 7;
+    return Array.from({ length: count }).map((_, i) => {
+      const s1 = seeded(10.13 + i * 1.17);
+      const s2 = seeded(42.77 + i * 2.03);
+      const s3 = seeded(99.91 + i * 3.11);
+
+      const left = 10 + s1 * 80;
+      const top = 12 + s2 * 76;
+
+      const size = 260 + s3 * 260; // 260..520
+      const rotate = -22 + seeded(7.77 + i * 1.9) * 44; // -22..22
+
+      // ✅ INCREASED OPACITY (old: 0.12..0.26)
+      const opacity = 0.28 + seeded(55.5 + i * 1.6) * 0.22; // 0.28..0.50
+
+      return { left, top, size, rotate, opacity };
+    });
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-2 pointer-events-none overflow-hidden">
+      {diagrams.map((d, idx) => (
+        <MeshOvalDiagram
+          key={idx}
+          left={d.left}
+          top={d.top}
+          size={d.size}
+          rotate={d.rotate}
+          opacity={d.opacity}
+        />
+      ))}
+    </div>
+  );
+});
+ProcessMeshDiagrams.displayName = "ProcessMeshDiagrams";
+
+
+// --- MESH BACKGROUND: PRECISION GRID (Screen Printing Mesh) + mesh ovals added ---
+const ProcessMeshBackground = React.memo(() => {
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950 pointer-events-none">
+      {/* 1. Base Gradient (Matches Global Theme) */}
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-[#0a1020] to-slate-950" />
+
+      {/* ✅ NEW: Gallery-style mesh diagrams (blurred edges, random places) */}
+      <ProcessMeshDiagrams />
+
+      {/* 2. Micro-Grid Mesh Pattern (Represents Printing Screens) */}
+      <div
+        className="absolute inset-0 opacity-[0.15]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(56, 189, 248, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(56, 189, 248, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: "20px 20px",
+          maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+        }}
+      />
+
+      {/* 3. Secondary Diagonal Weave (Fabric undertone) */}
+      <div
+        className="absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(45deg, #fff 0, #fff 0.5px, transparent 0.5px, transparent 10px)
+          `,
+          maskImage: "radial-gradient(circle at center, black, transparent 80%)",
+        }}
+      />
+
+      {/* 4. Scanning Line Animation (Process Indicator) */}
+      <motion.div
+        className="absolute inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-400/50 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.5)] z-10"
+        animate={{ top: ["0%", "100%"], opacity: [0, 1, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* 5. Vignette for blending */}
+      <div className="absolute inset-0 bg-radial from-transparent via-slate-950/50 to-slate-950" />
+    </div>
+  );
+});
+ProcessMeshBackground.displayName = "ProcessMeshBackground";
+
 export default function Process() {
-  const sectionRef = useRef(null);
-  const imageRef = useRef(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const imageRef = useRef<HTMLDivElement | null>(null);
 
   const { scrollYProgress: imageProgress } = useScroll({
     target: imageRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const imageY = useTransform(imageProgress, [0, 1], ["-10%", "10%"]);
   const imageScale = useTransform(imageProgress, [0, 0.5, 1], [1.1, 1, 1.1]);
 
   return (
-    <section ref={sectionRef} id="process" className="bg-slate-950 py-24 relative overflow-hidden border-t border-white/5">
-      
-      {/* Ink Drop Background Pattern */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(#0ea5e9_1px,transparent_1px)] bg-size-[32px_32px] opacity-10 mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-      
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 z-0 bg-linear-to-br from-sky-500/10 via-cyan-600/5 to-transparent" />
-      
-      {/* Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.7)_100%)] z-0 pointer-events-none" />
+    <section ref={sectionRef} id="process" className="bg-slate-950 py-24 relative overflow-hidden">
+      <ProcessMeshBackground />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
-        
-        {/* Section Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -193,16 +340,18 @@ export default function Process() {
             <Droplets className="text-sky-400" size={16} />
             <span className="text-sky-400 text-xs font-bold tracking-[0.25em] uppercase">THE WORKFLOW</span>
           </div>
-          
+
           <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
-            Our <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-cyan-500">Process.</span>
+            Our{" "}
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-cyan-500">
+              Process.
+            </span>
           </h2>
-          
+
           <p className="text-gray-400 max-w-2xl mx-auto mt-6 text-base leading-relaxed">
             From the first consultation to global export, every step is controlled with precision and care.
           </p>
-          
-          {/* Decorative ink line */}
+
           <div className="mt-8 flex items-center justify-center gap-2">
             <div className="h-px w-12 bg-linear-to-r from-transparent via-sky-400 to-transparent" />
             <div className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(14,165,233,0.6)]" />
@@ -220,7 +369,7 @@ export default function Process() {
           className="relative w-full h-75 md:h-112.5 rounded-2xl overflow-hidden mb-24 border border-white/10 shadow-2xl group"
         >
           <motion.div className="absolute inset-0 w-full h-full" style={{ y: imageY, scale: imageScale }}>
-            <Image 
+            <Image
               src="https://images.unsplash.com/photo-1544013679-25117c6fab34?w=1600&auto=format&fit=crop&q=80"
               alt="Industrial Screen Printing Workflow"
               fill
@@ -228,30 +377,15 @@ export default function Process() {
               sizes="90vw"
             />
           </motion.div>
-          
-          {/* Ink dot overlay */}
-          <div className="absolute inset-0 bg-[radial-gradient(#0ea5e9_1px,transparent_1px)] bg-size-[24px_24px] opacity-0 group-hover:opacity-10 transition-opacity duration-500 mix-blend-overlay" />
-          
-          <div className="absolute inset-0 bg-linear-to-br from-sky-500/20 via-transparent to-transparent mix-blend-overlay" />
+
+          {/* Overlay Effects */}
           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-700" />
-          
-          {/* Scanning line effect */}
-          <motion.div 
-            className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-sky-400 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.6)]"
-            animate={{ top: ["0%", "100%", "0%"] }}
-            transition={{ duration: 8, ease: "linear", repeat: Infinity }}
-          />
         </motion.div>
 
         {/* Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative">
           {steps.map((step, index) => (
-            <StepCard 
-              key={step.id} 
-              step={step} 
-              index={index}
-              totalSteps={steps.length}
-            />
+            <StepCard key={step.id} step={step} index={index} totalSteps={steps.length} />
           ))}
         </div>
       </div>

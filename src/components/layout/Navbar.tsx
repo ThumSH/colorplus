@@ -197,7 +197,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="relative group tracking-widest uppercase text-xl font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4"
+                className="relative group tracking-widest uppercase text-md font-light text-gray-300 hover:text-white transition-all hover:translate-x-2 flex items-center gap-4"
               >
                 <span className="text-xs font-bold text-gray-700 group-hover:text-sky-400 transition-colors">0{i+1}</span>
                 <InkDrops className="opacity-0 group-hover:opacity-100 transition-opacity" />

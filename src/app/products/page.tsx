@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Tag, Factory, Shirt, ArrowRight, Sparkles, Target, CheckCircle, Package } from "lucide-react";
+import { Factory, Shirt, Sparkles, Target, CheckCircle, Package } from "lucide-react";
 import Image from "next/image";
 
 // --- PRODUCT DATA FROM PDF ---
@@ -19,52 +19,84 @@ const products = [
   {
     id: 1,
     category: "Men",
-    title: "Premium T-Shirts",
-    desc: "High-quality cotton and blend tees with custom screen prints for lasting comfort and style.",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop",
-    features: ["100% Cotton", "Custom Prints", "Export Quality"]
+    title: "High-Density Silicone Print",
+    desc: "Precision high-density silicone printing on premium denim for raised, durable logos on heavy fabrics.",
+    image: "/boss.webp",
+    features: ["3D Raised Effect", "Wash Resistant", "Silicone Ink"]
   },
   {
     id: 2,
     category: "Men",
-    title: "Casual Shorts",
-    desc: "Durable fabrics with precision-printed detailing for everyday comfort and style.",
-    image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?q=80&w=1000&auto=format&fit=crop",
-    features: ["Quick Dry", "Multiple Colors", "Durable"]
+    title: "Stretch Denim Discharge",
+    desc: "Soft-hand discharge printing on stretch fabrics that maintains elasticity without cracking.",
+    image: "/ckj.webp",
+    features: ["Soft Hand Feel", "Stretch Compatible", "Breathable"]
   },
   {
     id: 3,
     category: "Men",
-    title: "Button-Down Shirts",
-    desc: "Formal and casual shirts featuring subtle branding or patterns for versatile wear.",
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000&auto=format&fit=crop",
-    features: ["Premium Fabric", "Formal Fit", "Iron-Free"]
+    title: "Vintage Wash Effects",
+    desc: "Distressed screen printing techniques designed to weather perfectly alongside heavy stone washes.",
+    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=987&auto=format&fit=crop",
+    features: ["Distressed Look", "Stone Wash Safe", "Pigment Ink"]
+  },
+  {
+    id: 12,
+    category: "Men",
+    title: "Metallic & Foil Applications",
+    desc: "Industrial-grade metallic foil transfer and printing on denim for bold, reflective fashion statements.",
+    image: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?q=80&w=1000&auto=format&fit=crop",
+    features: ["Metallic Finish", "Heat Transfer", "Industrial Style"]
+  },
+  {
+    id: 13,
+    category: "Men",
+    title: "Multi-Layer Plastisol",
+    desc: "Vibrant, multi-colored logo printing with high opacity on dark indigo denim backgrounds.",
+    image: "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?q=80&w=1000&auto=format&fit=crop",
+    features: ["High Opacity", "Color Vibrancy", "Sharp Edges"]
   },
 
   // Ladies Wear [cite: 129-132]
   {
     id: 4,
     category: "Ladies",
-    title: "Fashion Blouses",
-    desc: "Elegant cuts with delicate embellishments and prints for sophisticated styling.",
-    image: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=1000&auto=format&fit=crop",
-    features: ["Designer Cut", "Elegant Prints", "Premium Finish"]
+    title: "Water-Based Placement Prints",
+    desc: "Intricate floral and abstract placement prints using eco-friendly water-based inks on ladies' denim.",
+    image: "https://images.unsplash.com/photo-1584370848010-d7cc637703ef?q=80&w=1000&auto=format&fit=crop",
+    features: ["Eco-Friendly Ink", "Fine Detail", "Soft Finish"]
   },
   {
     id: 5,
     category: "Ladies",
-    title: "Skirts",
-    desc: "Printed skirts ranging from casual wear to fashion-forward styles for every occasion.",
-    image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=1000&auto=format&fit=crop",
-    features: ["Comfort Fit", "Vibrant Prints", "Easy Care"]
+    title: "Formal Trouser Branding",
+    desc: "Subtle, tonal branding and interior waistband printing for sophisticated formal trousers.",
+    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1000&auto=format&fit=crop",
+    features: ["Tonal Print", "Waistband Detail", "Minimalist"]
   },
   {
     id: 6,
     category: "Ladies",
-    title: "Trousers & Pants",
-    desc: "Comfortable fits with high-quality fabric finishes for all-day comfort.",
-    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1000&auto=format&fit=crop",
-    features: ["Stretch Fabric", "Modern Fit", "Durable"]
+    title: "All-Over Chino Patterns",
+    desc: "Seamless rotary and screen printed patterns on chino fabric for versatile casual wear.",
+    image: "https://images.unsplash.com/photo-1475178626620-a4d074967452?q=80&w=1000&auto=format&fit=crop",
+    features: ["All-Over Print", "Rotary Screen", "Color Fast"]
+  },
+  {
+    id: 14,
+    category: "Ladies",
+    title: "Pocket & Waist Embellishment",
+    desc: "Specialized small-area screen printing for pockets, loops, and waistbands on high-fashion denim.",
+    image: "https://images.unsplash.com/photo-1551852307-5490291221d7?q=80&w=1000&auto=format&fit=crop",
+    features: ["Precision Placement", "Glitter/Shimmer", "Fashion Accent"]
+  },
+  {
+    id: 15,
+    category: "Ladies",
+    title: "Heavy-Duty Cargo Prints",
+    desc: "Abrasion-resistant lettering and technical data prints on rugged cargo and utility fabrics.",
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1000&auto=format&fit=crop",
+    features: ["Abrasion Resistant", "Technical Look", "Heavy Ink"]
   },
 
   // Kids Wear [cite: 125-128]
@@ -166,9 +198,14 @@ export default function ProductsPage() {
             </motion.div>
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.9]">
-              OUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-violet-400 animate-gradient">
+              OUR <motion.span 
+                className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-violet-400"
+                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ backgroundSize: "200% 200%" }}
+              >
                 PRODUCTS
-              </span>
+              </motion.span>
             </h1>
             
             <p className="text-slate-300 max-w-xl mx-auto text-lg md:text-xl leading-relaxed font-light">
@@ -187,7 +224,7 @@ export default function ProductsPage() {
           viewport={{ once: true }}
         >
           {/* Clean gradient background without animated dots */}
-          <div className="absolute inset-0 bg-gradient-to-r from-sky-500/5 via-transparent to-violet-500/5" />
+          <div className="absolute inset-0 bg-linear-to-r from-sky-500/5 via-transparent to-violet-500/5" />
           
           <div className="relative z-10 flex-1">
             <div className="flex items-center gap-3 mb-4">
@@ -199,7 +236,7 @@ export default function ProductsPage() {
               </h3>
             </div>
             <p className="text-slate-400 max-w-lg text-lg font-light">
-              Our 1,000 sq ft facility in Kottawa is staffed by 50+ professionals, ensuring timely delivery for large-scale orders with export-grade precision.
+              Our 10,000 sq ft facility in Kottawa is staffed by 50+ professionals, ensuring timely delivery for large-scale orders with export-grade precision.
             </p>
           </div>
 
@@ -210,7 +247,7 @@ export default function ProductsPage() {
                 Pieces Per Month
               </div>
             </div>
-            <div className="h-16 w-1 bg-gradient-to-b from-sky-500 to-violet-500 rounded-full" />
+            <div className="h-16 w-1 bg-linear-to-b from-sky-500 to-violet-500 rounded-full" />
             <div className="p-4 rounded-xl bg-sky-500/20 border border-sky-500/30">
               <Shirt className="text-sky-400" size={32} />
             </div>
@@ -222,7 +259,7 @@ export default function ProductsPage() {
       <section className="container mx-auto px-6 md:px-12 mb-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
-            Explore Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Collections</span>
+            Explore Our <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Collections</span>
           </h2>
           <p className="text-slate-500 max-w-lg mx-auto font-light">
             Browse through our premium garment categories, each crafted with precision and care.
@@ -240,7 +277,7 @@ export default function ProductsPage() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`group relative px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-3 ${
                   isActive
-                    ? "text-white bg-gradient-to-r from-sky-500 to-violet-500 shadow-lg shadow-sky-500/25"
+                    ? "text-white bg-linear-to-r from-sky-500 to-violet-500 shadow-lg shadow-sky-500/25"
                     : "text-slate-500 bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-slate-600 hover:text-white"
                 }`}
                 whileHover={{ scale: 1.05 }}
@@ -249,7 +286,7 @@ export default function ProductsPage() {
                 {isActive && (
                   <motion.div
                     layoutId="activeCategory"
-                    className="absolute inset-0 bg-gradient-to-r from-sky-500 to-violet-500 rounded-full -z-10"
+                    className="absolute inset-0 bg-linear-to-r from-sky-500 to-violet-500 rounded-full -z-10"
                   />
                 )}
                 <Icon size={16} className={isActive ? "text-white" : "text-slate-400"} />
@@ -280,77 +317,28 @@ export default function ProductsPage() {
                 className="group relative"
               >
                 {/* Card Background Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+                <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
                 
                 {/* Product Card */}
-                <div className="relative bg-slate-900/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-sky-500/30 transition-all duration-500 h-full flex flex-col">
+                <div className="relative bg-slate-900/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-sky-500/30 transition-all duration-500 h-full">
                   {/* Image Area */}
-                  <div className="relative h-64 w-full overflow-hidden">
+                  <div className="relative aspect-3/4 w-full overflow-hidden">
                     <Image
                       src={product.image}
-                      alt={product.title}
+                      alt={product.title || "Product Image"}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
-                    {/* Category Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                        <Tag size={12} className="text-sky-400" />
-                        <span className="text-xs font-bold text-white uppercase tracking-wider">
-                          {product.category}
-                        </span>
-                      </span>
-                    </div>
-
-                    {/* Features Badge */}
-                    <div className="absolute top-4 right-4">
-                      <span className="inline-flex items-center gap-1 bg-emerald-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-500/30">
-                        <CheckCircle size={12} className="text-emerald-400" />
-                        <span className="text-xs font-bold text-emerald-400">
-                          Export Quality
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content Area */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-sky-400 transition-colors">
-                      {product.title}
-                    </h3>
-                    <p className="text-slate-400 text-sm mb-6 flex-1 font-light leading-relaxed">
-                      {product.desc}
-                    </p>
-                    
-                    {/* Features List */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {product.features?.map((feature, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 bg-slate-800/50 text-slate-300 text-xs rounded-full border border-slate-700"
-                        >
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {/* Action Footer */}
-                    <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-auto">
-                      <span className="text-xs text-slate-500 uppercase tracking-widest font-bold">
-                        Screen Printed
-                      </span>
-                      <motion.button 
-                        className="p-2 rounded-full bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white transition-all duration-300 group/btn"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                      </motion.button>
+                    {/* Title Overlay on Hover */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <h3 className="text-lg font-bold text-white text-center drop-shadow-lg">
+                        {product.title}
+                      </h3>
                     </div>
                   </div>
                 </div>
@@ -379,7 +367,7 @@ export default function ProductsPage() {
 
       {/* --- QUALITY ASSURANCE BANNER --- */}
       <section className="container mx-auto px-6 md:px-12 pb-24">
-        <div className="bg-gradient-to-r from-slate-900 to-slate-950 rounded-3xl p-8 md:p-12 border border-white/10 relative overflow-hidden">
+        <div className="bg-linear-to-r from-slate-900 to-slate-950 rounded-3xl p-8 md:p-12 border border-white/10 relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070')] opacity-10 bg-cover bg-center" />
           <div className="relative z-10 grid md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -412,17 +400,6 @@ export default function ProductsPage() {
           </div>
         </div>
       </section>
-
-      <style jsx global>{`
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient {
-          animation: gradient 8s ease infinite;
-          background-size: 200% 200%;
-        }
-      `}</style>
     </main>
   );
 }

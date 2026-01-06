@@ -42,7 +42,7 @@ const FloatingDotsBackgroundComponent = () => {
       {dots.map((dot, i) => (
         <div
           key={i}
-          className="absolute rounded-full bg-sky-400/40 animate-float"
+          className="absolute rounded-full bg-sky-400/40 animate-services-float"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
@@ -57,12 +57,12 @@ const FloatingDotsBackgroundComponent = () => {
         />
       ))}
       <style jsx global>{`
-        @keyframes float-dot {
+        @keyframes services-float-dot {
           0%, 100% { transform: translateY(0) scale(1); }
           50% { transform: translateY(-20px) scale(1.2); }
         }
-        .animate-float {
-          animation: float-dot ease-in-out infinite;
+        .animate-services-float {
+          animation: services-float-dot ease-in-out infinite;
         }
       `}</style>
     </div>
