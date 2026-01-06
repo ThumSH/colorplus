@@ -6,8 +6,8 @@ import StyledJsxRegistry from "./registry";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 
 export const metadata: Metadata = {
-  title: "Color Plus Printing Systems",
-  description: "Printing Systems",
+  title: "Coluor Plus Printing Systems",
+  description: "Precise.Printing.Always.",
   icons: {
     icon: "/logo.svg",
     shortcut: '/logo.svg', // For older browsers
