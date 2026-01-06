@@ -17,47 +17,38 @@ import {
   Award,
   Sparkles,
 } from "lucide-react";
+import ApparelMesh_stats from "@/components/ui/ApparelMesh_stats";
 
 /* ------------------------------------------------------------------ */
-/* REUSED OVAL HEX MESH (For Top-Right Corner)                       */
+/* CARD MESH (Updated for better visibility)                          */
 /* ------------------------------------------------------------------ */
 
-const OvalHexMesh = () => {
+const CardMesh = ({ idSuffix }: { idSuffix: string | number }) => {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
-      <motion.div 
-        className="w-full h-full absolute inset-0"
-        initial={{ scale: 1, opacity: 0.6 }}
-        animate={{ scale: 1.05, opacity: 0.8 }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        style={{
-          maskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)"
-        }}
-      >
-        <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="hex-mesh-stats" x="0" y="0" width="30" height="26" patternUnits="userSpaceOnUse">
-              <path d="M15 0L28 7.5V22.5L15 30L2 22.5V7.5L15 0Z" fill="none" stroke="#0ea5e9" strokeWidth="1" strokeOpacity="0.6" />
-              <circle cx="15" cy="15" r="1.5" fill="#38bdf8" fillOpacity="0.5" />
-            </pattern>
-          </defs>
-          <rect x="0" y="0" width="100%" height="100%" fill="url(#hex-mesh-stats)" />
-        </svg>
-      </motion.div>
-      <div 
-        className="absolute inset-0 bg-sky-500/5 blur-[100px]" 
-        style={{
-          maskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)",
-          WebkitMaskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)"
-        }}
-      />
+    // UPDATED: Changed opacity from [0.15] to 0.4 (visible) -> 0.6 (hover)
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity duration-500">
+      <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id={`card-mesh-${idSuffix}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill="#38bdf8" fillOpacity="0.8" />
+            <circle cx="12" cy="12" r="1" fill="#38bdf8" fillOpacity="0.8" />
+          </pattern>
+          <mask id={`card-mask-${idSuffix}`}>
+            <radialGradient id={`card-grad-${idSuffix}`} cx="50%" cy="50%" r="80%">
+              <stop offset="0%" stopColor="white" stopOpacity="1" />
+              <stop offset="100%" stopColor="black" stopOpacity="0" />
+            </radialGradient>
+            <rect width="100%" height="100%" fill={`url(#card-grad-${idSuffix})`} />
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill={`url(#card-mesh-${idSuffix})`} mask={`url(#card-mask-${idSuffix})`} />
+      </svg>
     </div>
   );
 };
 
 /* ------------------------------------------------------------------ */
-/* DOT COMPONENT (Updated with Lower Opacity)                        */
+/* DOT COMPONENT                                                      */
 /* ------------------------------------------------------------------ */
 
 type CurveDot = {
@@ -73,7 +64,6 @@ type DotProps = {
 };
 
 const SCurveDot = ({ dot, progress }: DotProps) => {
-  // UPDATED: Reduced max opacity from 1 to 0.6
   const opacity = useTransform(
     progress,
     [dot.t - 0.08, dot.t],
@@ -97,7 +87,6 @@ const SCurveDot = ({ dot, progress }: DotProps) => {
         opacity,
         scale,
         transform: "translate(-50%, -50%)",
-        // UPDATED: Reduced shadow opacity from 0.55 to 0.3
         boxShadow: `0 0 ${dot.size * 2}px rgba(56,189,248,0.3)`,
       }}
     />
@@ -216,22 +205,14 @@ export default function Stats() {
     offset: ["start end", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.15, 0.85, 1],
-    [0, 1, 1, 0]
-  );
-
   return (
     <section
       ref={sectionRef}
       className="relative bg-slate-950 py-10 overflow-hidden border-y border-white/5"
     >
       {/* 1. MESH OVAL (Top Right Corner) */}
-      {/* Positioned absolute top/right, slightly shifted to act as an accent */}
-      <div className="absolute -top-1/4 -right-10 w-200 h-150 opacity-60 pointer-events-none z-0">
-         <OvalHexMesh />
+      <div className="absolute -top-1/4 -right-10 w-200 h-150 opacity-80 pointer-events-none z-0">
+         <ApparelMesh_stats />
       </div>
 
       {/* 2. Scroll-driven dotted S-curve */}
@@ -243,7 +224,6 @@ export default function Stats() {
 
       <motion.div
         className="container mx-auto px-6 md:px-12 relative z-20"
-        style={{ y, opacity }}
       >
         {/* Header */}
         <div className="text-center mb-24 relative">
@@ -273,6 +253,9 @@ export default function Stats() {
                 transition={{ type: "spring", stiffness: 250, damping: 20 }}
                 className="group relative bg-slate-900/40 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:border-sky-500/50 transition-all duration-500 min-h-65 flex flex-col justify-between overflow-hidden shadow-2xl"
               >
+                {/* ✅ Mesh Design Inside Cards (Always Visible) */}
+                <CardMesh idSuffix={stat.id} />
+
                 <div className="relative z-10 flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-sky-500">
                     <Icon className="w-6 h-6" />

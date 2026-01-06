@@ -1,13 +1,12 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { Leaf, Globe, ShieldCheck, Database, CheckCircle2 } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
 
 // --- DATA ---
 const inkData = [
   { label: "Water Base / Rubber", percentage: 50, color: "bg-sky-500" },
-  { label: "Silicon", percentage: 40, color: "bg-purple-600" },
+  { label: "Silicone ", percentage: 40, color: "bg-purple-600" },
   { label: "Glitter", percentage: 10, color: "bg-green-600" },
   { label: "Specialty (Foil/Flock)", percentage: 20, color: "bg-cyan-500" },
 ];
@@ -18,30 +17,25 @@ const features = [
   { id: 3, title: "Supply Chain", desc: "4-month raw material stock.", icon: <Database className="text-sky-400" size={24} /> },
 ];
 
+// Optimized Component: No useState/useEffect needed!
 const SkillBar = ({ label, percentage, color, delay }: { label: string, percentage: number, color: string, delay: number }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    if (isInView) setTimeout(() => setWidth(percentage), delay * 1000); 
-  }, [isInView, percentage, delay]);
-
   return (
-    <div ref={ref} className="mb-5">
+    <div className="mb-5">
       <div className="flex justify-between mb-1">
         <span className="text-slate-300 font-medium text-xs uppercase tracking-wider">{label}</span>
-        <span className="text-sky-400 text-xs font-mono">{width}%</span>
+        <span className="text-sky-400 text-xs font-mono">{percentage}%</span>
       </div>
       <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-white/5">
         <motion.div 
           className={`h-full ${color} relative`}
+          // Framer Motion handles the delay natively without re-renders
           initial={{ width: 0 }}
-          animate={{ width: `${width}%` }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          whileInView={{ width: `${percentage}%` }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: "easeOut", delay: delay }}
         >
-             {/* Tiny dot pattern overlay on the bar itself */}
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+             {/* Texture Overlay */}
+             <div className="absolute inset-0 bg-white/20 mix-blend-overlay" />
         </motion.div>
       </div>
     </div>
@@ -79,7 +73,7 @@ export default function TechSpecs() {
                 </span>
               </h2>
               <p className="text-gray-400 text-lg mb-10 leading-relaxed">
-                We dont just print; we engineer the ink. Using our internal experties, our dots connect to form the bigger picture.
+                We don&apos;t just print; we engineer the ink. Using our internal expertise, our dots connect to form the bigger picture.
               </p>
             </motion.div>
 
@@ -136,8 +130,8 @@ export default function TechSpecs() {
               </div>
             </motion.div>
             
-            {/* Glow Behind */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-sky-500/10 blur-[80px] -z-10" />
+            {/* Glow Behind - Optimized Blur */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-sky-500/10 blur-3xl -z-10" />
           </div>
 
         </div>

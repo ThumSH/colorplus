@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useId } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 
-// --- 1. Deterministic Seeded Random Helper (Fixes Lint/Hydration Errors) ---
+// --- 1. Deterministic Seeded Random Helper ---
 const getSeededRandom = (seed: number) => {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 };
 
-// --- 2. Floating Dots Background (Hydration Safe) ---
+// --- 2. Floating Dots Background (Framer Motion) ---
 const FloatingDotsBackgroundComponent = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -39,31 +39,30 @@ const FloatingDotsBackgroundComponent = () => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none transform-gpu">
       {dots.map((dot, i) => (
-        <div
+        <motion.div
           key={i}
-          className="absolute rounded-full bg-sky-400/40 animate-contact-float"
+          className="absolute rounded-full bg-sky-400/40"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
             width: `${dot.size}px`,
             height: `${dot.size}px`,
             opacity: dot.opacity,
-            animationDuration: `${dot.duration}s`,
-            animationDelay: `${i * 0.2}s`,
             filter: `blur(${dot.size / 3}px)`,
             boxShadow: `0 0 ${dot.size + 2}px rgba(56, 189, 248, ${dot.opacity})`,
           }}
+          animate={{
+            y: [0, -20, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: dot.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.2,
+          }}
         />
       ))}
-      <style jsx global>{`
-        @keyframes contact-float-dot {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.2); }
-        }
-        .animate-contact-float {
-          animation: contact-float-dot ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
@@ -71,13 +70,82 @@ const FloatingDotsBackgroundComponent = () => {
 const FloatingDotsBackground = React.memo(FloatingDotsBackgroundComponent);
 FloatingDotsBackground.displayName = "FloatingDotsBackground";
 
+// --- 3. MESH BACKGROUND SYSTEM ---
+function MeshOval({
+  className = "",
+  opacity = 0.55,
+  rotate = 0,
+}: {
+  className?: string;
+  opacity?: number;
+  rotate?: number;
+}) {
+  const uid = useId();
+  const patternId = `meshPattern-${uid}`;
+  const gradId = `meshGrad-${uid}`;
+
+  return (
+    <div 
+      className={`absolute pointer-events-none ${className}`} 
+      style={{ 
+        transform: `rotate(${rotate}deg)`,
+        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+      }}
+    >
+      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+
+      <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.75" />
+          </linearGradient>
+
+          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
+            <path
+              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
+              fill="none"
+              stroke={`url(#${gradId})`}
+              strokeWidth="1.5"
+              strokeOpacity="0.8"
+            />
+            <circle cx="24" cy="21" r="2" fill="#38bdf8" opacity="0.6" />
+          </pattern>
+        </defs>
+
+        <g opacity={opacity}>
+          <rect width="300" height="300" fill={`url(#${patternId})`} />
+          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0" />
+          </radialGradient>
+          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function ContactMeshBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <MeshOval className="top-10 -left-20 w-96 h-96" opacity={0.6} rotate={-10} />
+      <MeshOval className="top-[30%] -right-32 w-[500px] h-[500px]" opacity={0.5} rotate={20} />
+      <MeshOval className="bottom-0 left-10 w-80 h-80" opacity={0.5} rotate={5} />
+    </div>
+  );
+}
+
 // --- CONTACT DATA ---
 const contactInfo = [
   {
     id: 1,
     title: "Office & Factory",
     content: "564/A, Athurugiriya Road, Kottawa, Sri Lanka.",
-    link: "https://maps.google.com/?q=564/A, Athurugiriya Road, Kottawa, Sri Lanka",
+    link: "https://maps.google.com/?q=564/A,+Athurugiriya+Road,+Kottawa,+Sri+Lanka",
     icon: <MapPin size={24} />,
     color: "text-sky-400",
     bg: "bg-sky-500/10",
@@ -119,6 +187,7 @@ export default function ContactPage() {
       
       {/* Backgrounds */}
       <FloatingDotsBackground />
+      <ContactMeshBackground />
       <div className="absolute top-0 right-0 w-150 h-150 bg-sky-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-125 h-125 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -139,7 +208,7 @@ export default function ContactPage() {
 
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-none">
               START YOUR <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-200 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-200 to-indigo-400">
                 NEXT PROJECT.
               </span>
             </h1>
@@ -244,8 +313,9 @@ export default function ContactPage() {
 
           {/* RIGHT: Map */}
           <div className="relative min-h-100 lg:min-h-full bg-slate-900">
+            {/* Updated iframe src to a valid Google Maps Embed query */}
             <iframe 
-              src="https://maps.google.com/?q=564/A, Athurugiriya Road, Kottawa, Sri Lanka&output=embed" 
+              src="https://maps.google.com/maps?q=564/A,+Athurugiriya+Road,+Kottawa,+Sri+Lanka&t=&z=13&ie=UTF8&iwloc=&output=embed"
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: "grayscale(100%) invert(90%) contrast(85%) opacity(0.8)" }} 

@@ -6,35 +6,28 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-// UPDATED DATA BASED ON COMPANY PROFILE
 const productSlides = [
   { 
     id: 1, 
-    // You should use an image of the factory or high-quality general print work here
     image: "/print.webp", 
     label: "Established 2009", 
     headline: ["SCREEN PRINTING", "Perfection."], 
-    // Source: [cite: 3, 13, 17]
     description: "From design to finish, we offer the best in exceptional quality for the textile industry.",
     highlightColor: "from-sky-400 to-cyan-300" 
   },
   { 
     id: 2, 
-    // You should use a close-up image of a textured print (Puff, Foil, or High Build) here
-    image: "/tech.webp", 
+    image: "/pri.webp", 
     label: "Born From Experience", 
     headline: ["MASTERING THE", "TECHNIQUE."],
-    // Source: [cite: 62, 88-96]
-    description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Plastisol prints.",
+    description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Silicone  prints.",
     highlightColor: "from-sky-200 to-cyan-500"
   },
   { 
     id: 3, 
-    // You should use an image showing branded apparel (e.g., CK or Hugo Boss) here
-    image: "/brand.webp", 
+    image: "/ty.webp", 
     label: "Global Export Quality",
     headline: ["TRUSTED BY", "ICONS."],
-    // Source: [cite: 24, 25-40]
     description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Ralph Lauren. Exporting excellence to the USA, UK, and Italy.",
     highlightColor: "from-sky-100 to-cyan-700"
   },
@@ -46,12 +39,12 @@ export default function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % productSlides.length);
-    }, 5000); // Increased to 5000ms to give users time to read the new descriptions
+    }, 5000); 
     return () => clearInterval(timer); 
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-slate-950">
       
       {/* --- 1. OPTIMIZED BACKGROUND STACK --- */}
       <div className="absolute inset-0 w-full h-full">
@@ -66,7 +59,8 @@ export default function Hero() {
                 scale: isActive ? 1 : 1.1 
               }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="absolute inset-0 w-full h-full"
+              // PERFORMANCE: will-change prevents stuttering during the scale animation
+              className="absolute inset-0 w-full h-full will-change-transform"
               style={{ zIndex: isActive ? 1 : 0 }} 
             >
               <Image 
@@ -76,6 +70,7 @@ export default function Hero() {
                 className="object-cover"
                 priority={index === 0} 
                 sizes="100vw"
+                quality={85} // Reduced slightly for performance
               />
             </motion.div>
           );
@@ -83,14 +78,13 @@ export default function Hero() {
       </div>
 
       {/* --- 2. STATIC OVERLAYS --- */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none"></div>
+      {/* Noise Texture */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none" />
       
-      {/* New: Color Gradient Overlay */}
-      <div className="absolute inset-0 bg-linear-to-br" />
-
-      {/* Gradient Overlays */}
+      {/* Gradient Overlays (Tailwind v4 syntax) */}
+      <div className="absolute inset-0 bg-linear-to-br from-black/20 to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/40 z-10 pointer-events-none" />
 
       {/* --- 3. HERO CONTENT --- */}
       <div className="relative z-20 container mx-auto px-6 md:px-12 flex flex-col items-start justify-center h-full pt-12">
@@ -104,10 +98,10 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="max-w-4xl"
+              className="max-w-4xl will-change-transform"
             >
               {/* Label */}
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4 mb-2">
                  <div className="h-0.5 w-8 bg-white/50"></div>
                  <span className="text-white/80 font-bold tracking-[0.2em] uppercase text-xs">
                    {productSlides[currentSlide].label}
@@ -135,15 +129,14 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex flex-wrap gap-4 mt-2"
+          className="flex flex-wrap gap-4 mb-10"
         >
           <Link href="/contact" className="bg-sky-600 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-sky-700 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
-            Get a Qoute
+            Get a Quote
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
-          
-          <Link href="/services" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-sm md:text-base">
-            Our Techniques
+          <Link href="/#gallery" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-sm md:text-base">
+            View Our Work
           </Link>
         </motion.div>
 
@@ -159,7 +152,7 @@ export default function Hero() {
             <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`h-1 transition-all duration-500 rounded-none ${
+                className={`h-1 transition-all duration-500 rounded-none cursor-pointer ${
                 index === currentSlide ? "w-12 bg-sky-500" : "w-6 bg-white/30 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}

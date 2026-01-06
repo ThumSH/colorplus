@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-
-
-/* Your custom colors/fonts */
 :root {
   --background: #000000;
   --foreground: #ffffff;
@@ -13,63 +10,4 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden; /* Prevents horizontal scrollbar */
-}
-
-.dots-container {
-  /* Example Dots Styles - adapt to your existing implementation */
-  background-color: black; /* or your theme bg */
-  background-image: radial-gradient(#333 1px, transparent 1px);
-  background-size: 20px 20px;
-  /* Add your specific animation code here if it was custom */
-}
-
-/* 2. MESH PATTERNS (The "Underwear" Look) */
-.mesh-container {
-  position: relative;
-  width: 100%;
-  background-color: #050505; /* Deep dark background to blend */
-  overflow: hidden;
-}
-
-/* Base Mesh Texture - blending softly */
-.mesh-texture {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.15; /* Subtle blend */
-  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
-}
-
-/* Variant 1: Hexagonal Mesh (Sporty/Breathable) */
-.mesh-hex {
-  background-color: transparent;
-  background-image: radial-gradient(circle at center, #ffffff 1px, transparent 1px);
-  background-size: 16px 16px; 
-  /* This creates a staggered dot pattern looking like mesh fabric */
-  background-position: 0 0, 8px 8px; 
-}
-
-/* Variant 2: Micro Grid (Screen Printing Mesh) */
-.mesh-grid {
-  background-size: 40px 40px;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-}
-
-/* Variant 3: Diamond Pique (Fabric Structure) */
-.mesh-diamond {
-  background: 
-    linear-gradient(135deg, rgba(255,255,255,0.05) 25%, transparent 25%) -10px 0,
-    linear-gradient(225deg, rgba(255,255,255,0.05) 25%, transparent 25%) -10px 0,
-    linear-gradient(315deg, rgba(255,255,255,0.05) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%);
-  background-size: 20px 20px;
-}
-
-/* Ensure content sits above the mesh */
-.section-content {
-  position: relative;
-  z-index: 10;
 }

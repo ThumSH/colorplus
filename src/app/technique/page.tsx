@@ -1,14 +1,89 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useId } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Layers, Zap, Droplets, Sparkles, Feather, Maximize, CheckCircle, PieChart as PieIcon, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
+// --- 1. MESH BACKGROUND SYSTEM ---
+function MeshOval({
+  className = "",
+  opacity = 0.55,
+  rotate = 0,
+}: {
+  className?: string;
+  opacity?: number;
+  rotate?: number;
+}) {
+  const uid = useId();
+  const patternId = `meshPattern-${uid}`;
+  const gradId = `meshGrad-${uid}`;
+
+  return (
+    <div 
+      className={`absolute pointer-events-none ${className}`} 
+      style={{ 
+        transform: `rotate(${rotate}deg)`,
+        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+      }}
+    >
+      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+
+      <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.75" />
+          </linearGradient>
+
+          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
+            <path
+              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
+              fill="none"
+              stroke={`url(#${gradId})`}
+              strokeWidth="1.5"
+              strokeOpacity="0.8"
+            />
+            <circle cx="24" cy="21" r="2" fill="#38bdf8" opacity="0.6" />
+          </pattern>
+        </defs>
+
+        <g opacity={opacity}>
+          <rect width="300" height="300" fill={`url(#${patternId})`} />
+          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0" />
+          </radialGradient>
+          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// Updated: Pushed elements down to avoid Hero Section (top-[90vh] etc)
+function TechniquesMeshBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* 1. Behind Ink Composition (Left) - Moved down from top-20 to top-[90vh] */}
+      <MeshOval className="top-[90vh] -left-32 w-[500px] h-[500px]" opacity={0.6} rotate={-20} />
+      
+      {/* 2. Middle Section (Right) */}
+      <MeshOval className="top-[180vh] -right-20 w-96 h-96" opacity={0.5} rotate={15} />
+      
+      {/* 3. Bottom/Transfer Section (Left) */}
+      <MeshOval className="bottom-20 left-10 w-80 h-80" opacity={0.5} rotate={-10} />
+    </div>
+  );
+}
+
 // --- DATA FROM PDF: INK COMPOSITION CHART  ---
 const inkStats = [
   { label: "Water Base", value: 50, color: "bg-sky-500" },
-  { label: "Silicon", value: 40, color: "bg-violet-500" },
+  { label: "Silicone ", value: 40, color: "bg-violet-500" },
   { label: "Glitter", value: 3, color: "bg-purple-500" },
   { label: "Pigment", value: 3, color: "bg-emerald-500" },
   { label: "Foil", value: 2, color: "bg-amber-500" },
@@ -16,13 +91,13 @@ const inkStats = [
   { label: "Other", value: 2, color: "bg-slate-500" },
 ];
 
-// --- DATA FROM PDF: PRINT TECHNIQUES [cite: 86-96] ---
+// --- DATA FROM PDF: PRINT TECHNIQUES ---
 const techniques = [
   {
     id: "tech-01",
     title: "Pigment Prints",
     desc: "Soaks into the fabric for a 'zero-hand' feel. Best for vintage looks on light fabrics.",
-    image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1000",
+    image: "/pig.webp",
     icon: <Feather />,
     color: "from-sky-500/20 to-sky-500/5",
     iconColor: "text-sky-400"
@@ -31,7 +106,7 @@ const techniques = [
     id: "tech-02",
     title: "Silicon Prints",
     desc: "The industry standard. Ink sits on top of the fabric, offering vibrant, opaque colors.",
-    image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1000",
+    image: "/sili.webp",
     icon: <Droplets />,
     color: "from-violet-500/20 to-violet-500/5",
     iconColor: "text-violet-400"
@@ -40,7 +115,7 @@ const techniques = [
     id: "tech-03",
     title: "High Build / Puff",
     desc: "Ink rises during curing to create a 3D relief texture. Adds dimension to branding.",
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000",
+    image: "/puff.webp",
     icon: <Maximize />,
     color: "from-emerald-500/20 to-emerald-500/5",
     iconColor: "text-emerald-400"
@@ -49,7 +124,7 @@ const techniques = [
     id: "tech-04",
     title: "Foil & Metallic",
     desc: "Heat-pressed foil sheets create a mirror-like shiny finish. Ideal for fashion wear.",
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000",
+    image: "/foil.webp",
     icon: <Zap />,
     color: "from-amber-500/20 to-amber-500/5",
     iconColor: "text-amber-400"
@@ -58,7 +133,7 @@ const techniques = [
     id: "tech-05",
     title: "Glitter & Shimmer",
     desc: "Suspended metallic flakes in clear base ink. Catches light for a sparkling effect.",
-    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000",
+    image: "/gli.webp",
     icon: <Sparkles />,
     color: "from-purple-500/20 to-purple-500/5",
     iconColor: "text-purple-400"
@@ -67,17 +142,17 @@ const techniques = [
     id: "tech-06",
     title: "Flock Prints",
     desc: "Velvet-like texture created by adhering small fibers to the ink surface.",
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000",
+    image: "/fl.webp",
     icon: <Layers />,
     color: "from-pink-500/20 to-pink-500/5",
     iconColor: "text-pink-400"
   },
 ];
 
-// --- DATA FROM PDF: TRANSFER SYSTEMS [cite: 97-102] ---
+// --- DATA FROM PDF: TRANSFER SYSTEMS ---
 const transfers = [
   "Rubber Hot Split",
-  "Sublimation Transfers",
+  "Pigment Prints",
   "Flock Transfers",
   "Foil Transfers",
   "Crystal & Metallic"
@@ -119,8 +194,11 @@ export default function TechniquesPage() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, 150]);
 
   return (
-    <main ref={containerRef} className="bg-slate-950 min-h-screen">
+    <main ref={containerRef} className="bg-slate-950 min-h-screen relative overflow-hidden">
       
+      {/* Background Mesh - Positioned below Hero */}
+      <TechniquesMeshBackground />
+
       {/* --- HERO SECTION --- */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background */}
@@ -156,13 +234,18 @@ export default function TechniquesPage() {
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.9]">
               MASTERING THE <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-violet-400 animate-gradient">
+              <motion.span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-violet-400"
+                style={{ backgroundSize: "300% 300%" }}
+                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
                 ART OF INK.
-              </span>
+              </motion.span>
             </h1>
             
             <p className="text-slate-300 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed font-light">
-              From water-based eco-inks to high-density plastisols, we utilize print techniques that ensure the best quality output for your brand[cite: 86].
+              From water-based eco-inks to Silicone prints, we utilize print techniques that ensure the best quality output for your brand.
             </p>
           </motion.div>
         </div>
@@ -180,7 +263,7 @@ export default function TechniquesPage() {
       </section>
 
       {/* --- INK COMPOSITION CHART  --- */}
-      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5">
+      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -200,7 +283,7 @@ export default function TechniquesPage() {
               
               <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
                 What Goes Into <br/>
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">
                   Our Production?
                 </span>
               </h2>
@@ -250,10 +333,10 @@ export default function TechniquesPage() {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl shadow-sky-500/5">
                 <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/10">
-                  <div className="w-3 h-8 bg-linear-to-b from-sky-500 to-violet-500 rounded-full" />
+                  <div className="w-3 h-8 bg-gradient-to-b from-sky-500 to-violet-500 rounded-full" />
                   <h3 className="text-white font-bold text-2xl">
                     Ink Usage Distribution
                   </h3>
@@ -283,8 +366,8 @@ export default function TechniquesPage() {
         </div>
       </section>
 
-      {/* --- TECHNIQUES SHOWCASE [cite: 86-96] --- */}
-      <section className="py-24">
+      {/* --- TECHNIQUES SHOWCASE --- */}
+      <section className="py-24 relative z-10">
         <div className="container mx-auto px-6 md:px-12">
           <motion.div 
             className="text-center mb-20"
@@ -293,7 +376,7 @@ export default function TechniquesPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
-              Our <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Print Techniques</span>
+              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Print Techniques</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto font-light">
               Explore our specialized capabilities that bring creativity to life on fabric.
@@ -311,8 +394,8 @@ export default function TechniquesPage() {
                 whileHover={{ y: -10 }}
                 className="group relative"
               >
-                {/* Background Glow */}
-                <div className={`absolute inset-0 bg-linear-to-br ${tech.color} rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500`} />
+                {/* Background Glow - Fixed Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${tech.color} rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500`} />
                 
                 {/* Card */}
                 <div className="relative bg-slate-900/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-sky-500/30 transition-all duration-500 h-full flex flex-col">
@@ -327,8 +410,8 @@ export default function TechniquesPage() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                    {/* Gradient Overlay - Fixed Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
                     
                     {/* Icon Badge */}
                     <div className="absolute top-4 left-4">
@@ -368,8 +451,8 @@ export default function TechniquesPage() {
         </div>
       </section>
 
-      {/* --- TRANSFER SECTION [cite: 97-102] --- */}
-      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-t border-white/5">
+      {/* --- TRANSFER SECTION --- */}
+      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-t border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -387,7 +470,7 @@ export default function TechniquesPage() {
             </motion.div>
             
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
-              Heat Transfer <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Systems</span>
+              Heat Transfer <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Systems</span>
             </h2>
             
             <p className="text-slate-500 max-w-2xl mx-auto mb-12 text-lg font-light">
@@ -415,7 +498,7 @@ export default function TechniquesPage() {
 
           {/* Additional Info */}
           <motion.div 
-            className="mt-20 p-8 bg-linear-to-r from-slate-900 to-slate-950 rounded-3xl border border-white/10 max-w-3xl mx-auto"
+            className="mt-20 p-8 bg-gradient-to-r from-slate-900 to-slate-950 rounded-3xl border border-white/10 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -433,16 +516,6 @@ export default function TechniquesPage() {
         </div>
       </section>
 
-      <style jsx global>{`
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient {
-          animation: gradient 8s ease infinite;
-          background-size: 200% 200%;
-        }
-      `}</style>
     </main>
   );
 }

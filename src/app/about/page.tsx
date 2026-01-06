@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect, useMemo, useId } from "react";
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { Target, Lightbulb, Users, ShieldCheck, TrendingUp, Globe, Factory, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
 
-// --- 1. Deterministic Seeded Random Helper (Fixes Lint/Hydration Errors) ---
+// --- 1. Deterministic Seeded Random Helper ---
 const getSeededRandom = (seed: number) => {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 };
 
-// --- 2. Floating Dots Background (Theme Consistent) ---
+// --- 2. Floating Dots Background (Converted to Framer Motion) ---
 const FloatingDotsBackgroundComponent = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -40,37 +40,109 @@ const FloatingDotsBackgroundComponent = () => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none transform-gpu">
       {dots.map((dot, i) => (
-        <div
+        <motion.div
           key={i}
-          className="absolute rounded-full bg-sky-500/30 animate-about-float"
+          className="absolute rounded-full bg-sky-500/30"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
             width: `${dot.size}px`,
             height: `${dot.size}px`,
             opacity: dot.opacity,
-            animationDuration: `${dot.duration}s`,
-            animationDelay: `${i * 0.2}s`,
             filter: `blur(${dot.size / 3}px)`,
             boxShadow: `0 0 ${dot.size + 2}px rgba(14, 165, 233, ${dot.opacity * 0.8})`,
           }}
+          // Replaced CSS animation with Framer Motion
+          animate={{
+            y: [0, -20, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: dot.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.2,
+          }}
         />
       ))}
-      <style jsx global>{`
-        @keyframes about-float-dot {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.2); }
-        }
-        .animate-about-float {
-          animation: about-float-dot ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
 
 const FloatingDotsBackground = React.memo(FloatingDotsBackgroundComponent);
 FloatingDotsBackground.displayName = "FloatingDotsBackground";
+
+// --- 3. MESH BACKGROUND SYSTEM ---
+
+function MeshOval({
+  className = "",
+  opacity = 0.55,
+  rotate = 0,
+}: {
+  className?: string;
+  opacity?: number;
+  rotate?: number;
+}) {
+  const uid = useId();
+  const patternId = `meshPattern-${uid}`;
+  const gradId = `meshGrad-${uid}`;
+
+  return (
+    <div 
+      className={`absolute pointer-events-none ${className}`} 
+      style={{ 
+        transform: `rotate(${rotate}deg)`,
+        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+      }}
+    >
+      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+
+      <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.75" />
+          </linearGradient>
+
+          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
+            <path
+              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
+              fill="none"
+              stroke={`url(#${gradId})`}
+              strokeWidth="1.5"
+              strokeOpacity="0.8"
+            />
+            <circle cx="24" cy="21" r="2" fill="#38bdf8" opacity="0.6" />
+          </pattern>
+        </defs>
+
+        <g opacity={opacity}>
+          <rect width="300" height="300" fill={`url(#${patternId})`} />
+          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0" />
+          </radialGradient>
+          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function AboutMeshBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <MeshOval className="top-32 -left-24 w-96 h-96" opacity={0.65} rotate={-15} />
+      <MeshOval className="top-[25%] -right-32 w-[500px] h-[500px]" opacity={0.5} rotate={20} />
+      <MeshOval className="top-[50%] left-[5%] w-72 h-72" opacity={0.7} rotate={45} />
+      <MeshOval className="bottom-40 -right-16 w-80 h-80" opacity={0.6} rotate={-10} />
+      <MeshOval className="-bottom-20 -left-20 w-96 h-96" opacity={0.5} rotate={10} />
+    </div>
+  );
+}
 
 // --- ANIMATION VARIANTS ---
 const fadeInUp: Variants = {
@@ -93,77 +165,60 @@ const staggerContainer: Variants = {
 // --- COLOR THEME CONSTANTS ---
 const COLOR_THEME = {
   primary: {
-    main: "#0ea5e9", // sky-500
-    light: "#38bdf8", // sky-400
-    dark: "#0284c7", // sky-600
-    bg: "rgba(14, 165, 233, 0.1)",
     text: "text-sky-500",
+    bg: "rgba(14, 165, 233, 0.1)", 
     border: "border-sky-500/30"
   },
   secondary: {
-    main: "#8b5cf6", // violet-500
-    light: "#a78bfa", // violet-400
-    dark: "#7c3aed", // violet-600
-    bg: "rgba(139, 92, 246, 0.1)",
     text: "text-violet-500",
+    bg: "rgba(139, 92, 246, 0.1)",
     border: "border-violet-500/30"
   },
   accent: {
-    main: "#10b981", // emerald-500
-    light: "#34d399", // emerald-400
-    dark: "#059669", // emerald-600
-    bg: "rgba(16, 185, 129, 0.1)",
     text: "text-emerald-500",
+    bg: "rgba(16, 185, 129, 0.1)",
     border: "border-emerald-500/30"
   },
-  neutral: {
-    50: "#f8fafc",
-    100: "#f1f5f9",
-    200: "#e2e8f0",
-    300: "#cbd5e1",
-    400: "#94a3b8",
-    500: "#64748b",
-    600: "#475569",
-    700: "#334155",
-    800: "#1e293b",
-    900: "#0f172a",
-    950: "#020617",
+  rose: {
+    text: "text-rose-500",
+    bg: "rgba(244, 63, 94, 0.1)",
+    border: "border-rose-500/30"
   }
 };
 
-// --- DATA FROM PDF ---
+// --- DATA ---
 const values = [
   {
     title: "Designing",
     desc: "We offer unique screen printing solutions and creative ideas to add value to your products.",
     icon: Lightbulb,
-    color: COLOR_THEME.accent.text,
-    bg: COLOR_THEME.accent.bg,
-    border: COLOR_THEME.accent.border
+    colorClass: COLOR_THEME.accent.text,
+    bgStyle: COLOR_THEME.accent.bg,
+    borderClass: COLOR_THEME.accent.border
   },
   {
     title: "Competitive Pricing",
     desc: "Ensuring costs are kept to meet competitive advantage while offering superlative quality.",
     icon: TrendingUp,
-    color: COLOR_THEME.secondary.text,
-    bg: COLOR_THEME.secondary.bg,
-    border: COLOR_THEME.secondary.border
+    colorClass: COLOR_THEME.secondary.text,
+    bgStyle: COLOR_THEME.secondary.bg,
+    borderClass: COLOR_THEME.secondary.border
   },
   {
-    title: "Export-Grade Standards",
-    desc: "export-grade standards from ink mixing to finishing, ensuring export-grade output.",
+    title: "Quality Control",
+    desc: "Export-grade standards from ink mixing to finishing, ensuring export-grade output.",
     icon: ShieldCheck,
-    color: COLOR_THEME.primary.text,
-    bg: COLOR_THEME.primary.bg,
-    border: COLOR_THEME.primary.border
+    colorClass: COLOR_THEME.primary.text,
+    bgStyle: COLOR_THEME.primary.bg,
+    borderClass: COLOR_THEME.primary.border
   },
   {
     title: "Customer Service",
     desc: "Superlative service that builds long-term partnerships with global brands.",
     icon: Users,
-    color: "text-rose-500",
-    bg: "rgba(244, 63, 94, 0.1)",
-    border: "border-rose-500/30"
+    colorClass: COLOR_THEME.rose.text,
+    bgStyle: COLOR_THEME.rose.bg,
+    borderClass: COLOR_THEME.rose.border
   },
 ];
 
@@ -182,6 +237,9 @@ export default function AboutPage() {
       
       {/* Background Dots */}
       <FloatingDotsBackground />
+      
+      {/* NEW: Mesh Background Diagrams */}
+      <AboutMeshBackground />
 
       {/* --- HERO SECTION --- */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
@@ -190,7 +248,7 @@ export default function AboutPage() {
           className="absolute inset-0 z-0"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          <div className="absolute inset-0 bg-linear-to-br from-slate-9 via-slate-2/8 to-sky-950/60 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/40 to-sky-950/40 z-10" />
           <Image
             src="/io.webp" 
             alt="Colour Plus Factory"
@@ -222,9 +280,15 @@ export default function AboutPage() {
               className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.9]"
             >
               SCREEN PRINTING <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-violet-400 animate-gradient bg-300%">
+              {/* Replaced CSS animation with Framer Motion span */}
+              <motion.span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-violet-400"
+                style={{ backgroundSize: "300% 300%" }}
+                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
                 AT ITS FINEST.
-              </span>
+              </motion.span>
             </motion.h1>
             
             <motion.p 
@@ -261,7 +325,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-10 rounded-3xl border border-white/10 hover:border-sky-500/50 transition-all duration-500 shadow-2xl shadow-sky-500/5">
                 <div className="absolute -top-3 -left-3 w-12 h-12 bg-sky-500/20 rounded-full blur-md" />
                 <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-4 uppercase tracking-tight">
@@ -284,7 +348,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-violet-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-10 rounded-3xl border border-white/10 hover:border-violet-500/50 transition-all duration-500 shadow-2xl shadow-violet-500/5">
                 <div className="absolute -top-3 -right-3 w-12 h-12 bg-violet-500/20 rounded-full blur-md" />
                 <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-4 uppercase tracking-tight">
@@ -304,7 +368,7 @@ export default function AboutPage() {
       </section>
 
       {/* --- OPERATIONAL EXCELLENCE GRID --- */}
-      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
+      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12">
           
           <motion.div 
@@ -319,7 +383,7 @@ export default function AboutPage() {
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-              Why <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Choose Us?</span>
+              Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Choose Us?</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto font-light">
               Built on a foundation of capacity, compliance, and quality that sets industry standards.
@@ -329,10 +393,42 @@ export default function AboutPage() {
           {/* Stats Row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
              {[
-               { label: "Factory Area", value: "10,000", suffix: "sq ft", icon: Factory, color: "sky" },
-               { label: "Monthly Output", value: "500k", suffix: "pcs", icon: TrendingUp, color: "violet" },
-               { label: "Workforce", value: "50+", suffix: "Staff", icon: Users, color: "emerald" },
-               { label: "Established", value: "2009", suffix: "", icon: Clock, color: "amber" },
+               { 
+                 label: "Factory Area", 
+                 value: "10,000", 
+                 suffix: "sq ft", 
+                 icon: Factory, 
+                 bgGradient: "from-sky-500/10",
+                 iconBox: "bg-sky-500/20 border-sky-500/30",
+                 iconColor: "text-sky-400"
+               },
+               { 
+                 label: "Monthly Output", 
+                 value: "500k", 
+                 suffix: "pcs", 
+                 icon: TrendingUp, 
+                 bgGradient: "from-violet-500/10",
+                 iconBox: "bg-violet-500/20 border-violet-500/30",
+                 iconColor: "text-violet-400"
+               },
+               { 
+                 label: "Workforce", 
+                 value: "50+", 
+                 suffix: "Staff", 
+                 icon: Users, 
+                 bgGradient: "from-emerald-500/10",
+                 iconBox: "bg-emerald-500/20 border-emerald-500/30",
+                 iconColor: "text-emerald-400"
+               },
+               { 
+                 label: "Established", 
+                 value: "2009", 
+                 suffix: "", 
+                 icon: Clock, 
+                 bgGradient: "from-amber-500/10",
+                 iconBox: "bg-amber-500/20 border-amber-500/30",
+                 iconColor: "text-amber-400"
+               },
              ].map((stat, i) => (
                <motion.div 
                  key={i}
@@ -342,10 +438,10 @@ export default function AboutPage() {
                  viewport={{ once: true }}
                  transition={{ delay: i * 0.1 }}
                >
-                 <div className={`absolute inset-0 bg-linear-to-br from-${stat.color}-500/10 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500`} />
+                 <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgGradient} to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500`} />
                  <div className="relative p-8 bg-slate-900/60 backdrop-blur-md rounded-2xl text-center border border-white/10 hover:border-sky-500/30 transition-all duration-500">
-                   <div className={`inline-flex p-4 rounded-xl bg-${stat.color}-500/20 border border-${stat.color}-500/30 mb-6`}>
-                     <stat.icon className={`text-${stat.color}-400`} size={28} />
+                   <div className={`inline-flex p-4 rounded-xl ${stat.iconBox} border mb-6`}>
+                     <stat.icon className={stat.iconColor} size={28} />
                    </div>
                    <div className="text-4xl font-black text-white mb-2 tracking-tight">
                      {stat.value}
@@ -373,10 +469,13 @@ export default function AboutPage() {
                 variants={fadeInUp}
                 className="group relative"
               >
-                <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500" />
-                <div className={`relative bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:${val.border} transition-all duration-500 h-full`}>
-                  <div className={`mb-6 ${val.bg} w-fit p-4 rounded-xl border ${val.border}`}>
-                    <val.icon size={24} className={val.color} />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500" />
+                <div className={`relative bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:${val.borderClass} transition-all duration-500 h-full`}>
+                  <div 
+                    className={`mb-6 w-fit p-4 rounded-xl border ${val.borderClass}`}
+                    style={{ backgroundColor: val.bgStyle }}
+                  >
+                    <val.icon size={24} className={val.colorClass} />
                   </div>
                   <h4 className="text-xl font-bold text-white mb-4 tracking-tight group-hover:translate-x-2 transition-transform">
                     {val.title}
@@ -410,7 +509,7 @@ export default function AboutPage() {
                 </div>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-8 tracking-tight leading-tight">
                   Worldwide <br />
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Excellence.</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Excellence.</span>
                 </h2>
                 
                 <div className="space-y-8">
@@ -421,7 +520,7 @@ export default function AboutPage() {
                     <div>
                       <h4 className="text-white font-bold text-lg mb-2">Global Network</h4>
                       <p className="text-slate-400 leading-relaxed">
-                        grown into a localize service provider, serving through local clients to global Markets Like
+                        Grown into a localized service provider, serving through local clients to global markets like
                         <strong className="text-sky-400 font-semibold"> USA, UK, Italy, and the Middle East</strong>.
                       </p>
                     </div>
@@ -434,7 +533,7 @@ export default function AboutPage() {
                     <div>
                       <h4 className="text-white font-bold text-lg mb-2">Safety & Compliance</h4>
                       <p className="text-slate-400 leading-relaxed">
-                       We prioritize safety, consistency  and sustainability. All our inks are imported from reputed suppliers and are  
+                       We prioritize safety, consistency and sustainability. All our inks are imported from reputed suppliers and are  
                         <strong className="text-emerald-400 font-semibold"> free of hazardous chemicals</strong>, 
                         ensuring compliance with strict international regulations.
                       </p>
@@ -449,8 +548,8 @@ export default function AboutPage() {
                       <h4 className="text-white font-bold text-lg mb-2">Stock Management</h4>
                       <p className="text-slate-400 leading-relaxed">
                         We maintain a 
-                        <strong className="text-amber-400 font-semibold"> two months rolling stock</strong> 
-                        of all raw materials to guarantee uninterrupted production.
+                        <strong className="text-amber-400 font-semibold">  two months rolling stock  </strong> 
+                          of all raw materials to guarantee uninterrupted production.
                       </p>
                     </div>
                   </div>
@@ -458,13 +557,13 @@ export default function AboutPage() {
              </motion.div>
 
              <motion.div 
-               className="relative h-150 rounded-3xl overflow-hidden"
+               className="relative h-[600px] rounded-3xl overflow-hidden"
                initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
              >
-                <div className="absolute inset-0 bg-linear-to-tr from-sky-500/20 via-transparent to-violet-500/20 z-10" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/20 via-transparent to-violet-500/20 z-10" />
                 <Image 
                   src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop"
                   alt="Global Logistics"
@@ -472,10 +571,16 @@ export default function AboutPage() {
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent flex items-end justify-center p-12 z-20">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent flex items-end justify-center p-12 z-20">
                   <div className="text-center">
                     <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-4">
-                      <Globe className="text-sky-400 animate-spin-slow" size={20} />
+                      {/* Replaced CSS animation with Framer Motion wrapper */}
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                      >
+                        <Globe className="text-sky-400" size={20} />
+                      </motion.div>
                       <span className="text-white font-bold tracking-widest text-sm">
                         EXPORTING WORLDWIDE
                       </span>
@@ -490,37 +595,6 @@ export default function AboutPage() {
            </div>
          </div>
       </section>
-
-      {/* Footer Note */}
-      <footer className="py-12 border-t border-white/5 text-center relative z-10">
-        <div className="container mx-auto px-6">
-          <p className="text-slate-500 text-sm font-light tracking-wide">
-            Colour Plus Printing Systems (Pvt) Ltd © {new Date().getFullYear()} • 
-            <span className="text-sky-500 font-medium ml-1">Precision in Every Print</span>
-          </p>
-        </div>
-      </footer>
-
-      <style jsx global>{`
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient {
-          animation: gradient 8s ease infinite;
-          background-size: 200% 200%;
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
-        }
-        .bg-300% {
-          background-size: 300% 300%;
-        }
-      `}</style>
     </main>
   );
 }

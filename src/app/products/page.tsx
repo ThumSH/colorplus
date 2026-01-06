@@ -19,127 +19,127 @@ const products = [
   {
     id: 1,
     category: "Men",
-    title: "High-Density Silicone Print",
-    desc: "Precision high-density silicone printing on premium denim for raised, durable logos on heavy fabrics.",
-    image: "/boss.webp",
+    image: "/19.webp",
     features: ["3D Raised Effect", "Wash Resistant", "Silicone Ink"]
   },
   {
     id: 2,
     category: "Men",
-    title: "Stretch Denim Discharge",
-    desc: "Soft-hand discharge printing on stretch fabrics that maintains elasticity without cracking.",
-    image: "/ckj.webp",
+    image: "/2.webp",
     features: ["Soft Hand Feel", "Stretch Compatible", "Breathable"]
   },
   {
     id: 3,
     category: "Men",
-    title: "Vintage Wash Effects",
-    desc: "Distressed screen printing techniques designed to weather perfectly alongside heavy stone washes.",
-    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=987&auto=format&fit=crop",
+    image: "/21.webp",
     features: ["Distressed Look", "Stone Wash Safe", "Pigment Ink"]
   },
   {
-    id: 12,
+    id: 4,
     category: "Men",
-    title: "Metallic & Foil Applications",
-    desc: "Industrial-grade metallic foil transfer and printing on denim for bold, reflective fashion statements.",
-    image: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?q=80&w=1000&auto=format&fit=crop",
+    image: "/boos.webp",
     features: ["Metallic Finish", "Heat Transfer", "Industrial Style"]
   },
   {
-    id: 13,
+    id: 5,
     category: "Men",
-    title: "Multi-Layer Plastisol",
-    desc: "Vibrant, multi-colored logo printing with high opacity on dark indigo denim backgrounds.",
-    image: "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?q=80&w=1000&auto=format&fit=crop",
+    image: "/d.webp",
+    features: ["High Opacity", "Color Vibrancy", "Sharp Edges"]
+  },
+  {
+    id: 6,
+    category: "Men",
+    image: "/cf.webp",
     features: ["High Opacity", "Color Vibrancy", "Sharp Edges"]
   },
 
   // Ladies Wear [cite: 129-132]
   {
-    id: 4,
+    id: 7,
     category: "Ladies",
-    title: "Water-Based Placement Prints",
-    desc: "Intricate floral and abstract placement prints using eco-friendly water-based inks on ladies' denim.",
-    image: "https://images.unsplash.com/photo-1584370848010-d7cc637703ef?q=80&w=1000&auto=format&fit=crop",
+    image: "/22.webp",
     features: ["Eco-Friendly Ink", "Fine Detail", "Soft Finish"]
   },
   {
-    id: 5,
+    id: 8,
     category: "Ladies",
-    title: "Formal Trouser Branding",
-    desc: "Subtle, tonal branding and interior waistband printing for sophisticated formal trousers.",
-    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1000&auto=format&fit=crop",
+    image: "/20.webp",
     features: ["Tonal Print", "Waistband Detail", "Minimalist"]
   },
   {
-    id: 6,
+    id: 9,
     category: "Ladies",
-    title: "All-Over Chino Patterns",
-    desc: "Seamless rotary and screen printed patterns on chino fabric for versatile casual wear.",
-    image: "https://images.unsplash.com/photo-1475178626620-a4d074967452?q=80&w=1000&auto=format&fit=crop",
+    image: "/ck-l.webp",
     features: ["All-Over Print", "Rotary Screen", "Color Fast"]
   },
   {
-    id: 14,
+    id: 10,
     category: "Ladies",
-    title: "Pocket & Waist Embellishment",
-    desc: "Specialized small-area screen printing for pockets, loops, and waistbands on high-fashion denim.",
-    image: "https://images.unsplash.com/photo-1551852307-5490291221d7?q=80&w=1000&auto=format&fit=crop",
+    image: "/ck-l2.webp",
     features: ["Precision Placement", "Glitter/Shimmer", "Fashion Accent"]
   },
   {
-    id: 15,
+    id: 11,
     category: "Ladies",
-    title: "Heavy-Duty Cargo Prints",
-    desc: "Abrasion-resistant lettering and technical data prints on rugged cargo and utility fabrics.",
-    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1000&auto=format&fit=crop",
+    image: "/ck-l3.webp",
+    features: ["Abrasion Resistant", "Technical Look", "Heavy Ink"]
+  }, 
+  {
+    id: 12,
+    category: "Ladies",
+    image: "/hg.webp",
     features: ["Abrasion Resistant", "Technical Look", "Heavy Ink"]
   },
 
   // Kids Wear [cite: 125-128]
   {
-    id: 7,
+    id: 13,
     category: "Kids",
-    title: "Children's T-Shirts",
-    desc: "Safe, chemical-free prints perfect for sensitive skin with fun designs.",
-    image: "https://images.unsplash.com/photo-1519238263496-414d68c36143?q=80&w=1000&auto=format&fit=crop",
+    image: "/23.webp",
     features: ["Chemical-Free", "Soft Fabric", "Fun Designs"]
   },
   {
-    id: 8,
+    id: 14,
     category: "Kids",
-    title: "Kids' Pants & Shorts",
-    desc: "Durable playwear designed for movement and comfort during active play.",
-    image: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?q=80&w=1000&auto=format&fit=crop",
+    image: "/v.webp",
+    features: ["Reinforced Seams", "Stretchable", "Easy Wash"]
+  },
+  {
+    id: 15,
+    category: "Kids",
+    image: "/x.webp",
     features: ["Reinforced Seams", "Stretchable", "Easy Wash"]
   },
 
   // Sports Wear [cite: 137-140]
   {
-    id: 9,
+    id: 16,
     category: "Sports",
-    title: "Performance Tees",
-    desc: "Moisture-wicking fabrics with stretchable athletic prints for optimal performance.",
-    image: "https://images.unsplash.com/photo-1518459031867-a89b944bffe4?q=80&w=1000&auto=format&fit=crop",
+    image: "/cf.webp",
     features: ["Moisture-Wicking", "Breathable", "Team Colors"]
   },
   {
-    id: 10,
+    id: 17,
     category: "Sports",
-    title: "Skinnies & Leggings",
-    desc: "High-stretch compression wear with durable transfer prints for athletic wear.",
-    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop",
+    image: "/s-1.webp",
     features: ["Compression Fit", "High Stretch", "Durable Prints"]
   },
   {
-    id: 11,
+    id: 18,
     category: "Sports",
-    title: "Tracksuits",
-    desc: "Full sets optimized for teams and athletic brands with coordinated designs.",
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
+    image: "/s-2.webp",
+    features: ["Full Set", "Team Branding", "Performance Fabric"]
+  },  
+  {
+    id: 19,
+    category: "Sports",
+    image: "/s-3.webp",
+    features: ["Full Set", "Team Branding", "Performance Fabric"]
+  },  
+  {
+    id: 20,
+    category: "Sports",
+    image: "/s-4.webp",
     features: ["Full Set", "Team Branding", "Performance Fabric"]
   },
 ];
@@ -173,7 +173,7 @@ export default function ProductsPage() {
           
           {/* Fabric texture with subtle overlay */}
           <Image
-            src="https://images.unsplash.com/photo-1520006403909-838d6b92c22e?q=80&w=2000"
+            src="/ty.webp"
             alt="Fabric Texture"
             fill
             className="object-cover opacity-30"
@@ -236,7 +236,7 @@ export default function ProductsPage() {
               </h3>
             </div>
             <p className="text-slate-400 max-w-lg text-lg font-light">
-              Our 10,000 sq ft facility in Kottawa is staffed by 50+ professionals, ensuring timely delivery for large-scale orders with export-grade precision.
+              Our 10,000 sq ft facility  is staffed by 50+ Well trained and experienced staff, ensuring timely delivery for large-scale orders with  precision.
             </p>
           </div>
 
@@ -325,7 +325,7 @@ export default function ProductsPage() {
                   <div className="relative aspect-3/4 w-full overflow-hidden">
                     <Image
                       src={product.image}
-                      alt={product.title || "Product Image"}
+                      alt={`${product.category} Wear Product`}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -334,12 +334,6 @@ export default function ProductsPage() {
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
-                    {/* Title Overlay on Hover */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                      <h3 className="text-lg font-bold text-white text-center drop-shadow-lg">
-                        {product.title}
-                      </h3>
-                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -359,7 +353,7 @@ export default function ProductsPage() {
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">No Products Found</h3>
             <p className="text-slate-500 max-w-md mx-auto">
-              Were currently updating this category with new products. Please check back soon or browse other categories.
+              We&apos;re currently updating this category with new products. Please check back soon or browse other categories.
             </p>
           </motion.div>
         )}

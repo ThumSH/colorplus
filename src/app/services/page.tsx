@@ -1,76 +1,57 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import { motion,Variants } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, Variants } from "framer-motion";
 import { Layers, Palette, Zap, Sparkles, Feather, Maximize, Droplets, Scissors, Globe, CheckCircle2, LucideIcon } from "lucide-react";
 import Image from "next/image";
 
-// --- 1. Deterministic Seeded Random Helper (Theme Consistent) ---
-const getSeededRandom = (seed: number) => {
-  const x = Math.sin(seed) * 10000;
-  return x - Math.floor(x);
-};
-
-// --- 2. Floating Dots Background ---
-const FloatingDotsBackgroundComponent = () => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 10);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const dots = useMemo(() => {
-    const numDots = 40;
-    return Array.from({ length: numDots }).map((_, i) => {
-      const seed1 = i + 0.987;
-      const seed2 = i + 0.654;
-      return {
-        x: getSeededRandom(seed1) * 100,
-        y: getSeededRandom(seed2) * 100,
-        size: 2 + getSeededRandom(seed1 + seed2) * 6,
-        opacity: 0.2 + getSeededRandom(seed1 * 2) * 0.5,
-        duration: 4 + getSeededRandom(seed2 * 2) * 5,
-      };
-    });
-  }, []);
-
-  if (!mounted) return <div className="absolute inset-0 z-0" />;
-
+// --- 1. MESH BACKGROUND COMPONENT (Consistent with About Page) ---
+const MeshBackgroundComponent = () => {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none transform-gpu">
-      {dots.map((dot, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full bg-sky-400/40 animate-services-float"
-          style={{
-            left: `${dot.x}%`,
-            top: `${dot.y}%`,
-            width: `${dot.size}px`,
-            height: `${dot.size}px`,
-            opacity: dot.opacity,
-            animationDuration: `${dot.duration}s`,
-            animationDelay: `${i * 0.2}s`,
-            filter: `blur(${dot.size / 3}px)`,
-            boxShadow: `0 0 ${dot.size + 2}px rgba(56, 189, 248, ${dot.opacity})`,
-          }}
-        />
-      ))}
-      <style jsx global>{`
-        @keyframes services-float-dot {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.2); }
-        }
-        .animate-services-float {
-          animation: services-float-dot ease-in-out infinite;
-        }
-      `}</style>
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none mix-blend-screen">
+      {/* Radial gradient mask */}
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_10%,theme(colors.slate.950)_90%)]" />
+
+      <svg
+        className="absolute inset-0 w-full h-full"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id="hex-mesh-pattern-services" // Unique ID to avoid conflicts if pages transition
+            x="0"
+            y="0"
+            width="56"
+            height="96"
+            patternUnits="userSpaceOnUse"
+            patternTransform="scale(1.2)"
+            className="animate-mesh-drift"
+          >
+            <path
+              d="M28 0 L56 16 V48 L28 64 L0 48 V16 Z"
+              fill="none"
+              className="text-sky-500/25"
+              stroke="currentColor"
+              strokeWidth="0.5"
+            />
+            <path
+              d="M28 48 L56 64 V96 L28 112 L0 96 V64 Z"
+              fill="none"
+              className="text-sky-500/25"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              transform="translate(28, 48)" 
+            />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="100%" height="100%" fill="url(#hex-mesh-pattern-services)" />
+      </svg>
     </div>
   );
 };
 
-const FloatingDotsBackground = React.memo(FloatingDotsBackgroundComponent);
-FloatingDotsBackground.displayName = "FloatingDotsBackground";
+const MeshBackground = React.memo(MeshBackgroundComponent);
+MeshBackground.displayName = "MeshBackground";
 
 // --- DATA FROM PDF ---
 const printTechniques = [
@@ -81,7 +62,7 @@ const printTechniques = [
     color: "emerald"
   },
   {
-    title: "Silicon Prints",
+    title: "Silicone  Prints",
     desc: "Vibrant, opaque colors with a heavier hand. The industry standard for bold, durable graphics.",
     icon: <Droplets size={32} className="text-sky-400" />,
     color: "sky"
@@ -163,8 +144,8 @@ export default function ServicesPage() {
   return (
     <main ref={containerRef} className="bg-slate-950 min-h-screen relative overflow-hidden">
       
-      {/* Background Animation */}
-      <FloatingDotsBackground />
+      {/* Background Animation - Replaced Dots with Mesh */}
+      <MeshBackground />
 
       {/* --- HERO HEADER --- */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
@@ -177,6 +158,7 @@ export default function ServicesPage() {
         />
         <div className="absolute inset-0 bg-linear-to-b from-slate-950/60 via-slate-950/80 to-slate-950" />
 
+        {/* Adjusted globs to sit behind content but above background */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-600/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none" />
 

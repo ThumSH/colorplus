@@ -26,9 +26,8 @@ const Highlight = ({ children, gradient }: { children: React.ReactNode; gradient
   );
 };
 
-// --- 2. BACKGROUND COMPONENTS (The Fix for Isolated Corners) ---
+// --- 2. BACKGROUND COMPONENTS ---
 
-// A. The Base Grid: Fills the corners with subtle technical texture
 const BaseGrid = () => (
   <div className="absolute inset-0 z-0 pointer-events-none">
     <div 
@@ -38,22 +37,17 @@ const BaseGrid = () => (
           backgroundSize: '40px 40px'
       }} 
     />
-    {/* Fade out the grid at the very top/bottom edges */}
     <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-transparent to-slate-950" />
   </div>
 );
 
-// B. Ambient Corners: Adds colored depth to the corners so they aren't pitch black
 const AmbientCorners = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    {/* Top Left - Deep Blue */}
-    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-900/10 blur-[120px] rounded-full mix-blend-screen" />
-    {/* Bottom Right - Deep Cyan */}
-    <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-cyan-900/10 blur-[120px] rounded-full mix-blend-screen" />
+    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-900/10 blur-[80px] rounded-full mix-blend-screen" />
+    <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-cyan-900/10 blur-[80px] rounded-full mix-blend-screen" />
   </div>
 );
 
-// C. The Oval Hex Mesh: Your Centerpiece
 const OvalHexMesh = () => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
@@ -77,9 +71,8 @@ const OvalHexMesh = () => {
           <rect x="0" y="0" width="100%" height="100%" fill="url(#hex-mesh)" />
         </svg>
       </motion.div>
-      {/* Oval Glow Behind Mesh */}
       <div 
-        className="absolute inset-0 bg-sky-500/5 blur-[100px]" 
+        className="absolute inset-0 bg-sky-500/5 blur-[80px]" 
         style={{
           maskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)",
           WebkitMaskImage: "radial-gradient(ellipse 60% 40% at 50% 50%, black 40%, transparent 80%)"
@@ -89,10 +82,10 @@ const OvalHexMesh = () => {
   );
 };
 
-// D. Dots Texture (For Hero Section)
 const DotsTexture = () => {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+      {/* CSS-based Dots Only */}
       <div 
         className="absolute inset-0 opacity-20"
         style={{ 
@@ -100,15 +93,9 @@ const DotsTexture = () => {
           backgroundSize: '40px 40px' 
         }} 
       />
-      <div className="absolute inset-0 opacity-60 mix-blend-screen filter invert contrast-150">
-         <Image
-           src="/dots-pattern.jpg"
-           alt="Texture Pattern"
-           fill
-           className="object-cover object-top"
-           priority
-         />
-      </div>
+      
+      {/* Removed the Image component here */}
+
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-950/40 to-slate-950" />
     </div>
   );
@@ -168,6 +155,32 @@ const cardVariants: Variants = {
   }),
 };
 
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const fadeInFromLeft: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const fadeInFromRight: Variants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
 // --- 5. CONNECTORS ---
 const CurvedConnector = ({ isLeftToRight }: { isLeftToRight: boolean }) => {
     return (
@@ -186,10 +199,6 @@ const CurvedConnector = ({ isLeftToRight }: { isLeftToRight: boolean }) => {
               <stop offset="50%" stopColor="#0ea5e9" stopOpacity="1" />
               <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
             </linearGradient>
-            <filter id="glow-line" x="-20%" y="-20%" width="140%" height="140%">
-               <feGaussianBlur stdDeviation="2" result="blur" />
-               <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
           </defs>
           <motion.path
             d={
@@ -202,7 +211,6 @@ const CurvedConnector = ({ isLeftToRight }: { isLeftToRight: boolean }) => {
             strokeDasharray="12 12"
             strokeLinecap="round"
             fill="none"
-            filter="url(#glow-line)"
             initial={{ pathLength: 0, opacity: 0 }}
             whileInView={{ pathLength: 1, opacity: 0.8 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -250,41 +258,35 @@ function HowWeWork() {
     offset: ["start end", "end start"]
   });
 
-  // Fades the mesh in as you scroll down
   const meshOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
 
   return (
     <section ref={containerRef} className="relative z-10 bg-slate-950 px-4 sm:px-6 pb-32 overflow-hidden">
       
-      {/* --- BACKGROUND LAYERS --- */}
-      {/* 1. Base Grid (Fills the corners) */}
       <BaseGrid />
-      
-      {/* 2. Ambient Color (Softens the corners) */}
       <AmbientCorners />
 
-      {/* 3. Oval Hex Mesh (Center Stage) */}
       <motion.div 
         className="absolute inset-0 z-0"
         style={{ opacity: meshOpacity }}
       >
         <OvalHexMesh />
       </motion.div>
-      {/* ------------------------- */}
 
       <div className="mx-auto max-w-7xl relative pt-20">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
           className="text-center mb-20 relative z-10"
         >
-          <h3 className="text-3xl md:text-5xl font-bold text-white mb-4">
+          <motion.h3 variants={fadeInUp} className="text-3xl md:text-5xl font-bold text-white mb-4">
             How We <span className="text-sky-500">Work</span>
-          </h3>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          </motion.h3>
+          <motion.p variants={fadeInUp} className="text-gray-400 text-lg max-w-2xl mx-auto">
             Our streamlined process ensures Quality, Consistency and efficiency at every step
-          </p>
+          </motion.p>
         </motion.div>
         
         <div className="relative">
@@ -312,12 +314,9 @@ function HowWeWork() {
                         whileHover={{ y: -10 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                       >
-                          {/* Animated Gradient Border */}
                           <div className="absolute inset-0 bg-linear-to-br from-cyan-500 via-blue-600 to-sky-500 opacity-30 group-hover:opacity-100 transition-opacity duration-700" />
                           
-                          {/* Inner Container */}
                           <div className="absolute inset-0.5 bg-slate-950 rounded-[22px] overflow-hidden z-10">
-                            {/* Background Grid Pattern */}
                             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[32px_32px] opacity-50" />
                             
                             <Image
@@ -329,10 +328,8 @@ function HowWeWork() {
                                 priority={index < 2}
                             />
                             
-                            {/* Overlay Gradient */}
                             <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-transparent to-transparent opacity-80" />
 
-                            {/* Number Badge */}
                             <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl w-14 h-14 flex items-center justify-center group-hover:bg-sky-500/20 group-hover:border-sky-500/50 transition-colors duration-500 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]">
                               <span className="text-2xl font-bold text-white/90 group-hover:text-sky-400 transition-colors">0{index + 1}</span>
                             </div>
@@ -343,22 +340,22 @@ function HowWeWork() {
                   {/* TEXT SIDE */}
                   <div className={`w-full md:w-1/2 ${isEven ? "md:text-left" : "md:text-right"} px-4 md:px-8`}>
                     <motion.div
-                      initial={{ opacity: 0, x: isEven ? 20 : -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.2 }}
+                      variants={staggerContainer}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, amount: 0.5 }}
                     >
-                      <h3 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                      <motion.h3 variants={isEven ? fadeInFromRight : fadeInFromLeft} className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
                         <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-200 via-blue-100 to-cyan-200">
                           {step.title}
                         </span>
-                      </h3>
-                      <div className="relative max-w-xl ml-0 p-8 rounded-3xl border border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-2xl overflow-hidden">
+                      </motion.h3>
+                      <motion.div variants={isEven ? fadeInFromRight : fadeInFromLeft} className="relative max-w-xl ml-0 p-8 rounded-3xl border border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-2xl overflow-hidden">
                         <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none" />
                         <div className="relative z-10 text-slate-300 text-lg md:text-xl leading-relaxed font-light">
                           {step.description}
                         </div>
-                      </div>
+                      </motion.div>
                     </motion.div>
                   </div>
                 </motion.div>
@@ -389,29 +386,29 @@ export default function Services() {
     <>
       <section id="services" className="bg-slate-950 relative overflow-hidden pt-24">
         
-        {/* HERO BACKGROUND */}
         <DotsTexture />
 
-        {/* HEADER */}
         <div className="container mx-auto px-6 text-center mb-16 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
           >
-            <span className="inline-flex items-center gap-2 py-2 px-4 border border-sky-500/30 bg-sky-500/10 rounded-full text-sky-400 text-sm font-bold tracking-[0.2em] uppercase mb-6 backdrop-blur-sm">
-              <Droplets size={30} className="animate-pulse" />
-              Our Craft
-            </span>
-            <h2 className="text-4xl md:text-7xl font-black text-white leading-none tracking-tight mb-6">
+            <motion.div variants={fadeInUp}>
+              <span className="inline-flex items-center gap-2 py-2 px-4 border border-sky-500/30 bg-sky-500/10 rounded-full text-sky-400 text-sm font-bold tracking-[0.2em] uppercase mb-6 backdrop-blur-sm">
+                <Droplets size={30} className="animate-pulse" />
+                Our Craft
+              </span>
+            </motion.div>
+            <motion.h2 variants={fadeInUp} className="text-4xl md:text-7xl font-black text-white leading-none tracking-tight mb-6">
               Mastering<br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-sky-500 to-blue-600">
                 the Press.
               </span>
-            </h2>
-            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
               Every Print Begins with a Dot
-            </p>
+            </motion.p>
           </motion.div>
         </div>
 

@@ -43,7 +43,7 @@ const steps = [
   {
     id: "04",
     title: "QC & Global Export",
-    desc: "After rigorous Quality Control and safety testing, we hand over to Our customers and deliver Precisely. We regularly export to the USA, UK, Italy, and the Middle East with full compliance.",
+    desc: "After rigorous Quality Control and safety testing, we hand over to Our customers and deliver Precisely with full compliance.",
     icon: <Globe size={28} />,
   },
 ];
@@ -232,14 +232,14 @@ const ProcessMeshDiagrams = React.memo(() => {
       const s2 = seeded(42.77 + i * 2.03);
       const s3 = seeded(99.91 + i * 3.11);
 
-      const left = 10 + s1 * 80;
-      const top = 12 + s2 * 76;
+      const left = Number((10 + s1 * 80).toFixed(4));
+      const top = Number((12 + s2 * 76).toFixed(4));
 
-      const size = 260 + s3 * 260; // 260..520
-      const rotate = -22 + seeded(7.77 + i * 1.9) * 44; // -22..22
+      const size = Number((260 + s3 * 260).toFixed(2)); // 260..520
+      const rotate = Number((-22 + seeded(7.77 + i * 1.9) * 44).toFixed(2)); // -22..22
 
       // ✅ INCREASED OPACITY (old: 0.12..0.26)
-      const opacity = 0.28 + seeded(55.5 + i * 1.6) * 0.22; // 0.28..0.50
+      const opacity = Number((0.28 + seeded(55.5 + i * 1.6) * 0.22).toFixed(4)); // 0.28..0.50
 
       return { left, top, size, rotate, opacity };
     });

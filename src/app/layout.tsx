@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import StyledJsxRegistry from "./registry";
+import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 
 export const metadata: Metadata = {
   title: "Color Plus Printing Systems",
@@ -22,9 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar/>
-        {children}
-        <Footer/>
+        <StyledJsxRegistry>
+          <Navbar/>
+          {children}
+          <Footer/>
+        </StyledJsxRegistry>
+        <FloatingWhatsApp />
       </body>
     </html>
   );

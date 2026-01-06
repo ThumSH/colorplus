@@ -17,10 +17,7 @@ export default function Footer() {
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/") {
       e.preventDefault(); 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -28,10 +25,11 @@ export default function Footer() {
     <footer className="bg-black text-white pt-24 pb-12 border-t border-white/10">
       <div className="container mx-auto px-6 md:px-12">
         
+        {/* CTA SECTION */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-gray-800 pb-20 mb-16 gap-10">
           <div>
             <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-6">
-              LETS PRINT <br />
+              LET&apos;S PRINT <br />
               <span className="text-blue-500">EXCELLENCE.</span>
             </h2>
             <p className="text-gray-400 max-w-md text-lg">
@@ -51,27 +49,25 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* LINKS SECTION */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           
           <div className="col-span-1 md:col-span-1">
              <Link
                 href="/"
-                className="block relative h-16 w-auto aspect-5/3 mb-4"
+                className="block relative h-16 w-auto aspect-[5/3] mb-4" // Fixed Aspect Ratio
                 onClick={handleLogoClick}
               >
                  <Image
                     src="/CP.webp" 
                     alt="Colour Plus Logo"
-                    width={160}
-                    height={100}
+                    fill
                     className="object-contain drop-shadow-lg opacity-90 hover:opacity-100 transition-opacity"
-                    priority
+                    sizes="160px"
                  />
              </Link>
-             <span
-                className={`${poppins.className} text-[10px] tracking-[0.2em] text-gray-400 block mb-6`}
-             >
-                COLOR PLUS PRINTING SYSTEMS (PVT) LTD
+             <span className={`${poppins.className} text-[10px] tracking-[0.2em] text-gray-400 block mb-6`}>
+                COLOUR PLUS PRINTING SYSTEMS (PVT) LTD
              </span>
              <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
                 Screen printing at its finest. Established in 2009, serving global brands with superlative quality and compliance.
@@ -103,39 +99,35 @@ export default function Footer() {
             <div className="space-y-4 text-gray-400 text-sm">
                <div className="flex items-start gap-3">
                   <MapPin size={16} className="mt-1 shrink-0 text-blue-500" />
-                  <span className="leading-relaxed">
-                     564/A, Athurugiriya Road, <br/>Kottawa, Sri Lanka.
-                  </span>
+                  <span className="leading-relaxed">564/A, Athurugiriya Road, <br/>Kottawa, Sri Lanka.</span>
                </div>
                
                <div className="flex items-center gap-3">
                   <Phone size={16} className="shrink-0 text-blue-500" />
-                  <a href="tel:0094112781525" className="hover:text-white transition-colors">
-                     (+94) 112781525
-                  </a>
+                  <a href="tel:0094112781525" className="hover:text-white transition-colors">(+94) 112781525</a>
                </div>
 
                <div className="flex items-center gap-3">
                   <Mail size={16} className="shrink-0 text-slate-400" />
-                  <a href="mailto:colourplus@sltnet.lk" className="hover:text-white transition-colors">
-                     colourplus@sltnet.lk
-                  </a>
+                  <a href="mailto:colourplus@sltnet.lk" className="hover:text-white transition-colors">colourplus@sltnet.lk</a>
                </div>
             </div>
 
             <div className="flex gap-4 mt-8">
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+              <a href="#" aria-label="Instagram" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
                 <Instagram size={14} />
               </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+              <a href="#" aria-label="LinkedIn" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
                 <Linkedin size={14} />
               </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+              <a href="#" aria-label="Facebook" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
                 <Facebook size={14} />
               </a>
             </div>
           </div>
         </div>
+
+        {/* COPYRIGHT */}
         <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left pt-8 mt-16 border-t border-gray-800 text-gray-500 text-xs">
           <p className="mb-4 md:mb-0 order-2 md:order-1">
             &copy; {new Date().getFullYear()} Colour Plus Printing Systems (Pvt) Ltd. All Rights Reserved.
@@ -143,8 +135,8 @@ export default function Footer() {
           <p className="order-1 md:order-2 mb-4 md:mb-0">
             Developed by <a href="https://tranzixglobalimpex.com/" target="_blank" rel="noopener noreferrer" className="font-semibold text-gray-400 hover:text-white transition-colors">Tranzix Global Impex</a>
           </p>
-          </div>
         </div>
+      </div>
     </footer>
   );
 }
