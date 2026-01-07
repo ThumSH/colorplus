@@ -28,7 +28,7 @@ const productSlides = [
     image: "/ty.webp", 
     label: "Global Export Quality",
     headline: ["TRUSTED BY", "ICONS."],
-    description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Ralph Lauren. Exporting excellence to the USA, UK, and Italy.",
+    description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Diesel. Exporting excellence to the USA, UK, and Italy.",
     highlightColor: "from-sky-100 to-cyan-700"
   },
 ];
@@ -45,7 +45,7 @@ export default function Hero() {
 
   return (
     // OPTIMIZATION: Use h-[100dvh] for better mobile browser support (accounts for address bar)
-    <section className="relative h-[100dvh] w-full overflow-hidden flex items-center justify-center bg-slate-950">
+    <section className="relative h-dvh w-full overflow-hidden flex items-center justify-center bg-slate-950">
       
       {/* --- 1. BACKGROUND IMAGE STACK --- */}
       <div className="absolute inset-0 w-full h-full">
@@ -82,8 +82,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none" />
       
       {/* Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-br from-black/20 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-black/40 z-10 pointer-events-none" />
 
       {/* --- 3. HERO CONTENT --- */}
@@ -91,7 +91,7 @@ export default function Hero() {
         
         {/* TEXT AREA */}
         {/* OPTIMIZATION: min-h prevents layout jumping when text length changes */}
-        <div className="min-h-[420px] md:min-h-[500px] flex flex-col justify-center relative w-full"> 
+        <div className="min-h-105 md:min-h-125 flex flex-col justify-center relative w-full"> 
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
@@ -112,9 +112,9 @@ export default function Hero() {
               
               {/* Headline */}
               {/* OPTIMIZED TYPOGRAPHY: Starts at 5xl (mobile) -> 6xl (tablet) -> 7xl (laptop) -> 8xl (desktop) */}
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black text-white leading-[0.95] tracking-tighter mb-6 drop-shadow-2xl">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl md:text-8xm font-black text-white leading-[0.95] tracking-tighter mb-6 drop-shadow-2xl">
                 {productSlides[currentSlide].headline[0]} <br />
-                <span className={`text-transparent bg-clip-text bg-gradient-to-r ${productSlides[currentSlide].highlightColor}`}>
+                <span className={`text-transparent bg-clip-text bg-linear-to-r ${productSlides[currentSlide].highlightColor}`}>
                   {productSlides[currentSlide].headline[1]}
                 </span>
               </h1>
@@ -138,7 +138,7 @@ export default function Hero() {
             Get a Quote
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link href="/#gallery" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-base md:text-lg backdrop-blur-sm">
+          <Link href="/products" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-base md:text-lg backdrop-blur-sm">
             View Our Work
           </Link>
         </motion.div>

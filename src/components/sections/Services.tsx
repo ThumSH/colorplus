@@ -2,8 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
-import { Droplets } from "lucide-react";
+import { Droplets, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 // --- 1. UTILITY COMPONENTS (Text Highlight) ---
 const Highlight = ({ children, gradient }: { children: React.ReactNode; gradient: string }) => {
@@ -85,7 +86,6 @@ const OvalHexMesh = () => {
 const DotsTexture = () => {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
-      {/* CSS-based Dots Only */}
       <div 
         className="absolute inset-0 opacity-20"
         style={{ 
@@ -93,9 +93,8 @@ const DotsTexture = () => {
           backgroundSize: '40px 40px' 
         }} 
       />
-      
-      {/* Removed the Image component here */}
-
+      <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+      </div>
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-950/40 to-slate-950" />
     </div>
   );
@@ -106,7 +105,7 @@ const howWeWorkSteps = [
   {
     image: "/1-1.webp",
     title: "Versatile Print Techniques",
-    description: "We utilize techniques tailored to your requirements, including Pigment, High Build, Puff, Gel, Silicone and Flock prints to ensure the best quality and performance execution.",
+    description: "We utilize techniques tailored to your requirements, including Pigment, High Build, Puff, Gel, Silicone and Flock prints to ensure the best quality and execution in delivering the best quality output.",
   },
   {
     image: "/1.2.webp",
@@ -371,6 +370,30 @@ function HowWeWork() {
             );
           })}
         </div>
+
+        {/* --- FIXED BUTTON ALIGNMENT --- */}
+        <motion.div
+          className="mt-24 flex justify-center relative z-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Link href="/technique">
+            <motion.button
+              className="relative group bg-white text-slate-950 uppercase tracking-[0.2em] text-[10px] font-black px-10 py-6 rounded-full overflow-hidden shadow-lg hover:shadow-sky-500/20 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="absolute inset-0 bg-linear-to-r from-sky-400 to-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex items-center gap-3 z-10">
+                View Techniques
+                <ArrowUpRight size={16} />
+              </div>
+            </motion.button>
+          </Link>
+        </motion.div>
+        
       </div>
     </section>
   );
