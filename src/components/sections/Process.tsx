@@ -149,15 +149,17 @@ const MeshOvalDiagram = React.memo(
     top,
     rotate,
     opacity,
+    idSuffix,
   }: {
     size: number;
     left: number; // percent
     top: number; // percent
     rotate: number;
     opacity: number;
+    idSuffix: string | number;
   }) => {
-    const gradId = React.useId();
-    const patId = React.useId();
+    const gradId = `process-grad-${idSuffix}`;
+    const patId = `process-pat-${idSuffix}`;
 
     return (
       <div
@@ -250,6 +252,7 @@ const ProcessMeshDiagrams = React.memo(() => {
       {diagrams.map((d, idx) => (
         <MeshOvalDiagram
           key={idx}
+          idSuffix={idx}
           left={d.left}
           top={d.top}
           size={d.size}

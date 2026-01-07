@@ -20,7 +20,7 @@ const productSlides = [
     image: "/pri.webp", 
     label: "Born From Experience", 
     headline: ["MASTERING THE", "TECHNIQUE."],
-    description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Silicone  prints.",
+    description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Silicone prints.",
     highlightColor: "from-sky-200 to-cyan-500"
   },
   { 
@@ -44,9 +44,10 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-slate-950">
+    // OPTIMIZATION: Use h-[100dvh] for better mobile browser support (accounts for address bar)
+    <section className="relative h-[100dvh] w-full overflow-hidden flex items-center justify-center bg-slate-950">
       
-      {/* --- 1. OPTIMIZED BACKGROUND STACK --- */}
+      {/* --- 1. BACKGROUND IMAGE STACK --- */}
       <div className="absolute inset-0 w-full h-full">
         {productSlides.map((slide, index) => {
           const isActive = index === currentSlide;
@@ -59,7 +60,6 @@ export default function Hero() {
                 scale: isActive ? 1 : 1.1 
               }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
-              // PERFORMANCE: will-change prevents stuttering during the scale animation
               className="absolute inset-0 w-full h-full will-change-transform"
               style={{ zIndex: isActive ? 1 : 0 }} 
             >
@@ -70,7 +70,7 @@ export default function Hero() {
                 className="object-cover"
                 priority={index === 0} 
                 sizes="100vw"
-                quality={85} // Reduced slightly for performance
+                quality={85}
               />
             </motion.div>
           );
@@ -78,19 +78,20 @@ export default function Hero() {
       </div>
 
       {/* --- 2. STATIC OVERLAYS --- */}
-      {/* Noise Texture */}
+      {/* Texture */}
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none" />
       
-      {/* Gradient Overlays (Tailwind v4 syntax) */}
-      <div className="absolute inset-0 bg-linear-to-br from-black/20 to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-linear-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
+      {/* Gradients */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/50 z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-black/40 z-10 pointer-events-none" />
 
       {/* --- 3. HERO CONTENT --- */}
-      <div className="relative z-20 container mx-auto px-6 md:px-12 flex flex-col items-start justify-center h-full pt-12">
+      <div className="relative z-20 container mx-auto px-6 md:px-12 flex flex-col items-start justify-center h-full pt-16 md:pt-0">
         
         {/* TEXT AREA */}
-        <div className="h-112.5 md:h-137.5 flex flex-col justify-center relative w-full"> 
+        {/* OPTIMIZATION: min-h prevents layout jumping when text length changes */}
+        <div className="min-h-[420px] md:min-h-[500px] flex flex-col justify-center relative w-full"> 
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
@@ -98,26 +99,28 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="max-w-4xl will-change-transform"
+              className="max-w-5xl will-change-transform"
             >
               {/* Label */}
-              <div className="flex items-center gap-4 mb-2">
+              <div className="flex items-center gap-4 mb-4">
                  <div className="h-0.5 w-8 bg-white/50"></div>
-                 <span className="text-white/80 font-bold tracking-[0.2em] uppercase text-xs">
+                 {/* Increased font size for mobile readability */}
+                 <span className="text-white/90 font-bold tracking-[0.2em] uppercase text-sm md:text-xs">
                    {productSlides[currentSlide].label}
                  </span>
               </div>
               
               {/* Headline */}
-              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-6 drop-shadow-2xl">
+              {/* OPTIMIZED TYPOGRAPHY: Starts at 5xl (mobile) -> 6xl (tablet) -> 7xl (laptop) -> 8xl (desktop) */}
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black text-white leading-[0.95] tracking-tighter mb-6 drop-shadow-2xl">
                 {productSlides[currentSlide].headline[0]} <br />
-                <span className={`text-transparent bg-clip-text bg-linear-to-r ${productSlides[currentSlide].highlightColor}`}>
+                <span className={`text-transparent bg-clip-text bg-gradient-to-r ${productSlides[currentSlide].highlightColor}`}>
                   {productSlides[currentSlide].headline[1]}
                 </span>
               </h1>
 
               {/* Description */}
-              <p className="text-gray-200 text-base md:text-lg max-w-lg leading-relaxed drop-shadow-md">
+              <p className="text-gray-200 text-lg sm:text-xl max-w-lg leading-relaxed drop-shadow-md font-medium">
                 {productSlides[currentSlide].description}
               </p>
             </motion.div>
@@ -129,13 +132,13 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex flex-wrap gap-4 mb-10"
+          className="flex flex-wrap gap-4 mb-12 sm:mb-8"
         >
-          <Link href="/contact" className="bg-sky-600 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-sky-700 transition-all duration-300 flex items-center gap-3 group text-sm md:text-base">
+          <Link href="/contact" className="bg-sky-600 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-sky-700 transition-all duration-300 flex items-center gap-3 group text-base md:text-lg shadow-lg shadow-sky-900/20">
             Get a Quote
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link href="/#gallery" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-sm md:text-base">
+          <Link href="/#gallery" className="bg-transparent border border-gray-400 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-all duration-300 text-base md:text-lg backdrop-blur-sm">
             View Our Work
           </Link>
         </motion.div>
@@ -143,7 +146,7 @@ export default function Hero() {
       </div>
 
       {/* --- 4. SLIDE CONTROLS --- */}
-      <div className="absolute bottom-12 right-6 md:right-12 z-30 flex gap-4 items-center">
+      <div className="absolute bottom-8 right-6 md:bottom-12 md:right-12 z-30 flex gap-4 items-center">
         <span className="text-white/50 text-sm font-bold tracking-widest uppercase hidden md:block">
             0{currentSlide + 1} / 0{productSlides.length}
         </span>
@@ -152,7 +155,7 @@ export default function Hero() {
             <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`h-1 transition-all duration-500 rounded-none cursor-pointer ${
+                className={`h-1.5 md:h-1 transition-all duration-500 rounded-full md:rounded-none cursor-pointer ${
                 index === currentSlide ? "w-12 bg-sky-500" : "w-6 bg-white/30 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
