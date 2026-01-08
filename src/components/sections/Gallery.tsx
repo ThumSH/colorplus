@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowUpRight, Droplets } from "lucide-react";
+import { ArrowUpRight, Droplets,Printer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useRef } from "react";
@@ -291,7 +291,7 @@ export default function Gallery() {
 
         {/* Footer button */}
          <motion.div
-        className="container mx-auto px-6 mt-32 lg:mt-4 flex flex-col items-center relative z-20"
+        className="container mx-auto px-6 mt-32 flex flex-col items-center relative z-20"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
@@ -300,20 +300,18 @@ export default function Gallery() {
         <p className="text-slate-400 text-lg font-light uppercase tracking-[0.2em] mb-8 text-center">
           More work coming soon
         </p>
-        <Link href="/products" className="group relative">
-          <motion.button
-            className="relative bg-white/95 text-slate-950 uppercase tracking-[0.15em] text-sm font-black px-12 lg:px-16 py-7 rounded-3xl overflow-hidden shadow-2xl hover:shadow-white/20 transition-all duration-500"
-            whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(255,255,255,0.25)" }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="absolute inset-0 bg-linear-to-r from-sky-400 via-cyan-400 to-sky-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-            <span className="relative flex items-center gap-3 z-10">
-              View Products
-              <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </span>
-          </motion.button>
-        </Link>
+                <div className="flex justify-center relative z-20">
+          <Link href="/products">
+            <button className="group relative flex items-center gap-3 bg-slate-900 text-white uppercase tracking-[0.2em] text-[11px] font-black px-12 py-6 overflow-hidden border border-white/10 hover:border-sky-500/50 transition-colors duration-300 rounded-sm">
+              <div className="absolute inset-0 bg-sky-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+              <div className="relative flex items-center gap-3 z-10">
+                <Printer size={16} />
+                View Products
+                <ArrowUpRight size={16} />
+              </div>
+            </button>
+          </Link>
+        </div>
       </motion.div>
       </div>
     </section>

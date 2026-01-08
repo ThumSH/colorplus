@@ -36,8 +36,8 @@ export const OvalHexMesh = React.memo(() => {
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
       <motion.div 
         className="w-full h-full absolute inset-0 will-change-transform"
-        initial={{ scale: 1, opacity: 0.4 }}
-        animate={{ scale: 1.05, opacity: 0.5 }}
+        initial={{ scale: 1, opacity: 0.7 }}
+        animate={{ scale: 1.05, opacity: 0.9 }}
         transition={{ duration: 8, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
         style={{
           maskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)",

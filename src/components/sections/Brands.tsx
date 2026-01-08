@@ -8,18 +8,18 @@ import { ApparelMesh } from "@/components/ui/BrandAssets";
 
 // --- Data ---
 const brands = [
-  { name: "Eddie Bauer", src: "/ed.svg" },
-  { name: "Hugo Boss", src: "/11.svg" },
-  { name: "Calvin Klein", src: "/10.svg" },
+   { name: "Tommy Hilfiger", src: "/tmy.svg" },
   { name: "Lily", src: "/lily.svg" },
-  { name: "True Religion", src: "/1.svg" },
-  { name: "Michael Kors", src: "/kors.svg" },
-  { name: "Kohls", src: "/6.svg" },
-  { name: "Columbia", src: "/9.svg" },
-  { name: "Diesel", src: "/8.svg" },
-  { name: "Tommy Hilfiger", src: "/2.svg" },
-  { name: "Mothercare", src: "/12.svg" },
-  { name: "Decathlon", src: "/deca.svg" }
+  { name: "Calvin Klein", src: "/ckl.svg" },
+  { name: "Michael Kors", src: "/cors.svg" },
+  { name: "Kohls", src: "/kohl.svg" },
+  { name: "Eddie Bauer", src: "/edb.svg" },
+  { name: "Columbia", src: "/cp.svg" },
+  { name: "Diesel", src: "/die.svg" },
+    { name: "Hugo Boss", src: "/hugo.svg" },
+  { name: "Mothercare", src: "/mc.svg" },
+  { name: "True Religion", src: "/trueR.svg" },
+  { name: "Decathlon", src: "/dec.svg" }
 ];
 
 // --- Animation Variants ---
@@ -44,21 +44,18 @@ const fadeInUp: Variants = {
 
 const BrandCard = React.memo(({ brand }: { brand: (typeof brands)[0] }) => (
   <div className="group relative">
-    <div className="relative h-70 rounded-2xl bg-slate-900/80 border border-white/10 group-hover:border-sky-500/30 flex items-center justify-center overflow-hidden transition-all duration-500 shadow-2xl backdrop-blur-sm">
-      <div className="relative z-10 w-full h-[80%] bg-white rounded-xl flex items-center justify-center p-10 shadow-lg transition-transform duration-500 group-hover:scale-105">
-        <div className="relative w-full h-full">
+    <div className="relative h-40 md:h-65 rounded-3xl overflow-hidden transition-all duration-500 bg-white group-hover:scale-[1.02] group-hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.4)]">
+      <div className="relative z-10 w-full h-full">
           <Image
             src={brand.src}
             alt={brand.name}
             fill
             sizes="(max-width: 768px) 100vw, 300px"
-            className="object-contain"
-            loading="lazy" 
+            className="object-cover" 
           />
-        </div>
       </div>
     </div>
-    <p className="mt-4 text-center text-lg font-bold text-slate-500 group-hover:text-sky-400 transition-colors duration-300 uppercase tracking-[0.3em]">
+    <p className="mt-6 text-center text-sm font-bold text-slate-500 group-hover:text-sky-400 transition-colors duration-300 uppercase tracking-[0.25em]">
       {brand.name}
     </p>
   </div>

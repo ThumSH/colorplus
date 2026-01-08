@@ -10,7 +10,7 @@ const MeshBackgroundComponent = () => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none mix-blend-screen">
       {/* Radial gradient mask */}
-      <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_10%,theme(colors.slate.950)_90%)]" />
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_10%,var(--color-slate-950)_90%)]" />
 
       <svg
         className="absolute inset-0 w-full h-full"
@@ -115,7 +115,7 @@ const valueAdded: ServiceItem[] = [
   },
   {
     title: "Accessory Sourcing",
-    desc: "We supply related accessories and other equipment sourced directly from China.",
+    desc: "We import related accessories and other equipment sourced directly from China.",
     icon: Globe
   },
   {

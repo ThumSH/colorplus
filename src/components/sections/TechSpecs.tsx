@@ -12,9 +12,9 @@ const inkData = [
 ];
 
 const features = [
-  { id: 1, title: "Eco-Friendly Inks", desc: "Hazardous-chemical free.", icon: <Leaf className="text-cyan-400" size={24} /> },
-  { id: 2, title: "Global Standard", desc: "Trusted by USA & EU brands.", icon: <Globe className="text-sky-400" size={24} /> },
-  { id: 3, title: "Supply Chain", desc: "4-month raw material stock.", icon: <Database className="text-sky-400" size={24} /> },
+  { id: 1, title: "Eco-Friendly Inks", desc: "Hazardous-chemical free.", icon: <Leaf className="text-cyan-400" size={24} />, titleColor: "text-cyan-400" },
+  { id: 2, title: "Global Standard", desc: "Trusted by USA & EU brands.", icon: <Globe className="text-sky-400" size={24} />, titleColor: "text-sky-400" },
+  { id: 3, title: "Supply Chain", desc: "4-month raw material stock.", icon: <Database className="text-emerald-400" size={24} />, titleColor: "text-emerald-400" },
 ];
 
 // Optimized Component: No useState/useEffect needed!
@@ -91,7 +91,7 @@ export default function TechSpecs() {
                     {item.icon}
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-base">{item.title}</h4>
+                    <h4 className={`font-bold text-lg ${item.titleColor}`}>{item.title}</h4>
                     <p className="text-gray-500 text-sm">{item.desc}</p>
                   </div>
                 </motion.div>

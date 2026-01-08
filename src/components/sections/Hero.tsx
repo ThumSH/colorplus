@@ -28,7 +28,7 @@ const productSlides = [
     image: "/ty.webp", 
     label: "Global Export Quality",
     headline: ["TRUSTED BY", "ICONS."],
-    description: "The preferred printing partner for global giants like Calvin Klein, Hugo Boss, and Diesel. Exporting excellence to the USA, UK, and Italy.",
+    description: "Become excellence in printing partnering through local base major apparel companies to global brands",
     highlightColor: "from-sky-100 to-cyan-700"
   },
 ];
