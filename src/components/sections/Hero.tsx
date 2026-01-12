@@ -11,7 +11,7 @@ const productSlides = [
     id: 1, 
     image: "/print.webp", 
     label: "Established 2009", 
-    headline: ["SCREEN PRINTING", "Perfection."], 
+    headline: ["SCREEN PRINTING", "PERFECTION."], 
     description: "From design to finish, we offer the best in exceptional quality for the textile industry.",
     highlightColor: "from-sky-400 to-cyan-300" 
   },
@@ -19,7 +19,7 @@ const productSlides = [
     id: 2, 
     image: "/pri.webp", 
     label: "Born From Experience", 
-    headline: ["MASTERING THE", "TECHNIQUE."],
+    headline: ["MASTERING THE", "PRESS."],
     description: "Utilizing a wide spectrum of techniques including High Build, Gel, Foil, Flock, and Silicone prints.",
     highlightColor: "from-sky-200 to-cyan-500"
   },

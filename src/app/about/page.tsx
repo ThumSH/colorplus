@@ -11,7 +11,7 @@ const getSeededRandom = (seed: number) => {
   return x - Math.floor(x);
 };
 
-// --- 2. Floating Dots Background (Converted to Framer Motion) ---
+// --- 2. Floating Dots Background ---
 const FloatingDotsBackgroundComponent = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -52,7 +52,6 @@ const FloatingDotsBackgroundComponent = () => {
             filter: `blur(${dot.size / 3}px)`,
             boxShadow: `0 0 ${dot.size + 2}px rgba(14, 165, 233, ${dot.opacity * 0.8})`,
           }}
-          // Replaced CSS animation with Framer Motion
           animate={{
             y: [0, -20, 0],
             scale: [1, 1.2, 1],
@@ -72,7 +71,6 @@ const FloatingDotsBackgroundComponent = () => {
 const FloatingDotsBackground = React.memo(FloatingDotsBackgroundComponent);
 FloatingDotsBackground.displayName = "FloatingDotsBackground";
 
-// --- 3. MESH BACKGROUND SYSTEM ---
 
 function MeshOval({
   className = "",
@@ -92,40 +90,47 @@ function MeshOval({
       className={`absolute pointer-events-none ${className}`} 
       style={{ 
         transform: `rotate(${rotate}deg)`,
-        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+        // ✅ The Signature "Soft Fade" Mask
+        maskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        // ✅ The Signature "Soft Blur"
+        filter: "blur(0.5px)",
       }}
     >
-      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-sky-600/10 blur-[60px]" />
 
       <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
+          {/* Gradient for the Ring Stroke */}
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
-            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.75" />
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
           </linearGradient>
 
-          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
-            <path
-              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
-              fill="none"
-              stroke={`url(#${gradId})`}
-              strokeWidth="1.5"
-              strokeOpacity="0.8"
-            />
-            <circle cx="24" cy="21" r="2" fill="#38bdf8" opacity="0.6" />
+          {/* ✅ THE MICRO DOT PATTERN (Matches Footer/Gallery) */}
+          <pattern id={patternId} x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+            <rect width="100%" height="100%" fill="transparent" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.6" />
+            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
           </pattern>
         </defs>
 
         <g opacity={opacity}>
-          <rect width="300" height="300" fill={`url(#${patternId})`} />
-          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
-            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
-            <stop offset="100%" stopColor="#000" stopOpacity="0" />
-          </radialGradient>
-          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+          {/* Filled Body */}
+          <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patternId})`} opacity="0.9" />
+          
+          {/* Stroke Ring */}
+          <ellipse
+            cx="150"
+            cy="150"
+            rx="130"
+            ry="105"
+            fill="none"
+            stroke={`url(#${gradId})`}
+            strokeOpacity="0.3"
+            strokeWidth="1"
+          />
         </g>
       </svg>
     </div>
@@ -135,8 +140,11 @@ function MeshOval({
 function AboutMeshBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-950/50 to-slate-950" />
+      
+      {/* Placements using the new MeshOval */}
       <MeshOval className="top-32 -left-24 w-96 h-96" opacity={0.65} rotate={-15} />
-      <MeshOval className="top-[25%] -right-32 w-[500px] h-[500px]" opacity={0.5} rotate={20} />
+      <MeshOval className="top-[25%] -right-32 w-120 h-120" opacity={0.5} rotate={20} />
       <MeshOval className="top-[50%] left-[5%] w-72 h-72" opacity={0.7} rotate={45} />
       <MeshOval className="bottom-40 -right-16 w-80 h-80" opacity={0.6} rotate={-10} />
       <MeshOval className="-bottom-20 -left-20 w-96 h-96" opacity={0.5} rotate={10} />
@@ -248,7 +256,7 @@ export default function AboutPage() {
           className="absolute inset-0 z-0"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/40 to-sky-950/40 z-10" />
+          <div className="absolute inset-0 bg-linear-to-br from-slate-900 via-slate-900/40 to-sky-950/40 z-10" />
           <Image
             src="/io.webp" 
             alt="Colour Plus Factory"
@@ -282,7 +290,7 @@ export default function AboutPage() {
               SCREEN PRINTING <br />
               {/* Replaced CSS animation with Framer Motion span */}
               <motion.span 
-                className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-violet-400"
+                className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-violet-400"
                 style={{ backgroundSize: "300% 300%" }}
                 animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -325,7 +333,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-10 rounded-3xl border border-white/10 hover:border-sky-500/50 transition-all duration-500 shadow-2xl shadow-sky-500/5">
                 <div className="absolute -top-3 -left-3 w-12 h-12 bg-sky-500/20 rounded-full blur-md" />
                 <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-4 uppercase tracking-tight">
@@ -348,7 +356,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-br from-violet-500/10 to-transparent rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-10 rounded-3xl border border-white/10 hover:border-violet-500/50 transition-all duration-500 shadow-2xl shadow-violet-500/5">
                 <div className="absolute -top-3 -right-3 w-12 h-12 bg-violet-500/20 rounded-full blur-md" />
                 <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-4 uppercase tracking-tight">
@@ -368,7 +376,7 @@ export default function AboutPage() {
       </section>
 
       {/* --- OPERATIONAL EXCELLENCE GRID --- */}
-      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
+      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12">
           
           <motion.div 
@@ -383,7 +391,7 @@ export default function AboutPage() {
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-              Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Choose Us?</span>
+              Why <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Choose Us?</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto font-light">
               Built on a foundation of capacity, compliance, and quality that sets industry standards.
@@ -438,7 +446,7 @@ export default function AboutPage() {
                  viewport={{ once: true }}
                  transition={{ delay: i * 0.1 }}
                >
-                 <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgGradient} to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500`} />
+                 <div className={`absolute inset-0 bg-linear-to-br ${stat.bgGradient} to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500`} />
                  <div className="relative p-8 bg-slate-900/60 backdrop-blur-md rounded-2xl text-center border border-white/10 hover:border-sky-500/30 transition-all duration-500">
                    <div className={`inline-flex p-4 rounded-xl ${stat.iconBox} border mb-6`}>
                      <stat.icon className={stat.iconColor} size={28} />
@@ -469,7 +477,7 @@ export default function AboutPage() {
                 variants={fadeInUp}
                 className="group relative"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500" />
+                <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500" />
                 <div className={`relative bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:${val.borderClass} transition-all duration-500 h-full`}>
                   <div 
                     className={`mb-6 w-fit p-4 rounded-xl border ${val.borderClass}`}
@@ -509,7 +517,7 @@ export default function AboutPage() {
                 </div>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-8 tracking-tight leading-tight">
                   Worldwide <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Excellence.</span>
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Excellence.</span>
                 </h2>
                 
                 <div className="space-y-8">
@@ -557,21 +565,21 @@ export default function AboutPage() {
              </motion.div>
 
              <motion.div 
-               className="relative h-[600px] rounded-3xl overflow-hidden"
+               className="relative h-150 rounded-3xl overflow-hidden"
                initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
              >
-                <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/20 via-transparent to-violet-500/20 z-10" />
+                <div className="absolute inset-0 bg-linear-to-tr from-sky-500/20 via-transparent to-violet-500/20 z-10" />
                 <Image 
-                  src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop"
+                  src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200&auto=format&fit=crop"
                   alt="Global Logistics"
                   fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-contain"
+                  sizes="(max-width: 1023px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent flex items-end justify-center p-12 z-20">
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent flex items-end justify-center p-12 z-20">
                   <div className="text-center">
                     <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-4">
                       {/* Replaced CSS animation with Framer Motion wrapper */}

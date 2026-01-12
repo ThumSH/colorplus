@@ -19,9 +19,9 @@ export const BaseGrid = () => (
 export const ApparelMesh = ({ 
   variant = "micro", 
   opacity = 0.15,
-  color = "#38bdf8",
+  color = "#0ea5e9", // <--- UPDATED to custom color (Sky-500)
   splitCenter = false,
-  scale = 1 // <--- NEW DEFAULT SCALE (1 = Normal, 2 = Double Size, etc.)
+  scale = 1 
 }: { 
   variant?: "sport" | "micro"; 
   opacity?: number;
@@ -51,7 +51,7 @@ export const ApparelMesh = ({
             width="20" 
             height="34" 
             patternUnits="userSpaceOnUse"
-            patternTransform={`scale(${scale})`} // <--- THIS CONTROLS THE SIZE
+            patternTransform={`scale(${scale})`}
           >
             <path d="M10 0 L20 5 V15 L10 20 L0 15 V5 Z" fill="none" stroke={color} strokeWidth="1" />
             <path d="M10 17 L20 22 V32 L10 37 L0 32 V22 Z" fill="none" stroke={color} strokeWidth="1" transform="translate(10, 17)" />
@@ -65,24 +65,25 @@ export const ApparelMesh = ({
             width="12" 
             height="12" 
             patternUnits="userSpaceOnUse"
-            patternTransform={`scale(${scale})`} // <--- THIS CONTROLS THE SIZE
+            patternTransform={`scale(${scale})`}
           >
             <rect width="100%" height="100%" fill="transparent" />
             <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill={color} opacity="0.5" />
             <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill={color} opacity="0.5" />
           </pattern>
+
+          <linearGradient id="fade-gradient" x1="0" y1="0" x2="0" y2="1">
+             <stop offset="0%" stopColor="#020617" stopOpacity="0.8" />
+             <stop offset="20%" stopColor="#020617" stopOpacity="0" />
+             <stop offset="80%" stopColor="#020617" stopOpacity="0" />
+             <stop offset="100%" stopColor="#020617" stopOpacity="0.8" />
+          </linearGradient>
         </defs>
 
         <rect width="100%" height="100%" fill={`url(#mesh-${variant})`} />
         
         {/* Edge Fade */}
         <rect width="100%" height="100%" fill="url(#fade-gradient)" />
-        <linearGradient id="fade-gradient" x1="0" y1="0" x2="0" y2="1">
-           <stop offset="0%" stopColor="#020617" stopOpacity="0.8" />
-           <stop offset="20%" stopColor="#020617" stopOpacity="0" />
-           <stop offset="80%" stopColor="#020617" stopOpacity="0" />
-           <stop offset="100%" stopColor="#020617" stopOpacity="0.8" />
-        </linearGradient>
       </svg>
     </div>
   );

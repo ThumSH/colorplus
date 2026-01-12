@@ -5,7 +5,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Layers, Zap, Droplets, Sparkles, Feather, Maximize, CheckCircle, PieChart as PieIcon, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
-// --- 1. MESH BACKGROUND SYSTEM ---
+// --- 1. MESH BACKGROUND SYSTEM (New Micro Dot Design) ---
+
 function MeshOval({
   className = "",
   opacity = 0.55,
@@ -24,58 +25,65 @@ function MeshOval({
       className={`absolute pointer-events-none ${className}`} 
       style={{ 
         transform: `rotate(${rotate}deg)`,
-        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+        // ✅ Signature Soft Fade Mask
+        maskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        // ✅ Signature Soft Blur
+        filter: "blur(0.5px)",
       }}
     >
-      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-sky-600/10 blur-[60px]" />
 
       <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
+          {/* Gradient for the Ring Stroke */}
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
-            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.75" />
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
           </linearGradient>
 
-          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
-            <path
-              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
-              fill="none"
-              stroke={`url(#${gradId})`}
-              strokeWidth="1.5"
-              strokeOpacity="0.8"
-            />
-            <circle cx="24" cy="21" r="2" fill="#38bdf8" opacity="0.6" />
+          {/* ✅ THE MICRO DOT PATTERN */}
+          <pattern id={patternId} x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+            <rect width="100%" height="100%" fill="transparent" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.6" />
+            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
           </pattern>
         </defs>
 
         <g opacity={opacity}>
-          <rect width="300" height="300" fill={`url(#${patternId})`} />
-          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
-            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
-            <stop offset="100%" stopColor="#000" stopOpacity="0" />
-          </radialGradient>
-          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+          {/* Filled Body */}
+          <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patternId})`} opacity="0.9" />
+          
+          {/* Stroke Ring */}
+          <ellipse
+            cx="150"
+            cy="150"
+            rx="130"
+            ry="105"
+            fill="none"
+            stroke={`url(#${gradId})`}
+            strokeOpacity="0.3"
+            strokeWidth="1"
+          />
         </g>
       </svg>
     </div>
   );
 }
 
-// Updated: Pushed elements down to avoid Hero Section (top-[90vh] etc)
+// Updated: Retained specific positioning for this page's layout
 function TechniquesMeshBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {/* 1. Behind Ink Composition (Left) - Moved down from top-20 to top-[90vh] */}
-      <MeshOval className="top-[90vh] -left-32 w-[500px] h-[500px]" opacity={0.6} rotate={-20} />
+      {/* 1. Behind Ink Composition (Left) */}
+      <MeshOval className="top-[90vh] -left-32 w-140 h-140" opacity={0.6} rotate={-20} />
       
       {/* 2. Middle Section (Right) */}
-      <MeshOval className="top-[180vh] -right-20 w-96 h-96" opacity={0.5} rotate={15} />
+      <MeshOval className="top-[180vh] -right-20 w-120 h-120" opacity={0.5} rotate={15} />
       
       {/* 3. Bottom/Transfer Section (Left) */}
-      <MeshOval className="bottom-20 left-10 w-80 h-80" opacity={0.5} rotate={-10} />
+      <MeshOval className="bottom-20 left-10 w-100 h-100" opacity={0.5} rotate={-10} />
     </div>
   );
 }
@@ -196,7 +204,7 @@ export default function TechniquesPage() {
   return (
     <main ref={containerRef} className="bg-slate-950 min-h-screen relative overflow-hidden">
       
-      {/* Background Mesh - Positioned below Hero */}
+      {/* ✅ NEW: Techniques Mesh Background */}
       <TechniquesMeshBackground />
 
       {/* --- HERO SECTION --- */}
@@ -235,7 +243,7 @@ export default function TechniquesPage() {
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-[0.9]">
               MASTERING THE <br />
               <motion.span 
-                className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-violet-400"
+                className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-violet-400"
                 style={{ backgroundSize: "300% 300%" }}
                 animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -263,7 +271,7 @@ export default function TechniquesPage() {
       </section>
 
       {/* --- INK COMPOSITION CHART  --- */}
-      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
+      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-y border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -283,7 +291,7 @@ export default function TechniquesPage() {
               
               <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
                 What Goes Into <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">
                   Our Production?
                 </span>
               </h2>
@@ -333,10 +341,10 @@ export default function TechniquesPage() {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl" />
               <div className="relative bg-slate-900/60 backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl shadow-sky-500/5">
                 <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/10">
-                  <div className="w-3 h-8 bg-gradient-to-b from-sky-500 to-violet-500 rounded-full" />
+                  <div className="w-3 h-8 bg-linear-to-b from-sky-500 to-violet-500 rounded-full" />
                   <h3 className="text-white font-bold text-2xl">
                     Ink Usage Distribution
                   </h3>
@@ -376,7 +384,7 @@ export default function TechniquesPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Print Techniques</span>
+              Our <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Print Techniques</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto font-light">
               Explore our specialized capabilities that bring creativity to life on fabric.
@@ -395,7 +403,7 @@ export default function TechniquesPage() {
                 className="group relative"
               >
                 {/* Background Glow - Fixed Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${tech.color} rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500`} />
+                <div className={`absolute inset-0 bg-linear-to-br ${tech.color} rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500`} />
                 
                 {/* Card */}
                 <div className="relative bg-slate-900/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-sky-500/30 transition-all duration-500 h-full flex flex-col">
@@ -411,7 +419,7 @@ export default function TechniquesPage() {
                     />
                     
                     {/* Gradient Overlay - Fixed Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/20 to-transparent" />
                     
                     {/* Icon Badge */}
                     <div className="absolute top-4 left-4">
@@ -452,7 +460,7 @@ export default function TechniquesPage() {
       </section>
 
       {/* --- TRANSFER SECTION --- */}
-      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 border-t border-white/5 relative z-10">
+      <section className="py-24 bg-linear-to-b from-slate-950 via-slate-900/50 to-slate-950 border-t border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -470,7 +478,7 @@ export default function TechniquesPage() {
             </motion.div>
             
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
-              Heat Transfer <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">Systems</span>
+              Heat Transfer <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-violet-400">Systems</span>
             </h2>
             
             <p className="text-slate-500 max-w-2xl mx-auto mb-12 text-lg font-light">
@@ -498,7 +506,7 @@ export default function TechniquesPage() {
 
           {/* Additional Info */}
           <motion.div 
-            className="mt-20 p-8 bg-gradient-to-r from-slate-900 to-slate-950 rounded-3xl border border-white/10 max-w-3xl mx-auto"
+            className="mt-20 p-8 bg-linear-to-r from-slate-900 to-slate-950 rounded-3xl border border-white/10 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

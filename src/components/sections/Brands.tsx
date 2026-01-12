@@ -8,7 +8,7 @@ import { ApparelMesh } from "@/components/ui/BrandAssets";
 
 // --- Data ---
 const brands = [
-   { name: "Tommy Hilfiger", src: "/tmy.svg" },
+  { name: "Tommy Hilfiger", src: "/tmy.svg" },
   { name: "Lily", src: "/lily.svg" },
   { name: "Calvin Klein", src: "/ckl.svg" },
   { name: "Michael Kors", src: "/cors.svg" },
@@ -16,7 +16,7 @@ const brands = [
   { name: "Eddie Bauer", src: "/edb.svg" },
   { name: "Columbia", src: "/cp.svg" },
   { name: "Diesel", src: "/die.svg" },
-    { name: "Hugo Boss", src: "/hugo.svg" },
+  { name: "Hugo Boss", src: "/hugo.svg" },
   { name: "Mothercare", src: "/mc.svg" },
   { name: "True Religion", src: "/trueR.svg" },
   { name: "Decathlon", src: "/dec.svg" }
@@ -55,9 +55,7 @@ const BrandCard = React.memo(({ brand }: { brand: (typeof brands)[0] }) => (
           />
       </div>
     </div>
-    <p className="mt-6 text-center text-sm font-bold text-slate-500 group-hover:text-sky-400 transition-colors duration-300 uppercase tracking-[0.25em]">
-      {brand.name}
-    </p>
+    {/* Brand name text removed from here */}
   </div>
 ));
 BrandCard.displayName = "BrandCard";
@@ -129,13 +127,11 @@ export default function Brands() {
             </div>
           </motion.div>
           
-          {/* Added mb-6 to give space between Heading and Paragraph */}
           <motion.h2 variants={fadeInUp} className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-6 leading-tight">
             Powering The <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-indigo-400">Industry Leaders.</span>
           </motion.h2>
           
-          {/* Added mx-auto so the max-w-2xl box is actually centered */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

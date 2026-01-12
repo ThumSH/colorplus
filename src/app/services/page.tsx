@@ -1,57 +1,93 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useId } from "react";
 import { motion, Variants } from "framer-motion";
 import { Layers, Palette, Zap, Sparkles, Feather, Maximize, Droplets, Scissors, Globe, CheckCircle2, LucideIcon } from "lucide-react";
 import Image from "next/image";
 
-// --- 1. MESH BACKGROUND COMPONENT (Consistent with About Page) ---
-const MeshBackgroundComponent = () => {
-  return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none mix-blend-screen">
-      {/* Radial gradient mask */}
-      <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_10%,var(--color-slate-950)_90%)]" />
+// --- 1. MESH BACKGROUND SYSTEM (New Micro Dot Design) ---
 
-      <svg
-        className="absolute inset-0 w-full h-full"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+function MeshOval({
+  className = "",
+  opacity = 0.55,
+  rotate = 0,
+}: {
+  className?: string;
+  opacity?: number;
+  rotate?: number;
+}) {
+  const uid = useId();
+  const patternId = `meshPattern-${uid}`;
+  const gradId = `meshGrad-${uid}`;
+
+  return (
+    <div 
+      className={`absolute pointer-events-none ${className}`} 
+      style={{ 
+        transform: `rotate(${rotate}deg)`,
+        // ✅ Signature Soft Fade Mask
+        maskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        // ✅ Signature Soft Blur
+        filter: "blur(0.5px)",
+      }}
+    >
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-sky-600/10 blur-[60px]" />
+
+      <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern
-            id="hex-mesh-pattern-services" // Unique ID to avoid conflicts if pages transition
-            x="0"
-            y="0"
-            width="56"
-            height="96"
-            patternUnits="userSpaceOnUse"
-            patternTransform="scale(1.2)"
-            className="animate-mesh-drift"
-          >
-            <path
-              d="M28 0 L56 16 V48 L28 64 L0 48 V16 Z"
-              fill="none"
-              className="text-sky-500/25"
-              stroke="currentColor"
-              strokeWidth="0.5"
-            />
-            <path
-              d="M28 48 L56 64 V96 L28 112 L0 96 V64 Z"
-              fill="none"
-              className="text-sky-500/25"
-              stroke="currentColor"
-              strokeWidth="0.5"
-              transform="translate(28, 48)" 
-            />
+          {/* Gradient for the Ring Stroke */}
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
+          </linearGradient>
+
+          {/* ✅ THE MICRO DOT PATTERN */}
+          <pattern id={patternId} x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+            <rect width="100%" height="100%" fill="transparent" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.4" />
+            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
           </pattern>
         </defs>
-        <rect x="0" y="0" width="100%" height="100%" fill="url(#hex-mesh-pattern-services)" />
+
+        <g opacity={opacity}>
+          {/* Filled Body */}
+          <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patternId})`} opacity="0.9" />
+          
+          {/* Stroke Ring */}
+          <ellipse
+            cx="150"
+            cy="150"
+            rx="130"
+            ry="105"
+            fill="none"
+            stroke={`url(#${gradId})`}
+            strokeOpacity="0.3"
+            strokeWidth="1"
+          />
+        </g>
       </svg>
     </div>
   );
-};
+}
 
-const MeshBackground = React.memo(MeshBackgroundComponent);
-MeshBackground.displayName = "MeshBackground";
+const ServicesMeshBackground = React.memo(() => {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Base Gradient */}
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-950/50 to-slate-950" />
+      
+      {/* Distributed Mesh Ovals */}
+      <MeshOval className="top-20 -left-32 w-160 h-160" opacity={0.6} rotate={-10} />
+      <MeshOval className="top-[20%] -right-40 w-180 h-180" opacity={0.5} rotate={15} />
+      <MeshOval className="top-[45%] left-[-10%] w-140 h-140" opacity={0.55} rotate={30} />
+      <MeshOval className="top-[70%] right-[-5%] w-160 h-160" opacity={0.5} rotate={-20} />
+      <MeshOval className="-bottom-32 left-[20%] w-200 h-200" opacity={0.6} rotate={5} />
+    </div>
+  );
+});
+ServicesMeshBackground.displayName = "ServicesMeshBackground";
 
 // --- DATA FROM PDF ---
 const printTechniques = [
@@ -144,8 +180,8 @@ export default function ServicesPage() {
   return (
     <main ref={containerRef} className="bg-slate-950 min-h-screen relative overflow-hidden">
       
-      {/* Background Animation - Replaced Dots with Mesh */}
-      <MeshBackground />
+      {/* ✅ NEW: Services Mesh Background */}
+      <ServicesMeshBackground />
 
       {/* --- HERO HEADER --- */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">

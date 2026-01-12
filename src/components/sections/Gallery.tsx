@@ -1,12 +1,12 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowUpRight, Droplets,Printer } from "lucide-react";
+import { ArrowUpRight, Droplets, Printer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useRef } from "react";
 
-// --- Types ---
+
 interface Project {
   id: number;
   client: string;
@@ -51,71 +51,53 @@ const projects: Project[] = [
   },
 ];
 
-// -------------------------------
-// 1) MESH PATCH (With Blurred Edges)
-// -------------------------------
+
 function MeshPatch({
   idSuffix,
   className = "",
-  opacity = 0.95,
+  opacity = 0.8,
   rotate = 0,
+  scale = 1,
 }: {
   idSuffix: string | number;
   className?: string;
   opacity?: number;
   rotate?: number;
+  scale?: number;
 }) {
   const patternId = `meshPattern-${idSuffix}`;
-  const gradId = `meshGrad-${idSuffix}`;
-  const innerGlowId = `innerGlow-${idSuffix}`;
 
   return (
     <div
       className={`absolute pointer-events-none ${className} will-change-transform`}
       style={{
-        transform: `rotate(${rotate}deg)`,
-        // 1. Fade the edges with a mask
-        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
-        // 2. Blur the structure slightly for that soft look
-        filter: "blur(2px)", 
+        transform: `rotate(${rotate}deg) scale(${scale})`,
+        maskImage: "radial-gradient(closest-side, black 20%, transparent 90%)",
+        WebkitMaskImage: "radial-gradient(closest-side, black 20%, transparent 90%)",
+        filter: "blur(0.5px)",
         opacity,
       }}
       aria-hidden="true"
     >
-      {/* Background Glow */}
-      <div className="absolute inset-0 bg-sky-500/10 blur-[50px]" />
+      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
 
-      <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <svg className="w-full h-full">
         <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.65" />
-            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.55" />
-          </linearGradient>
-
-          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
-            <path
-              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
-              fill="none"
-              stroke={`url(#${gradId})`}
-              strokeWidth="1"
-              strokeOpacity="0.55"
-            />
-            <circle cx="24" cy="21" r="1.6" fill="#38bdf8" opacity="0.35" />
+          <pattern
+            id={patternId}
+            x="0"
+            y="0"
+            width="14"
+            height="14"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect width="100%" height="100%" fill="transparent" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.6" />
+            <ellipse cx="10" cy="10" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.4" />
           </pattern>
-
-          <radialGradient id={innerGlowId} cx="50%" cy="45%" r="65%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.16" />
-            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#000" stopOpacity="0" />
-          </radialGradient>
         </defs>
 
-        <g opacity="1">
-          <rect width="300" height="300" fill={`url(#${patternId})`} />
-          <rect width="300" height="300" fill={`url(#${innerGlowId})`} />
-        </g>
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
       </svg>
     </div>
   );
@@ -124,33 +106,28 @@ function MeshPatch({
 function GalleryBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {/* Base */}
-      <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-indigo-950/15 to-slate-950" />
 
-      {/* Ambient blobs */}
-      <div className="absolute -top-[18%] left-[8%] w-[58%] h-[58%] bg-sky-900/10 blur-[100px] rounded-full mix-blend-screen" />
-      <div className="absolute top-[22%] -right-[14%] w-[58%] h-[58%] bg-indigo-900/10 blur-[100px] rounded-full mix-blend-screen" />
-      <div className="absolute -bottom-[22%] left-[22%] w-[66%] h-[66%] bg-cyan-900/10 blur-[100px] rounded-full mix-blend-screen" />
+      <div className="absolute inset-0 bg-slate-950" />
 
-      {/* Mesh patches (Now with blurred edges) */}
-     <MeshPatch idSuffix="bg-1" className="top-10 left-1 w-100 h-80" opacity={0.92} rotate={-10} />
-      <MeshPatch idSuffix="bg-2" className="top-20 right-8 w-90 h-90" opacity={0.8} rotate={18} />
-      <MeshPatch idSuffix="bg-3" className="top-[30%] left-[34%] w-105 h-105" opacity={0.85} rotate={6} />
-      <MeshPatch idSuffix="bg-4" className="top-[48%] -left-28 w-115 h-115" opacity={0.5} rotate={-20} />
-      <MeshPatch idSuffix="bg-5" className="top-[52%] right-[4%] w-105 h-105" opacity={0.48} rotate={24} />
-      <MeshPatch idSuffix="bg-8" className="top-[68%] right-[10%] w--translate-x-1/2 w-96 h-96" opacity={0.4} rotate={15} />
-      <MeshPatch idSuffix="bg-6" className="bottom-24 left-10 w-95 h-95" opacity={0.58} rotate={12} />
-      <MeshPatch idSuffix="bg-7" className="bottom-10 right-6 w-85 h-85" opacity={0.62} rotate={-14} />
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-sky-950/10 to-slate-950" />
 
-      {/* Vignette */}
-      <div className="absolute inset-0 bg-radial from-transparent via-transparent to-slate-950/55" />
+      <MeshPatch idSuffix="bg-1" className="top-0 left-[-10%] w-160 h-160" opacity={0.9} rotate={-15} />
+      <MeshPatch idSuffix="bg-2" className="top-0 right-[-10%] w-160 h-160" opacity={0.8} rotate={-15} />
+      <MeshPatch idSuffix="bg-3" className="top-[20%] right-[-5%] w-140 h-140" opacity={0.8} rotate={20} />
+      
+      <MeshPatch idSuffix="bg-4" className="top-[40%] left-[20%] w-180 h-180" opacity={0.8} rotate={0} />
+      <MeshPatch idSuffix="bg-5" className="top-[60%] left-[20%] w-180 h-180" opacity={0.8} rotate={0} />
+      
+      <MeshPatch idSuffix="bg-6" className="bottom-[10%] left-[-5%] w-140 h-140" opacity={0.8} rotate={10} />
+      <MeshPatch idSuffix="bg-7" className="bottom-0 right-[-10%] w-160 h-160" opacity={0.8} rotate={-25} />
+
+
+      <div className="absolute inset-0 bg-radial from-transparent via-slate-950/20 to-slate-950/80" />
     </div>
   );
 }
 
-// -------------------------------
-// 2) GALLERY ITEM (Increased Size)
-// -------------------------------
+
 const GalleryItem = React.memo(({ item, index }: { item: Project; index: number }) => {
   const isReversed = index % 2 !== 0;
   
@@ -162,66 +139,81 @@ const GalleryItem = React.memo(({ item, index }: { item: Project; index: number 
   
   const smoothY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, bounce: 0 });
   
-  // Parallax for the Image
-  const y = useTransform(smoothY, [0, 1], [-25, 25]);
-  const scale = useTransform(smoothY, [0, 1], [1.05, 1]);
-
-  // NEW: Parallax for the "In-Between" Mesh
-  // This moves faster/further than the image to create a 3D layering effect
-  const meshY = useTransform(smoothY, [0, 1], [-80, 80]);
-  const meshRotate = useTransform(smoothY, [0, 1], [isReversed ? -15 : 15, isReversed ? 15 : -15]);
+  const y = useTransform(smoothY, [0, 1], [-30, 30]);
+  const scale = useTransform(smoothY, [0, 1], [1.02, 1]);
 
   return (
-    <div ref={containerRef} className="relative z-10 py-16 md:py-24 group">
+    <div ref={containerRef} className="relative z-10 py-20 group">
       
-      {/* --- NEW: THE IN-BETWEEN MESH --- */}
-      <motion.div 
-        style={{ y: meshY, rotate: meshRotate }}
-        className={`absolute hidden lg:block z-0 pointer-events-none 
-          ${isReversed ? "-left-20" : "-right-20"} top-1/4`}
-      >
-        <MeshPatch 
-          idSuffix={`inter-mesh-${item.id}`} 
-          className="w-80 h-80" 
-          opacity={0.35} 
-        />
-      </motion.div>
+      <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[80%] h-px bg-linear-to-r from-transparent via-sky-500/10 to-transparent -z-10" />
 
-      <div className={`flex flex-col lg:flex-row items-center gap-10 lg:gap-16 ${isReversed ? "lg:flex-row-reverse" : ""}`}>
+      <div className={`flex flex-col lg:flex-row items-center gap-10 lg:gap-20 ${isReversed ? "lg:flex-row-reverse" : ""}`}>
         
-        {/* Image Section */}
         <motion.div
-          className="w-full lg:w-1/2 relative group z-10"
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
+          className="w-full lg:w-[55%] relative z-10"
+          initial={{ opacity: 0, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {/* ... existing image container code ... */}
-          <div className="relative h-100 md:h-137.5 lg:h-175 w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl">
-             {/* Tech Corners & Label remain the same */}
-             <motion.div style={{ y, scale }} className="absolute inset-0 w-full h-full will-change-transform">
-                <Image src={item.image} alt={item.client} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" quality={85} />
-             </motion.div>
+          <div className="relative h-100 md:h-137.5 w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-900/50 shadow-2xl group-hover:shadow-[0_0_50px_rgba(14,165,233,0.15)] transition-shadow duration-700">
+            
+            <div className="absolute top-4 left-4 w-2 h-2 border-l border-t border-sky-500/50 z-20" />
+            <div className="absolute top-4 right-4 w-2 h-2 border-r border-t border-sky-500/50 z-20" />
+            <div className="absolute bottom-4 left-4 w-2 h-2 border-l border-b border-sky-500/50 z-20" />
+            <div className="absolute bottom-4 right-4 w-2 h-2 border-r border-b border-sky-500/50 z-20" />
+            
+            <div className="absolute top-6 left-6 z-20 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full">
+              <span className="text-sky-400 text-[10px] font-bold tracking-widest">{item.year}</span>
+            </div>
+            
+            <motion.div style={{ y, scale }} className="absolute inset-0 w-full h-full will-change-transform">
+              <Image 
+                src={item.image} 
+                alt={item.client} 
+                fill 
+                className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700" 
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw"
+                quality={90}
+              />
+            </motion.div>
+          
+            <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 via-transparent to-transparent" />
           </div>
         </motion.div>
 
-        {/* Text Section */}
         <motion.div
-          className={`w-full lg:w-1/2 relative z-20 ${isReversed ? "lg:-mr-20" : "lg:-ml-20"}`}
-          initial={{ opacity: 0, x: isReversed ? -20 : 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          className={`w-full lg:w-[45%] relative z-20 ${isReversed ? "lg:text-right" : "lg:text-left"}`}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.7, delay: 0.2 }}
         >
-          {/* ... existing text card code ... */}
-          <div className="relative bg-slate-900/55 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-2xl shadow-xl overflow-hidden hover:border-sky-500/30 transition-colors duration-500">
-             {/* Content remains the same */}
-             <div className="relative z-10">
-                <h3 className="text-3xl md:text-5xl font-black text-white mb-5 tracking-tighter uppercase leading-[0.9]">{item.client}</h3>
-                <p className="text-slate-300/90 text-sm md:text-base leading-relaxed font-light mb-8">{item.desc}</p>
-                {/* ... labels and buttons ... */}
-             </div>
+          <div className={`relative p-8 rounded-2xl border border-white/5 bg-slate-900/40 backdrop-blur-sm 
+            ${isReversed ? "lg:mr-auto" : "lg:ml-auto"}`}>
+            
+            <h3 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase mb-4 group-hover:text-sky-400 transition-colors duration-300">
+              {item.client}
+            </h3>
+            
+            <p className="text-slate-400 text-sm md:text-base leading-relaxed font-light mb-8 max-w-md">
+              {item.desc}
+            </p>
+            
+            <div className={`flex flex-wrap gap-2 mb-8 ${isReversed ? "justify-end" : "justify-start"}`}>
+              {item.tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1 text-[10px] font-bold tracking-widest uppercase bg-sky-500/5 border border-sky-500/20 text-sky-300 rounded-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className={`flex items-center gap-2 text-sky-500 text-xs font-bold uppercase tracking-widest ${isReversed ? "justify-end" : "justify-start"}`}>
+              <span>Case Study</span>
+              <ArrowUpRight size={14} />
+            </div>
           </div>
         </motion.div>
       </div>
@@ -230,89 +222,93 @@ const GalleryItem = React.memo(({ item, index }: { item: Project; index: number 
 });
 GalleryItem.displayName = "GalleryItem";
 
-
-// -------------------------------
-// 3) MAIN COMPONENT
-// -------------------------------
 export default function Gallery() {
   return (
-    <section id="gallery" className="bg-slate-950 py-24 relative overflow-hidden">
+    <section id="gallery" className="bg-slate-950 py-24 lg:py-40 relative overflow-hidden">
       <GalleryBackground />
 
-      {/* Subtle vertical “rail” */}
-      <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-linear-to-b from-transparent via-white/8 to-transparent pointer-events-none z-1" />
+      {/* Center Line Decoration */}
+      <div className="absolute left-1/2 top-0 w-px h-full bg-linear-to-b from-transparent via-white/5 to-transparent -translate-x-1/2" />
 
       {/* Header */}
-      <div className="container mx-auto px-6 relative z-10 text-center mb-16">
+      <div className="container mx-auto px-6 lg:px-12 relative z-10 text-center mb-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-sky-500/10 border border-white/10 mb-6 backdrop-blur-md"
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-sky-500/20 bg-sky-500/5 mb-8"
         >
-          <Droplets className="text-sky-400" size={16} />
-          <span className="text-sky-300 text-[10px] font-black tracking-[0.4em] uppercase">
-            Premium Portfolio
+          <Droplets className="text-sky-400" size={14} />
+          <span className="text-sky-300 text-[10px] font-black tracking-[0.3em] uppercase">
+            Curated Works
           </span>
         </motion.div>
 
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-black text-white leading-[0.85] tracking-tighter mb-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9]"
         >
           SELECTED <br />
-          <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-300 to-indigo-400">
-            WORKS.
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-200 to-white">
+            PROJECTS.
           </span>
         </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-slate-400 max-w-xl mx-auto text-base md:text-lg leading-relaxed font-light"
-        >
-          A curated selection of A-grade screen printing projects—built for clarity, durability, and premium finish.
-        </motion.p>
       </div>
 
-      {/* Gallery items */}
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col gap-20">
+      {/* Projects Grid */}
+      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+        <div className="flex flex-col gap-12">
           {projects.map((item, index) => (
             <GalleryItem key={item.id} item={item} index={index} />
           ))}
         </div>
 
-        {/* Footer button */}
+        {/* Bottom CTA */}
          <motion.div
-        className="container mx-auto px-6 mt-32 flex flex-col items-center relative z-20"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 1, delay: 0.3 }}
-      >
-        <p className="text-slate-400 text-lg font-light uppercase tracking-[0.2em] mb-8 text-center">
-          More work coming soon
-        </p>
-                <div className="flex justify-center relative z-20">
+
+          className="mt-24 lg:mt-10 flex flex-col items-center relative z-20"
+
+          initial={{ opacity: 0, y: 30 }}
+
+          whileInView={{ opacity: 1, y: 0 }}
+
+          viewport={{ once: true, amount: 0.4 }}
+
+          transition={{ duration: 0.8, delay: 0.2 }}
+
+        >
+
+          <p className="text-slate-400 text-sm lg:text-base font-light uppercase tracking-[0.25em] mb-20 text-center">
+
+            More work coming soon
+
+          </p>
+
+         
+
           <Link href="/products">
-            <button className="group relative flex items-center gap-3 bg-slate-900 text-white uppercase tracking-[0.2em] text-[11px] font-black px-12 py-6 overflow-hidden border border-white/10 hover:border-sky-500/50 transition-colors duration-300 rounded-sm">
-              <div className="absolute inset-0 bg-sky-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+
+            <button className="group relative flex items-center gap-3 bg-slate-900 text-white uppercase tracking-[0.2em] text-[10px] lg:text-[11px] font-black px-10 lg:px-12 py-5 lg:py-6 overflow-hidden border border-white/10 hover:border-sky-500/50 transition-colors duration-300 rounded-sm">
+
+              <div className="absolute inset-0 bg-linear-to-r from-sky-600 to-indigo-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+
               <div className="relative flex items-center gap-3 z-10">
-                <Printer size={16} />
+
+                <Printer size={15} />
+
                 View Products
-                <ArrowUpRight size={16} />
+
+                <ArrowUpRight size={15} />
+
               </div>
+
             </button>
+
           </Link>
-        </div>
-      </motion.div>
+
+        </motion.div>
       </div>
     </section>
   );

@@ -70,7 +70,8 @@ const FloatingDotsBackgroundComponent = () => {
 const FloatingDotsBackground = React.memo(FloatingDotsBackgroundComponent);
 FloatingDotsBackground.displayName = "FloatingDotsBackground";
 
-// --- 3. MESH BACKGROUND SYSTEM ---
+// --- 3. MESH BACKGROUND SYSTEM (New Micro Dot Design) ---
+
 function MeshOval({
   className = "",
   opacity = 0.55,
@@ -89,40 +90,47 @@ function MeshOval({
       className={`absolute pointer-events-none ${className}`} 
       style={{ 
         transform: `rotate(${rotate}deg)`,
-        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 40%, transparent 100%)"
+        // ✅ Signature Soft Fade Mask
+        maskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
+        // ✅ Signature Soft Blur
+        filter: "blur(0.5px)",
       }}
     >
-      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-sky-600/10 blur-[60px]" />
 
       <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
+          {/* Gradient for the Ring Stroke */}
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
-            <stop offset="45%" stopColor="#0ea5e9" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.75" />
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
           </linearGradient>
 
-          <pattern id={patternId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
-            <path
-              d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
-              fill="none"
-              stroke={`url(#${gradId})`}
-              strokeWidth="1.5"
-              strokeOpacity="0.8"
-            />
-            <circle cx="24" cy="21" r="2" fill="#38bdf8" opacity="0.6" />
+          {/* ✅ THE MICRO DOT PATTERN */}
+          <pattern id={patternId} x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+            <rect width="100%" height="100%" fill="transparent" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.6" />
+            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
           </pattern>
         </defs>
 
         <g opacity={opacity}>
-          <rect width="300" height="300" fill={`url(#${patternId})`} />
-          <radialGradient id={`innerGlow-${uid}`} cx="50%" cy="45%" r="65%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
-            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.05" />
-            <stop offset="100%" stopColor="#000" stopOpacity="0" />
-          </radialGradient>
-          <rect width="300" height="300" fill={`url(#innerGlow-${uid})`} />
+          {/* Filled Body */}
+          <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patternId})`} opacity="0.9" />
+          
+          {/* Stroke Ring */}
+          <ellipse
+            cx="150"
+            cy="150"
+            rx="130"
+            ry="105"
+            fill="none"
+            stroke={`url(#${gradId})`}
+            strokeOpacity="0.3"
+            strokeWidth="1"
+          />
         </g>
       </svg>
     </div>
@@ -132,9 +140,14 @@ function MeshOval({
 function ContactMeshBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      <MeshOval className="top-10 -left-20 w-96 h-96" opacity={0.6} rotate={-10} />
-      <MeshOval className="top-[30%] -right-32 w-[500px] h-[500px]" opacity={0.5} rotate={20} />
-      <MeshOval className="bottom-0 left-10 w-80 h-80" opacity={0.5} rotate={5} />
+      {/* 1. Top Left - Hero Accent */}
+      <MeshOval className="top-10 -left-20 w-120 h-120" opacity={0.6} rotate={-10} />
+      
+      {/* 2. Top Right - Counterbalance */}
+      <MeshOval className="top-[25%] -right-32 w-160 h-160" opacity={0.5} rotate={20} />
+      
+      {/* 3. Bottom Left - Form Backing */}
+      <MeshOval className="bottom-0 left-10 w-140 h-140" opacity={0.5} rotate={5} />
     </div>
   );
 }
@@ -145,7 +158,7 @@ const contactInfo = [
     id: 1,
     title: "Office & Factory",
     content: "564/A, Athurugiriya Road, Kottawa, Sri Lanka.",
-    link: "https://maps.google.com/?q=564/A,+Athurugiriya+Road,+Kottawa,+Sri+Lanka",
+    link: "https://www.google.com/maps/search/?api=1&query=564/A,+Athurugiriya+Road,+Kottawa,+Sri+Lanka",
     icon: <MapPin size={24} />,
     color: "text-sky-400",
     bg: "bg-sky-500/10",
@@ -187,7 +200,10 @@ export default function ContactPage() {
       
       {/* Backgrounds */}
       <FloatingDotsBackground />
+      {/* ✅ NEW: Contact Mesh Background */}
       <ContactMeshBackground />
+      
+      {/* Ambient Globs */}
       <div className="absolute top-0 right-0 w-150 h-150 bg-sky-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-125 h-125 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -208,7 +224,7 @@ export default function ContactPage() {
 
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-none">
               START YOUR <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-200 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 via-sky-200 to-indigo-400">
                 NEXT PROJECT.
               </span>
             </h1>
@@ -313,9 +329,8 @@ export default function ContactPage() {
 
           {/* RIGHT: Map */}
           <div className="relative min-h-100 lg:min-h-full bg-slate-900">
-            {/* Updated iframe src to a valid Google Maps Embed query */}
             <iframe 
-              src="https://maps.google.com/maps?q=564/A,+Athurugiriya+Road,+Kottawa,+Sri+Lanka&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.087796472659!2d79.95729707593649!3d6.880088093118833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2505562767095%3A0xc00f07248d672728!2sColour%20Plus%20Printing%20Systems%20(Pvt)%20Ltd!5e0!3m2!1sen!2slk!4v1708945678901!5m2!1sen!2slk"
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: "grayscale(100%) invert(90%) contrast(85%) opacity(0.8)" }} 

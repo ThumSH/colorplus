@@ -15,7 +15,7 @@ const FloatingWhatsApp = () => {
       initial="hidden"
       animate="visible"
       whileHover="hover"
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center"
+      className="fixed bottom-18 right-6 z-50 flex items-center justify-center"
       style={{ textDecoration: 'none' }} 
     >
 

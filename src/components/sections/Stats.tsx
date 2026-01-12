@@ -17,15 +17,71 @@ import {
   Award,
   Sparkles,
 } from "lucide-react";
-import ApparelMesh_stats from "@/components/ui/ApparelMesh_stats";
+
+// --- REMOVED OLD MESH IMPORT ---
+// import ApparelMesh_stats from "@/components/ui/ApparelMesh_stats";
 
 /* ------------------------------------------------------------------ */
-/* CARD MESH (Updated for better visibility)                          */
+/* NEW COMPONENT: MESH PATCH (Oval/Dot Structure)                     */
+/* ------------------------------------------------------------------ */
+
+function MeshPatch({
+  idSuffix,
+  className = "",
+  opacity = 0.95,
+  rotate = 0,
+}: {
+  idSuffix: string | number;
+  className?: string;
+  opacity?: number;
+  rotate?: number;
+}) {
+  const patternId = `meshPattern-stats-${idSuffix}`;
+
+  return (
+    <div
+      className={`absolute pointer-events-none ${className} will-change-transform`}
+      style={{
+        transform: `rotate(${rotate}deg)`,
+        // Radial mask to fade edges
+        maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
+        opacity,
+      }}
+      aria-hidden="true"
+    >
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-sky-500/10 blur-[50px]" />
+
+      <svg className="w-full h-full">
+        <defs>
+          {/* THE "MICRO" OVAL PATTERN */}
+          <pattern
+            id={patternId}
+            x="0"
+            y="0"
+            width="12"
+            height="12"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect width="100%" height="100%" fill="transparent" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.3" />
+            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.3" />
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+      </svg>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* CARD MESH (Preserved)                                              */
 /* ------------------------------------------------------------------ */
 
 const CardMesh = ({ idSuffix }: { idSuffix: string | number }) => {
   return (
-    // UPDATED: Changed opacity from [0.15] to 0.4 (visible) -> 0.6 (hover)
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity duration-500">
       <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -48,7 +104,7 @@ const CardMesh = ({ idSuffix }: { idSuffix: string | number }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* DOT COMPONENT                                                      */
+/* DOT COMPONENT (Preserved - Ink Drops)                              */
 /* ------------------------------------------------------------------ */
 
 type CurveDot = {
@@ -94,7 +150,7 @@ const SCurveDot = ({ dot, progress }: DotProps) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* SCROLL-DRIVEN S-CURVE BACKGROUND                                   */
+/* SCROLL-DRIVEN S-CURVE BACKGROUND (Preserved - Ink Drops)           */
 /* ------------------------------------------------------------------ */
 
 const SCurveDotsBackground = ({
@@ -210,12 +266,12 @@ export default function Stats() {
       ref={sectionRef}
       className="relative bg-slate-950 py-10 overflow-hidden border-y border-white/5"
     >
-      {/* 1. MESH OVAL (Top Right Corner) */}
+      {/* 1. MESH OVAL (Top Right Corner - REPLACED) */}
       <div className="absolute -top-1/4 -right-10 w-200 h-150 opacity-80 pointer-events-none z-0">
-         <ApparelMesh_stats />
+         <MeshPatch idSuffix="stats-bg" className="w-full h-full" rotate={-15} />
       </div>
 
-      {/* 2. Scroll-driven dotted S-curve */}
+      {/* 2. Scroll-driven dotted S-curve (Ink Drops - PRESERVED) */}
       <SCurveDotsBackground progress={scrollYProgress} />
 
       {/* Edge fades */}
@@ -253,7 +309,7 @@ export default function Stats() {
                 transition={{ type: "spring", stiffness: 250, damping: 20 }}
                 className="group relative bg-slate-900/40 backdrop-blur-xl p-8 rounded-2xl border border-white/10 hover:border-sky-500/50 transition-all duration-500 min-h-65 flex flex-col justify-between overflow-hidden shadow-2xl"
               >
-                {/* ✅ Mesh Design Inside Cards (Always Visible) */}
+                {/* Mesh Design Inside Cards (Preserved) */}
                 <CardMesh idSuffix={stat.id} />
 
                 <div className="relative z-10 flex items-center gap-3">

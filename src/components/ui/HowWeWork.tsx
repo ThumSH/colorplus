@@ -13,7 +13,7 @@ const Highlight = ({ children, colorClass }: { children: React.ReactNode; colorC
 const howWeWorkSteps: WorkStep[] = [
   {
     id: "01",
-    image: "/1-1.webp",
+    image: "/lo.webp",
     plainTitle: "Versatile Print Techniques",
     title: (
       <>
@@ -24,7 +24,7 @@ const howWeWorkSteps: WorkStep[] = [
   },
   {
     id: "02",
-    image: "/1.2.webp",
+    image: "/ht.webp",
     plainTitle: "Advanced Transfers",
     title: (
       <>

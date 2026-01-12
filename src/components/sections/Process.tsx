@@ -135,13 +135,13 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
   );
 };
 
-// --- Deterministic random (stable “random” placements, no hydration issues) ---
+// --- Deterministic random (stable “random” placements) ---
 const seeded = (seed: number) => {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 };
 
-// --- Mesh Oval Diagram (same style as Gallery, with blurred/faded edges) ---
+// --- UPDATED: Mesh Oval Diagram (Using Micro Dots) ---
 const MeshOvalDiagram = React.memo(
   ({
     size,
@@ -171,37 +171,36 @@ const MeshOvalDiagram = React.memo(
           height: `${size}px`,
           transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
           opacity,
-          // ✅ blur the edges (feather)
-          WebkitMaskImage: "radial-gradient(circle at center, #000 55%, transparent 78%)",
-          maskImage: "radial-gradient(circle at center, #000 55%, transparent 78%)",
-          filter: "blur(0.25px)",
+          // ✅ UPDATED: Softer Mask for blurred edges
+          // "closest-side" ensures it fits the box perfectly.
+          // Changing stops from 55%->78% to 30%->85% creates a much longer, softer fade.
+          WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 85%)",
+          maskImage: "radial-gradient(closest-side, black 30%, transparent 85%)",
+          // ✅ UPDATED: Slightly stronger blur to soften the dot pixels
+          filter: "blur(0.6px)",
         }}
         aria-hidden="true"
       >
         {/* soft glow behind the mesh */}
-        <div className="absolute inset-0 rounded-full bg-sky-500/10 blur-[70px]" />
+        <div className="absolute inset-0 rounded-full bg-sky-500/10 blur-[80px]" />
 
         <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.65" />
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.4" />
               <stop offset="55%" stopColor="#0ea5e9" stopOpacity="0.5" />
               <stop offset="100%" stopColor="#818cf8" stopOpacity="0.5" />
             </linearGradient>
 
-            <pattern id={patId} x="0" y="0" width="48" height="42" patternUnits="userSpaceOnUse">
-              <path
-                d="M24 2 L40 11 V31 L24 40 L8 31 V11 Z"
-                fill="none"
-                stroke={`url(#${gradId})`}
-                strokeWidth="1"
-                strokeOpacity="0.6"
-              />
-              <circle cx="24" cy="21" r="1.6" fill="#38bdf8" opacity="0.28" />
+            {/* Micro Dots Pattern */}
+            <pattern id={patId} x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+              <rect width="100%" height="100%" fill="transparent" />
+              <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
+              <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
             </pattern>
           </defs>
 
-          {/* oval clip feel */}
+          {/* Oval Shape */}
           <g>
             <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patId})`} opacity="0.9" />
             <ellipse
@@ -211,8 +210,8 @@ const MeshOvalDiagram = React.memo(
               ry="105"
               fill="none"
               stroke={`url(#${gradId})`}
-              strokeOpacity="0.22"
-              strokeWidth="1.2"
+              strokeOpacity="0.15" // Reduced stroke opacity to blend better
+              strokeWidth="1"
             />
           </g>
         </svg>
@@ -223,24 +222,33 @@ const MeshOvalDiagram = React.memo(
 MeshOvalDiagram.displayName = "MeshOvalDiagram";
 
 // --- Random-ish (but stable) mesh placements across the Process section ---
-// ✅ ONLY CHANGE THIS PART in your file:
-// Replace your current ProcessMeshDiagrams with this version (higher opacity)
-
 const ProcessMeshDiagrams = React.memo(() => {
   const diagrams = useMemo(() => {
-    const count = 7;
+    const count = 4;
+    // Define zones to prevent overlap. Each zone is a [min, max] range for x and y percentages.
+    const zones = [
+      { x: [10, 35], y: [10, 40] },   // Top-left
+      { x: [65, 90], y: [15, 45] },   // Top-right
+      { x: [15, 40], y: [60, 90] },   // Bottom-left
+      { x: [60, 85], y: [55, 85] },   // Bottom-right
+    ];
+
     return Array.from({ length: count }).map((_, i) => {
+      const zone = zones[i % zones.length]; // Use modulo for safety if count > zones.length
+
       const s1 = seeded(10.13 + i * 1.17);
       const s2 = seeded(42.77 + i * 2.03);
       const s3 = seeded(99.91 + i * 3.11);
 
-      const left = Number((10 + s1 * 80).toFixed(4));
-      const top = Number((12 + s2 * 76).toFixed(4));
+      // Calculate position within the assigned zone to ensure they don't stack
+      const leftRange = zone.x[1] - zone.x[0];
+      const topRange = zone.y[1] - zone.y[0];
+      const left = Number((zone.x[0] + s1 * leftRange).toFixed(4));
+      const top = Number((zone.y[0] + s2 * topRange).toFixed(4));
 
       const size = Number((260 + s3 * 260).toFixed(2)); // 260..520
       const rotate = Number((-22 + seeded(7.77 + i * 1.9) * 44).toFixed(2)); // -22..22
 
-      // ✅ INCREASED OPACITY (old: 0.12..0.26)
       const opacity = Number((0.28 + seeded(55.5 + i * 1.6) * 0.22).toFixed(4)); // 0.28..0.50
 
       return { left, top, size, rotate, opacity };
@@ -266,30 +274,30 @@ const ProcessMeshDiagrams = React.memo(() => {
 ProcessMeshDiagrams.displayName = "ProcessMeshDiagrams";
 
 
-// --- MESH BACKGROUND: PRECISION GRID (Screen Printing Mesh) + mesh ovals added ---
+// --- UPDATED BACKGROUND: Replaced grid with dots ---
 const ProcessMeshBackground = React.memo(() => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950 pointer-events-none">
-      {/* 1. Base Gradient (Matches Global Theme) */}
+      {/* 1. Base Gradient */}
       <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-[#0a1020] to-slate-950" />
 
-      {/* ✅ NEW: Gallery-style mesh diagrams (blurred edges, random places) */}
+      {/* 2. Floating Mesh Diagrams (Now with dots) */}
       <ProcessMeshDiagrams />
 
-      {/* 2. Micro-Grid Mesh Pattern (Represents Printing Screens) */}
-      <div
-        className="absolute inset-0 opacity-[0.15]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(56, 189, 248, 0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(56, 189, 248, 0.3) 1px, transparent 1px)
-          `,
-          backgroundSize: "20px 20px",
-          maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
-        }}
-      />
+      {/* 3. UPDATED: Micro Dot Pattern (Replacing the old square Grid) */}
+      <div className="absolute inset-0 opacity-[0.15]" style={{ maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)" }}>
+        <svg className="absolute inset-0 w-full h-full">
+          <defs>
+            <pattern id="process-bg-dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+              <rect width="100%" height="100%" fill="transparent" />
+              <ellipse cx="7" cy="7" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.4" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#process-bg-dots)" />
+        </svg>
+      </div>
 
-      {/* 3. Secondary Diagonal Weave (Fabric undertone) */}
+      {/* 4. Secondary Diagonal Weave (Fabric undertone) - Kept for texture depth */}
       <div
         className="absolute inset-0 opacity-[0.05]"
         style={{
@@ -300,14 +308,14 @@ const ProcessMeshBackground = React.memo(() => {
         }}
       />
 
-      {/* 4. Scanning Line Animation (Process Indicator) */}
+      {/* 5. Scanning Line Animation */}
       <motion.div
         className="absolute inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-400/50 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.5)] z-10"
         animate={{ top: ["0%", "100%"], opacity: [0, 1, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
       />
 
-      {/* 5. Vignette for blending */}
+      {/* 6. Vignette */}
       <div className="absolute inset-0 bg-radial from-transparent via-slate-950/50 to-slate-950" />
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Leaf, Globe, ShieldCheck, Database, CheckCircle2 } from "lucide-react";
+import React from "react";
 
 // --- DATA ---
 const inkData = [
@@ -17,7 +18,9 @@ const features = [
   { id: 3, title: "Supply Chain", desc: "4-month raw material stock.", icon: <Database className="text-emerald-400" size={24} />, titleColor: "text-emerald-400" },
 ];
 
-// Optimized Component: No useState/useEffect needed!
+// --- COMPONENTS ---
+
+// 1. Skill Bar (Optimized)
 const SkillBar = ({ label, percentage, color, delay }: { label: string, percentage: number, color: string, delay: number }) => {
   return (
     <div className="mb-5">
@@ -28,7 +31,6 @@ const SkillBar = ({ label, percentage, color, delay }: { label: string, percenta
       <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-white/5">
         <motion.div 
           className={`h-full ${color} relative`}
-          // Framer Motion handles the delay natively without re-renders
           initial={{ width: 0 }}
           whileInView={{ width: `${percentage}%` }}
           viewport={{ once: true }}
@@ -42,14 +44,55 @@ const SkillBar = ({ label, percentage, color, delay }: { label: string, percenta
   );
 };
 
+// 2. Floating Mesh Accent (Behind the card)
+const FloatingMeshAccent = () => (
+  <motion.div
+    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] -z-10 opacity-90 pointer-events-none"
+    animate={{ rotate: 360 }}
+    transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+  >
+    <svg className="w-full h-full">
+      <defs>
+        <radialGradient id="tech-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+        <pattern id="tech-dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+           <rect width="100%" height="100%" fill="transparent" />
+           <ellipse cx="7" cy="7" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.8" />
+        </pattern>
+      </defs>
+      {/* Soft Glow Base */}
+      <rect width="100%" height="100%" fill="url(#tech-glow)" />
+      {/* Rotating Dot Ring */}
+      <circle cx="50%" cy="50%" r="35%" fill="none" stroke="url(#tech-dots)" strokeWidth="60" strokeOpacity="0.5" 
+        style={{ maskImage: "radial-gradient(circle, black 40%, transparent 80%)" }}
+      />
+    </svg>
+  </motion.div>
+);
+
+// 3. Main TechSpecs Section
 export default function TechSpecs() {
   return (
     <section className="bg-slate-950 py-24 relative overflow-hidden">
       
-      {/* --- DOT MATRIX BACKGROUND --- */}
-      <div className="absolute inset-0 z-0 bg-linear-to-br from-cyan-950/40 via-slate-950 to-slate-950" />
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
-         <div className="absolute h-full w-full bg-[radial-gradient(#38bdf8_1.5px,transparent_1.5px)] bg-size-[30px_30px] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+      {/* --- BACKGROUND: Spotlight Dots (Consistent with other sections) --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+         {/* Central Spotlight Fade */}
+         <div className="absolute inset-0 opacity-20" style={{ maskImage: "radial-gradient(circle at 30% 50%, black 0%, transparent 70%)" }}>
+            <svg className="w-full h-full">
+              <rect width="100%" height="100%" fill="url(#bg-micro-dots)" /> {/* References pattern defined in layout or reuse defs */}
+              <defs>
+                <pattern id="bg-micro-dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+                  <rect width="100%" height="100%" fill="transparent" />
+                  <ellipse cx="7" cy="7" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.4" />
+                </pattern>
+              </defs>
+            </svg>
+         </div>
+         {/* Deep Blue Ambient Gradient */}
+         <div className="absolute inset-0 bg-linear-to-br from-slate-950 via-slate-950 to-cyan-950/20" />
       </div>
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -101,6 +144,9 @@ export default function TechSpecs() {
 
           {/* RIGHT: SPECS CARD */}
           <div className="relative">
+            {/* FLOATING MESH ACCENT (Behind Card) */}
+            <FloatingMeshAccent />
+
             <motion.div 
               className="bg-[#0F172A]/90 backdrop-blur-xl border border-sky-500/20 p-8 rounded-3xl shadow-2xl relative z-10"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -129,9 +175,6 @@ export default function TechSpecs() {
                  </p>
               </div>
             </motion.div>
-            
-            {/* Glow Behind - Optimized Blur */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-sky-500/10 blur-3xl -z-10" />
           </div>
 
         </div>

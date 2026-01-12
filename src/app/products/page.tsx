@@ -115,33 +115,27 @@ const products = [
   {
     id: 16,
     category: "Sports",
-    image: "/cf.webp",
+    image: "/G1.webp",
     features: ["Moisture-Wicking", "Breathable", "Team Colors"]
   },
   {
     id: 17,
     category: "Sports",
-    image: "/s-1.webp",
+    image: "/G4.webp",
     features: ["Compression Fit", "High Stretch", "Durable Prints"]
   },
   {
     id: 18,
     category: "Sports",
-    image: "/s-2.webp",
+    image: "/G3.webp",
     features: ["Full Set", "Team Branding", "Performance Fabric"]
   },  
   {
     id: 19,
     category: "Sports",
-    image: "/s-3.webp",
+    image: "/G2.webp",
     features: ["Full Set", "Team Branding", "Performance Fabric"]
   },  
-  {
-    id: 20,
-    category: "Sports",
-    image: "/s-4.webp",
-    features: ["Full Set", "Team Branding", "Performance Fabric"]
-  },
 ];
 
 export default function ProductsPage() {
