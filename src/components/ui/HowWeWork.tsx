@@ -43,7 +43,7 @@ const howWeWorkSteps: WorkStep[] = [
   },
   {
     id: "03",
-    image: "/1.3.webp",
+    image: "/certs.webp",
     plainTitle: "Global Compliance",
     title: (
       <>

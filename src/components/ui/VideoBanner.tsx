@@ -17,7 +17,7 @@ export const VideoBanner = () => {
         className="absolute inset-0 w-full h-full will-change-transform"
       >
         <video 
-          src="/ps.mp4" 
+          src="/qa.mp4" 
           autoPlay 
           loop 
           muted 

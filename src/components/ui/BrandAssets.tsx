@@ -15,11 +15,11 @@ export const BaseGrid = () => (
 );
 
 
-// --- UPDATED COMPONENT: APPAREL MESH (With Size Control) ---
+
 export const ApparelMesh = ({ 
   variant = "micro", 
   opacity = 0.15,
-  color = "#0ea5e9", // <--- UPDATED to custom color (Sky-500)
+  color = "#0ea5e9", 
   splitCenter = false,
   scale = 1 
 }: { 
