@@ -18,7 +18,7 @@ const brands = [
   { name: "Diesel", src: "/die.svg" },
   { name: "Hugo Boss", src: "/hugo.svg" },
   { name: "Mothercare", src: "/mc.svg" },
-  { name: "True Religion", src: "/trueR.svg" },
+  {name: "True Religion", src: "/trueR.svg" },
   { name: "Decathlon", src: "/dec.svg" }
 ];
 
@@ -44,25 +44,25 @@ const fadeInUp: Variants = {
 
 const BrandCard = React.memo(({ brand }: { brand: (typeof brands)[0] }) => (
   <div className="group relative">
-    <div className="relative h-40 md:h-65 rounded-3xl overflow-hidden transition-all duration-500 bg-white group-hover:scale-[1.02] group-hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.4)]">
+    <div className="relative h-70 sm:h-52 md:h-52 rounded-3xl overflow-hidden transition-all duration-500 bg-white group-hover:scale-[1.02] group-hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.4)]">
       <div className="relative z-10 w-full h-full">
           <Image
             src={brand.src}
             alt={brand.name}
             fill
-            sizes="(max-width: 768px) 100vw, 300px"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
             className="object-cover" 
           />
       </div>
     </div>
-    {/* Brand name text removed from here */}
   </div>
 ));
 BrandCard.displayName = "BrandCard";
+  
 
 const DesktopSlider = () => {
   const [index, setIndex] = useState(0);
-  const SLIDE_OFFSET = 380;
+  const SLIDE_OFFSET = 300; // Reduced from 380
   const VISIBLE = 3;
   const maxIndex = Math.max(brands.length - VISIBLE, 0);
 
@@ -70,7 +70,7 @@ const DesktopSlider = () => {
   const prevSlide = () => setIndex((p) => (p === 0 ? maxIndex : p - 1));
 
   return (
-    <div className="relative hidden lg:block w-full max-w-300 mx-auto">
+    <div className="relative hidden lg:block w-full max-w-6xl mx-auto">
       <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none z-30 px-2">
          <button onClick={prevSlide} className="w-14 h-14 pointer-events-auto rounded-full flex items-center justify-center bg-slate-950/80 border border-white/10 text-white hover:bg-sky-500 transition-all -translate-x-16 group shadow-lg">
             <ChevronLeft size={28} className="group-hover:-translate-x-0.5 transition-transform" />
@@ -81,12 +81,12 @@ const DesktopSlider = () => {
       </div>
       <div className="overflow-hidden w-full py-10 px-2">
         <motion.div
-          className="flex gap-12 will-change-transform"
+          className="flex gap-10 will-change-transform" // Reduced gap from 12
           animate={{ x: -index * SLIDE_OFFSET }}
           transition={{ type: "spring", stiffness: 150, damping: 25 }}
         >
           {brands.map((b) => (
-            <div key={b.name} className="min-w-82.5 shrink-0">
+            <div key={b.name} className="min-w-70 shrink-0"> {/* Reduced from min-w-82.5 */}
               <BrandCard brand={b} />
             </div>
           ))}
@@ -114,7 +114,7 @@ export default function Brands() {
       
       <div className="relative z-10 container mx-auto px-5">
         <motion.div
-          className="text-center mb-1 max-w-4xl mx-auto"
+          className="text-center mb-8 max-w-4xl mx-auto"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -137,7 +137,7 @@ export default function Brands() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-zinc-400 max-w-2xl mx-auto mb-1 leading-relaxed"
+            className="text-lg text-zinc-400 max-w-2xl mx-auto mb-8 leading-relaxed"
           >
             From high-end fashion to global sportswear, we are the silent
             partner behind the brands you trust.
@@ -146,15 +146,15 @@ export default function Brands() {
           <motion.div variants={fadeInUp} className="w-32 h-1 bg-linear-to-r from-transparent via-sky-500 to-transparent mx-auto rounded-full opacity-60" />
         </motion.div>
         
-        <motion.div
-          className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-10"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-        >
-          {brands.map((brand) => <motion.div key={brand.name} variants={fadeInUp}><BrandCard brand={brand} /></motion.div>)}
-        </motion.div>
+       <motion.div
+            className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-12"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+        {brands.map((brand) => <motion.div key={brand.name} variants={fadeInUp}><BrandCard brand={brand} /></motion.div>)}
+      </motion.div>
         
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
           <DesktopSlider />

@@ -451,7 +451,7 @@ export default function AboutPage() {
                    <div className={`inline-flex p-4 rounded-xl ${stat.iconBox} border mb-6`}>
                      <stat.icon className={stat.iconColor} size={28} />
                    </div>
-                   <div className="text-4xl font-black text-white mb-2 tracking-tight">
+                   <div className="text-2xl font-black text-white mb-2 tracking-tight">
                      {stat.value}
                      {stat.suffix && <span className="text-sm text-slate-400 font-bold ml-1">{stat.suffix}</span>}
                    </div>

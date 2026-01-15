@@ -24,7 +24,7 @@ const howWeWorkSteps: WorkStep[] = [
   },
   {
     id: "02",
-    image: "/ht.webp",
+    image: "/heat.webp",
     plainTitle: "Advanced Transfers",
     title: (
       <>

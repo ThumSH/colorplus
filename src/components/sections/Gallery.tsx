@@ -29,7 +29,7 @@ const projects: Project[] = [
     id: 2,
     client: "Eddie Bauer",
     desc: "Breathable water-based inks perfect for outdoor apparel with eco-friendly performance standards.",
-    image: "/21.webp",
+    image: "/ed_b.webp",
     year: "2023",
     tags: ["Eco-Ink", "Outdoor", "Soft-Feel"],
   },
@@ -37,7 +37,7 @@ const projects: Project[] = [
     id: 3,
     client: "LILLY",
     desc: "Eye-catching reflective finishes for high-end streetwear utilizing premium heat-transfer foils.",
-    image: "/lil.webp",
+    image: "/liu.webp",
     year: "2023",
     tags: ["Reflective", "Premium", "Transfer"],
   },
@@ -45,7 +45,7 @@ const projects: Project[] = [
     id: 4,
     client: "Hugo Boss",
     desc: "Sophisticated, sustainable pigment prints that combine luxury aesthetics with eco-conscious production.",
-    image: "/boos.webp",
+    image: "/hugo_boss.webp",
     year: "2024",
     tags: ["Sustainable", "Luxury", "Pigment"],
   },
@@ -140,12 +140,12 @@ const GalleryItem = React.memo(({ item, index }: { item: Project; index: number 
   const smoothY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, bounce: 0 });
   
   const y = useTransform(smoothY, [0, 1], [-30, 30]);
-  const scale = useTransform(smoothY, [0, 1], [1.02, 1]);
+  const scale = useTransform(smoothY, [0, 1], [1.01, 1]);
 
   return (
     <div ref={containerRef} className="relative z-10 py-20 group">
       
-      <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[80%] h-px bg-linear-to-r from-transparent via-sky-500/10 to-transparent -z-10" />
+      <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[70%] h-px bg-linear-to-r from-transparent via-sky-500/10 to-transparent -z-10" />
 
       <div className={`flex flex-col lg:flex-row items-center gap-10 lg:gap-20 ${isReversed ? "lg:flex-row-reverse" : ""}`}>
         
@@ -156,7 +156,7 @@ const GalleryItem = React.memo(({ item, index }: { item: Project; index: number 
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <div className="relative h-100 md:h-137.5 w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-900/50 shadow-2xl group-hover:shadow-[0_0_50px_rgba(14,165,233,0.15)] transition-shadow duration-700">
+          <div className="relative h-100 md:h-150.5 w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-900/50 shadow-2xl group-hover:shadow-[0_0_50px_rgba(14,165,233,0.15)] transition-shadow duration-700">
             
             <div className="absolute top-4 left-4 w-2 h-2 border-l border-t border-sky-500/50 z-20" />
             <div className="absolute top-4 right-4 w-2 h-2 border-r border-t border-sky-500/50 z-20" />

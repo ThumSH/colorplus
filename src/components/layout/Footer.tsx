@@ -251,7 +251,7 @@ export default function Footer() {
             transition={{ duration: 0.8 }}
             className="relative z-10"
           >
-            <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
+            <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
               LET&apos;S PRINT <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-cyan-300">
                 EXCELLENCE.
