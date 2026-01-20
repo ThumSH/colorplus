@@ -21,7 +21,7 @@ const projects: Project[] = [
     id: 1,
     client: "Calvin Klein",
     desc: "Premium tactile prints with sharp edges, exceptional durability, and vibrant color retention.",
-    image: "/19.webp",
+    image: "/qwe.webp",
     year: "2024",
     tags: ["Tactile", "Durability", "Fashion"],
   },

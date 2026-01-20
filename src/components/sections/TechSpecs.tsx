@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Leaf, Globe, ShieldCheck, Database, CheckCircle2 } from "lucide-react";
-import React, { useId } from "react";
+import React from "react";
 
 // --- DATA ---
 const inkData = [
@@ -49,14 +49,15 @@ function MeshOval({
   className = "",
   opacity = 0.55,
   rotate = 0,
+  id,
 }: {
   className?: string;
   opacity?: number;
   rotate?: number;
+  id: string;
 }) {
-  const uid = useId();
-  const patternId = `meshPattern-${uid}`;
-  const gradId = `meshGrad-${uid}`;
+  const patternId = `meshPattern-${id}`;
+  const gradId = `meshGrad-${id}`;
 
   return (
     <div 
@@ -106,8 +107,8 @@ export default function TechSpecs() {
          <div className="absolute inset-0 bg-linear-to-br from-slate-950 via-slate-950 to-cyan-950/20" />
          
          {/* Mesh Ovals */}
-         <MeshOval className="top-[-5%] left-[-5%] w-64 h-64" opacity={0.4} rotate={-15} />
-         <MeshOval className="bottom-[-10%] right-[-5%] w-80 h-80" opacity={0.3} rotate={10} />
+         <MeshOval id="tech-oval-1" className="top-[-5%] left-[-5%] w-64 h-64" opacity={0.4} rotate={-15} />
+         <MeshOval id="tech-oval-2" className="bottom-[-10%] right-[-5%] w-80 h-80" opacity={0.3} rotate={10} />
       </div>
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
