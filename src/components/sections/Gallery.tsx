@@ -45,7 +45,7 @@ const projects: Project[] = [
     id: 4,
     client: "Hugo Boss",
     desc: "Sophisticated, sustainable pigment prints that combine luxury aesthetics with eco-conscious production.",
-    image: "/hugo_boss.webp",
+    image: "/hs.webp",
     year: "2024",
     tags: ["Sustainable", "Luxury", "Pigment"],
   },

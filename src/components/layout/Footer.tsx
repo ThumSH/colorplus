@@ -4,221 +4,110 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { motion,type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Instagram, Linkedin, Facebook, MapPin, Phone, Mail } from "lucide-react";
 
-// --- 1. NEW COMPONENT: INK GESTURES (The "Pen Swing" Effect) ---
-const InkGestures = () => {
-  // Animation variants for the drawing effect
-  const draw: Variants = {
-    hidden: { pathLength: 0, opacity: 0 },
-    visible: (i: number) => ({
-      pathLength: 1,
-      opacity: 1,
-      transition: {
-        pathLength: { delay: i * 0.1, type: "spring", duration: 1.5, bounce: 0 },
-        opacity: { delay: i * 0.1, duration: 0.01 },
-      },
-    }),
-  };
-
+// --- 1. NEW: BUTTON DOT MATRIX (Replaces Ink Gestures) ---
+// This surrounds the button with a dot grid as shown in the image.
+const ButtonDotMatrix = React.memo(() => {
   return (
-    <div className="absolute top-[-20%] right-[-10%] md:right-[5%] w-75 md:w-125 h-125 pointer-events-none z-0 rotate-12 opacity-80">
-      <motion.svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 500 400"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
-        style={{ overflow: "visible" }}
-      >
-        {/* Stroke 1: The big sweep */}
-        <motion.path
-          d="M 50 350 Q 150 50 450 100"
-          fill="transparent"
-          stroke="#0ea5e9"
-          strokeWidth="4"
-          strokeLinecap="round"
-          variants={draw}
-          custom={0}
-        />
-        
-        {/* Stroke 2: The sharp return */}
-        <motion.path
-          d="M 420 80 Q 300 150 100 200"
-          fill="transparent"
-          stroke="#38bdf8"
-          strokeWidth="3"
-          strokeLinecap="round"
-          variants={draw}
-          custom={0.2}
-          style={{ opacity: 0.7 }}
-        />
-
-        {/* Stroke 3: Chaos line */}
-        <motion.path
-          d="M 120 220 C 200 180, 350 300, 480 50"
-          fill="transparent"
-          stroke="#0ea5e9"
-          strokeWidth="2"
-          strokeLinecap="round"
-          variants={draw}
-          custom={0.4}
-        />
-
-        {/* Stroke 4: Fast flick */}
-        <motion.path
-          d="M 300 300 Q 400 250 450 350"
-          fill="transparent"
-          stroke="#38bdf8"
-          strokeWidth="5"
-          strokeLinecap="round"
-          variants={draw}
-          custom={0.5}
-          style={{ opacity: 0.5 }}
-        />
-
-        {/* Ink Splatters (Circles appearing) */}
-        <motion.circle 
-          cx="460" cy="90" r="4" fill="#0ea5e9" 
-          initial={{ scale: 0 }} 
-          whileInView={{ scale: 1 }} 
-          transition={{ delay: 0.8, type: "spring" }} 
-        />
-        <motion.circle 
-          cx="40" cy="360" r="3" fill="#38bdf8" 
-          initial={{ scale: 0 }} 
-          whileInView={{ scale: 1 }} 
-          transition={{ delay: 0.2, type: "spring" }} 
-        />
-        <motion.circle 
-          cx="200" cy="180" r="6" fill="#0ea5e9" 
-          initial={{ scale: 0 }} 
-          whileInView={{ scale: 1 }} 
-          transition={{ delay: 0.5, type: "spring" }} 
-          style={{ opacity: 0.6 }}
-        />
-      </motion.svg>
-    </div>
-  );
-};
-
-// --- 2. EXISTING MESH OVAL COMPONENT ---
-const FooterMeshOval = React.memo(
-  ({
-    size,
-    left,
-    top,
-    rotate,
-    opacity,
-    idSuffix,
-  }: {
-    size: number;
-    left: number;
-    top: number;
-    rotate: number;
-    opacity: number;
-    idSuffix: string | number;
-  }) => {
-    const gradId = `footer-grad-${idSuffix}`;
-    const patId = `footer-pat-${idSuffix}`;
-
-    return (
-      <div
-        className="absolute pointer-events-none"
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none z-0">
+      
+      {/* Radial Mask to fade edges */}
+      <div 
+        className="absolute inset-0 w-full h-full"
         style={{
-          left: `${left}%`,
-          top: `${top}%`,
-          width: `${size}px`,
-          height: `${size}px`,
-          transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
-          opacity,
-          WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
-          maskImage: "radial-gradient(closest-side, black 30%, transparent 90%)",
-          filter: "blur(0.5px)",
+          maskImage: "radial-gradient(closest-side, black 30%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 80%)"
         }}
-        aria-hidden="true"
       >
-        <div className="absolute inset-0 rounded-full bg-sky-600/10 blur-[80px]" />
-
-        <svg className="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-full h-full opacity-60">
           <defs>
-            <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
-            </linearGradient>
-
-            <pattern id={patId} x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
-              <rect width="100%" height="100%" fill="transparent" />
-              <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.6" />
-              <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.5" />
+            {/* The Dot Pattern */}
+            <pattern 
+              id="footer-btn-dots" 
+              x="0" 
+              y="0" 
+              width="24" 
+              height="24" 
+              patternUnits="userSpaceOnUse"
+            >
+               <rect width="100%" height="100%" fill="transparent" />
+               <circle cx="2" cy="2" r="1.5" fill="#0ea5e9" />
             </pattern>
           </defs>
-
-          <g>
-            <ellipse cx="150" cy="150" rx="130" ry="105" fill={`url(#${patId})`} opacity="0.9" />
-            <ellipse
-              cx="150"
-              cy="150"
-              rx="130"
-              ry="105"
-              fill="none"
-              stroke={`url(#${gradId})`}
-              strokeOpacity="0.3"
-              strokeWidth="1"
-            />
-          </g>
+          <rect width="100%" height="100%" fill="url(#footer-btn-dots)" />
         </svg>
       </div>
-    );
-  }
-);
-FooterMeshOval.displayName = "FooterMeshOval";
+      
+      {/* Optional: Subtle blue glow behind the dots for depth */}
+      <div className="absolute inset-0 bg-radial-[closest-side] from-sky-500/10 to-transparent opacity-50" />
+    </div>
+  );
+});
+ButtonDotMatrix.displayName = "ButtonDotMatrix";
 
-// --- 3. FOOTER BACKGROUND ---
-const FooterBackground = React.memo(() => {
+
+// --- 2. HEX MESH BACKGROUND (Kept as is) ---
+const HexMeshBackground = React.memo(() => {
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-slate-950" />
-      <div className="absolute bottom-0 left-0 right-0 h-150 bg-linear-to-t from-sky-900/10 to-transparent" />
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-slate-950">
+      
+      {/* A. Deep Background Gradient */}
+      <div className="absolute inset-0 bg-radial-[at_top_center] from-slate-900 via-slate-950 to-slate-950 opacity-10" />
 
-      {/* Corners */}
-      <FooterMeshOval 
-        idSuffix="corner-left"
-        size={500}         
-        left={0}           
-        top={90}          
-        rotate={30}        
-        opacity={0.4}      
-      />
-      <FooterMeshOval 
-        idSuffix="corner-right"
-        size={500}         
-        left={100}         
-        top={90}          
-        rotate={-30}       
-        opacity={0.4}      
-      />
-      {/* Center Keystone */}
-      <FooterMeshOval 
-        idSuffix="center-bottom"
-        size={290}         
-        left={50}          
-        top={80}          
-        rotate={0}         
-        opacity={0.4}      
-      />
+      {/* B. The Hex Grid with Perspective Transform */}
+      <div 
+        className="absolute inset-0 w-full h-[150%] -top-[30%]"
+        style={{
+          // This transform creates the "Floor/Landscape" effect seen in the image
+          transform: "perspective(1000px) rotateX(60deg) scale(2)",
+          transformOrigin: "center 80%", // Anchor near bottom for better depth
+          maskImage: "radial-gradient(ellipse at center bottom, black 40%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse at center bottom, black 40%, transparent 80%)"
+        }}
+      >
+        <svg className="w-full h-full opacity-20">
+          <defs>
+            {/* The Honeycomb Pattern */}
+            <pattern 
+              id="hex-floor" 
+              width="24" 
+              height="40" 
+              patternUnits="userSpaceOnUse" 
+              patternTransform="scale(1)"
+            >
+               {/* Hexagon Path */}
+               <path 
+                 d="M12 0 L24 7 V21 L12 28 L0 21 V7 Z" 
+                 fill="none" 
+                 stroke="#0ea5e9" 
+                 strokeWidth="0.5" 
+               />
+               
+               {/* Glowing Vertices (Dots) - Adds that "Data/Tech" sparkle */}
+               <circle cx="12" cy="0" r="1.5" fill="#38bdf8" className="animate-pulse" opacity="0.1"/>
+               <circle cx="12" cy="28" r="1.5" fill="#38bdf8" className="animate-pulse" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hex-floor)" />
+        </svg>
+      </div>
 
-      <div className="absolute top-10 left-10 text-[20rem] font-black text-white/2 leading-none select-none pointer-events-none z-0">
+      {/* C. Blue Glow Overlay (Bottom) */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-sky-600/10 via-sky-900/05 to-transparent blur-3xl pointer-events-none" />
+      
+      {/* D. Center "CP" Watermark (Kept from original) */}
+      <div className="absolute top-10 left-10 text-[20rem] font-black text-white/[0.02] leading-none select-none pointer-events-none z-0">
         CP
       </div>
     </div>
   );
 });
-FooterBackground.displayName = "FooterBackground";
+HexMeshBackground.displayName = "HexMeshBackground";
 
-// --- 4. MAIN FOOTER ---
+
+// --- 3. MAIN FOOTER ---
 export default function Footer() {
   const pathname = usePathname();
 
@@ -231,19 +120,17 @@ export default function Footer() {
 
   return (
     <footer className="relative pt-32 pb-10 overflow-hidden text-white">
-      <FooterBackground />
+      
+      <HexMeshBackground />
       
       {/* Top Border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-sky-500/30 to-transparent" />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         
-        {/* --- CTA SECTION WITH INK GESTURES --- */}
+        {/* --- CTA SECTION --- */}
         <div className="relative flex flex-col lg:flex-row justify-between items-start lg:items-end mb-24 gap-12">
           
-          {/* ✅ ADDED: The Ink Gesture Animation */}
-          <InkGestures />
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -270,9 +157,12 @@ export default function Footer() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-4 relative z-10"
           >
+             {/* The Dot Matrix surrounds this specific button */}
+             <ButtonDotMatrix />
+
              <Link 
                 href="/contact" 
-                className="group relative inline-flex items-center gap-4 px-8 py-4 bg-sky-500 hover:bg-sky-400 text-white rounded-full transition-all duration-300 shadow-[0_0_30px_rgba(14,165,233,0.3)] hover:shadow-[0_0_50px_rgba(14,165,233,0.5)]"
+                className="group relative inline-flex items-center gap-4 px-8 py-4 bg-sky-500 hover:bg-sky-400 text-white rounded-full transition-all duration-300 shadow-[0_0_30px_rgba(14,165,233,0.3)] hover:shadow-[0_0_50px_rgba(14,165,233,0.5)] z-20"
              >
                 <span className="text-lg font-bold tracking-widest uppercase">Start a Project</span>
                 <span className="bg-white/20 rounded-full p-2 group-hover:bg-white group-hover:text-sky-500 transition-colors duration-300">

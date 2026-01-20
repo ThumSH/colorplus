@@ -10,10 +10,11 @@ import { HowWeWork } from "../ui/HowWeWork";
 export default function Services() {
   return (
     <>
-      <section id="services" className="bg-slate-950 relative overflow-hidden pt-32 pb-20">
+      {/* Increased padding-top (pt-40) to reduce cramping */}
+      <section id="services" className="bg-slate-950 relative overflow-hidden pt-40">
         <DotsTexture />
 
-        <div className="container mx-auto px-6 text-center mb-20 relative z-10">
+        <div className="container mx-auto px-6 text-center mb-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

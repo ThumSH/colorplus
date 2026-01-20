@@ -174,8 +174,8 @@ const MeshOvalDiagram = React.memo(
           // ✅ UPDATED: Softer Mask for blurred edges
           // "closest-side" ensures it fits the box perfectly.
           // Changing stops from 55%->78% to 30%->85% creates a much longer, softer fade.
-          WebkitMaskImage: "radial-gradient(closest-side, black 30%, transparent 85%)",
-          maskImage: "radial-gradient(closest-side, black 30%, transparent 85%)",
+          WebkitMaskImage: "radial-gradient(closest-side, black 20%, transparent 100%)",
+          maskImage: "radial-gradient(closest-side, black 20%, transparent 100%)",
           // ✅ UPDATED: Slightly stronger blur to soften the dot pixels
           filter: "blur(0.6px)",
         }}
@@ -285,7 +285,10 @@ const ProcessMeshBackground = React.memo(() => {
       <ProcessMeshDiagrams />
 
       {/* 3. UPDATED: Micro Dot Pattern (Replacing the old square Grid) */}
-      <div className="absolute inset-0 opacity-[0.15]" style={{ maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)" }}>
+      <div className="absolute inset-0 opacity-[0.15]" style={{ 
+        maskImage: "radial-gradient(ellipse at center, black 40%, transparent 80%)",
+        WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 80%)" 
+      }}>
         <svg className="absolute inset-0 w-full h-full">
           <defs>
             <pattern id="process-bg-dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">

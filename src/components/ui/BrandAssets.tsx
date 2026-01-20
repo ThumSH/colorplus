@@ -1,90 +1,76 @@
 "use client";
 
-// ... (Keep your existing BaseGrid and AmbientCorners helpers here) ...
+import React from "react";
+
+// 1. Base Grid (Kept subtle background)
 export const BaseGrid = () => (
   <div className="absolute inset-0 z-0 pointer-events-none">
     <div 
-      className="absolute inset-0 opacity-[0.73]"
+      className="absolute inset-0 opacity-[0.03]"
       style={{ 
           backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
+          backgroundSize: '50px 50px' 
       }} 
     />
     <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-transparent to-slate-950" />
   </div>
 );
 
-
-
+// 2. ApparelMesh (Updated: Smaller Size & Radial Blurred Edges)
 export const ApparelMesh = ({ 
-  variant = "micro", 
-  opacity = 0.15,
   color = "#0ea5e9", 
-  splitCenter = false,
-  scale = 1 
+  opacity = 0.4 
 }: { 
-  variant?: "sport" | "micro"; 
-  opacity?: number;
   color?: string;
-  splitCenter?: boolean;
-  scale?: number;
+  opacity?: number;
 }) => {
   return (
-    <div 
-      className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
-      style={{
-        maskImage: splitCenter 
-          ? "linear-gradient(to right, black 0%, black 40%, transparent 45%, transparent 55%, black 60%, black 100%)"
-          : undefined,
-        WebkitMaskImage: splitCenter 
-          ? "linear-gradient(to right, black 0%, black 40%, transparent 45%, transparent 55%, black 60%, black 100%)" 
-          : undefined
-      }}
-    >
-      <svg className="w-full h-full" style={{ opacity }}>
-        <defs>
-          {/* VARIANT A: SPORT MESH (Hex/Honeycomb Look) */}
-          <pattern 
-            id="mesh-sport" 
-            x="0" 
-            y="0" 
-            width="20" 
-            height="34" 
-            patternUnits="userSpaceOnUse"
-            patternTransform={`scale(${scale})`}
-          >
-            <path d="M10 0 L20 5 V15 L10 20 L0 15 V5 Z" fill="none" stroke={color} strokeWidth="1" />
-            <path d="M10 17 L20 22 V32 L10 37 L0 32 V22 Z" fill="none" stroke={color} strokeWidth="1" transform="translate(10, 17)" />
-          </pattern>
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      
+      {/* A. Vertical Glows (Left & Right only) - Softened */}
+      <div className="absolute top-0 bottom-0 left-0 w-1/3 bg-blue-900/10 blur-[100px]" />
+      <div className="absolute top-0 bottom-0 right-0 w-1/3 bg-sky-900/10 blur-[100px]" />
 
-          {/* VARIANT B: MICRO MESH (Underwear/Oval Look) */}
-          <pattern 
-            id="mesh-micro" 
-            x="0" 
-            y="0" 
-            width="12" 
-            height="12" 
-            patternUnits="userSpaceOnUse"
-            patternTransform={`scale(${scale})`}
-          >
-            <rect width="100%" height="100%" fill="transparent" />
-            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill={color} opacity="0.5" />
-            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill={color} opacity="0.5" />
-          </pattern>
+      {/* B. The Side Mesh Structure */}
+      <div 
+        className="absolute inset-0 w-full h-full"
+        style={{
+          // MASK CHANGE: Using Radial Gradients at the edges.
+          // This creates a curved, soft blur instead of a straight vertical line.
+          maskImage: `
+            radial-gradient(ellipse 40% 80% at 0% 50%, black 0%, transparent 100%),
+            radial-gradient(ellipse 40% 80% at 100% 50%, black 0%, transparent 100%)
+          `,
+          WebkitMaskImage: `
+            radial-gradient(ellipse 40% 80% at 0% 50%, black 0%, transparent 100%),
+            radial-gradient(ellipse 40% 80% at 100% 50%, black 0%, transparent 100%)
+          `,
+          maskComposite: "add",
+          WebkitMaskComposite: "source-over"
+        }}
+      >
+        <svg className="w-full h-full" style={{ opacity }}>
+          <defs>
+            {/* OVAL PATTERN: Scaled DOWN for smaller structure */}
+            <pattern 
+              id="mesh-side-ovals" 
+              x="0" 
+              y="0" 
+              width="14" 
+              height="14" 
+              patternUnits="userSpaceOnUse"
+              patternTransform="scale(0.75)" 
+            >
+              {/* Scale changed from 1.5 -> 0.75 (50% smaller) */}
+              <rect width="100%" height="100%" fill="transparent" />
+              <ellipse cx="3.5" cy="3.5" rx="1.8" ry="3" fill={color} />
+              <ellipse cx="10.5" cy="10.5" rx="1.8" ry="3" fill={color} />
+            </pattern>
+          </defs>
 
-          <linearGradient id="fade-gradient" x1="0" y1="0" x2="0" y2="1">
-             <stop offset="0%" stopColor="#020617" stopOpacity="0.8" />
-             <stop offset="20%" stopColor="#020617" stopOpacity="0" />
-             <stop offset="80%" stopColor="#020617" stopOpacity="0" />
-             <stop offset="100%" stopColor="#020617" stopOpacity="0.8" />
-          </linearGradient>
-        </defs>
-
-        <rect width="100%" height="100%" fill={`url(#mesh-${variant})`} />
-        
-        {/* Edge Fade */}
-        <rect width="100%" height="100%" fill="url(#fade-gradient)" />
-      </svg>
+          <rect width="100%" height="100%" fill="url(#mesh-side-ovals)" />
+        </svg>
+      </div>
     </div>
   );
 };

@@ -143,11 +143,11 @@ function AboutMeshBackground() {
       <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-950/50 to-slate-950" />
       
       {/* Placements using the new MeshOval */}
-      <MeshOval className="top-32 -left-24 w-96 h-96" opacity={0.65} rotate={-15} />
-      <MeshOval className="top-[25%] -right-32 w-120 h-120" opacity={0.5} rotate={20} />
-      <MeshOval className="top-[50%] left-[5%] w-72 h-72" opacity={0.7} rotate={45} />
-      <MeshOval className="bottom-40 -right-16 w-80 h-80" opacity={0.6} rotate={-10} />
-      <MeshOval className="-bottom-20 -left-20 w-96 h-96" opacity={0.5} rotate={10} />
+      <MeshOval className="top-32 -left-24 w-72 h-72" opacity={0.65} rotate={-15} />
+      <MeshOval className="top-[25%] -right-32 w-96 h-96" opacity={0.5} rotate={20} />
+      <MeshOval className="top-[50%] left-[5%] w-56 h-56" opacity={0.7} rotate={45} />
+      <MeshOval className="bottom-40 -right-16 w-64 h-64" opacity={0.6} rotate={-10} />
+      <MeshOval className="-bottom-20 -left-20 w-72 h-72" opacity={0.5} rotate={10} />
     </div>
   );
 }
@@ -366,7 +366,7 @@ export default function AboutPage() {
                   Our Vision
                 </h3>
                 <p className="text-slate-300 leading-relaxed text-lg font-light pl-1">
-                  To offer the best when it comes to <span className="text-violet-400 font-semibold">exceptional quality</span> in the screen print industry.
+                  To offer the best when it comes to <span className="text-sky-400 font-semibold">exceptional quality</span> in the screen print industry.
                 </p>
               </div>
             </motion.div>
@@ -542,7 +542,7 @@ export default function AboutPage() {
                       <h4 className="text-white font-bold text-lg mb-2">Safety & Compliance</h4>
                       <p className="text-slate-400 leading-relaxed">
                        We prioritize safety, consistency and sustainability. All our inks are imported from reputed suppliers and are  
-                        <strong className="text-emerald-400 font-semibold"> free of hazardous chemicals</strong>, 
+                        <strong className="text-sky-400 font-semibold"> free of hazardous chemicals</strong>, 
                         ensuring compliance with strict international regulations.
                       </p>
                     </div>
@@ -556,7 +556,7 @@ export default function AboutPage() {
                       <h4 className="text-white font-bold text-lg mb-2">Stock Management</h4>
                       <p className="text-slate-400 leading-relaxed">
                         We maintain a 
-                        <strong className="text-amber-400 font-semibold">  two months rolling stock  </strong> 
+                        <strong className="text-sky-400 font-semibold">  two months rolling stock  </strong> 
                           of all raw materials to guarantee uninterrupted production.
                       </p>
                     </div>

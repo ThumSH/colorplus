@@ -79,11 +79,11 @@ const ServicesMeshBackground = React.memo(() => {
       <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-950/50 to-slate-950" />
       
       {/* Distributed Mesh Ovals */}
-      <MeshOval className="top-20 -left-32 w-160 h-160" opacity={0.6} rotate={-10} />
-      <MeshOval className="top-[20%] -right-40 w-180 h-180" opacity={0.5} rotate={15} />
-      <MeshOval className="top-[45%] left-[-10%] w-140 h-140" opacity={0.55} rotate={30} />
-      <MeshOval className="top-[70%] right-[-5%] w-160 h-160" opacity={0.5} rotate={-20} />
-      <MeshOval className="-bottom-32 left-[20%] w-200 h-200" opacity={0.6} rotate={5} />
+      <MeshOval className="top-20 -left-32 w-112 h-112" opacity={0.6} rotate={-10} />
+      <MeshOval className="top-[20%] -right-40 w-128 h-128" opacity={0.5} rotate={15} />
+      <MeshOval className="top-[45%] left-[-10%] w-96 h-96" opacity={0.55} rotate={30} />
+      <MeshOval className="top-[70%] right-[-5%] w-112 h-112" opacity={0.5} rotate={-20} />
+      <MeshOval className="-bottom-32 left-[20%] w-140 h-140" opacity={0.6} rotate={5} />
     </div>
   );
 });

@@ -3,7 +3,7 @@
 import React from "react";
 import { ArrowUpRight, Printer } from "lucide-react";
 import Link from "next/link";
-import { BaseGrid, OvalHexMesh } from "./Backgrounds";
+import { OvalHexMesh, ButtonMeshBackdrop } from "./Backgrounds";
 import { WorkCard, type WorkStep } from "./WorkCard";
 
 const Highlight = ({ children, colorClass }: { children: React.ReactNode; colorClass: string }) => (
@@ -13,7 +13,7 @@ const Highlight = ({ children, colorClass }: { children: React.ReactNode; colorC
 const howWeWorkSteps: WorkStep[] = [
   {
     id: "01",
-    image: "/lo.webp",
+    image: "/advance.webp",
     plainTitle: "Versatile Print Techniques",
     title: (
       <>
@@ -43,7 +43,7 @@ const howWeWorkSteps: WorkStep[] = [
   },
   {
     id: "03",
-    image: "/certs.webp",
+    image: "/certs2.webp",
     plainTitle: "Global Compliance",
     title: (
       <>
@@ -68,7 +68,6 @@ const howWeWorkSteps: WorkStep[] = [
 export const HowWeWork = () => {
   return (
     <section className="relative z-10 bg-slate-950 px-4 sm:px-6 pb-40 overflow-hidden">
-      <BaseGrid />
       <OvalHexMesh />
       
       {/* Static Vertical Line */}
@@ -90,7 +89,11 @@ export const HowWeWork = () => {
           ))}
         </div>
 
+        {/* View Techniques Button Section */}
         <div className="mt-32 flex justify-center relative z-20">
+          {/* New: Localized Mesh Backdrop for the button area */}
+          <ButtonMeshBackdrop />
+          
           <Link href="/technique">
             <button className="group relative flex items-center gap-3 bg-slate-900 text-white uppercase tracking-[0.2em] text-[11px] font-black px-12 py-6 overflow-hidden border border-white/10 hover:border-sky-500/50 transition-colors duration-300 rounded-sm">
               <div className="absolute inset-0 bg-sky-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />

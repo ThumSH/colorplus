@@ -77,13 +77,13 @@ function TechniquesMeshBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* 1. Behind Ink Composition (Left) */}
-      <MeshOval className="top-[90vh] -left-32 w-140 h-140" opacity={0.6} rotate={-20} />
+      <MeshOval className="top-[90vh] -left-32 w-96 h-96" opacity={0.6} rotate={-20} />
       
       {/* 2. Middle Section (Right) */}
-      <MeshOval className="top-[180vh] -right-20 w-120 h-120" opacity={0.5} rotate={15} />
+      <MeshOval className="top-[180vh] -right-20 w-80 h-80" opacity={0.5} rotate={15} />
       
       {/* 3. Bottom/Transfer Section (Left) */}
-      <MeshOval className="bottom-20 left-10 w-100 h-100" opacity={0.5} rotate={-10} />
+      <MeshOval className="bottom-20 left-10 w-72 h-72" opacity={0.5} rotate={-10} />
     </div>
   );
 }
@@ -105,16 +105,16 @@ const techniques = [
     id: "tech-01",
     title: "Pigment Prints",
     desc: "Soaks into the fabric for a 'zero-hand' feel. Best for vintage looks on light fabrics.",
-    image: "/pig.webp",
+    image: "/pigment.webp",
     icon: <Feather />,
     color: "from-sky-500/20 to-sky-500/5",
     iconColor: "text-sky-400"
   },
   {
     id: "tech-02",
-    title: "Silicon Prints",
+    title: "Silicone Prints",
     desc: "The industry standard. Ink sits on top of the fabric, offering vibrant, opaque colors.",
-    image: "/sili.webp",
+    image: "/silicone.webp",
     icon: <Droplets />,
     color: "from-violet-500/20 to-violet-500/5",
     iconColor: "text-violet-400"
@@ -123,7 +123,7 @@ const techniques = [
     id: "tech-03",
     title: "High Build / Puff",
     desc: "Ink rises during curing to create a 3D relief texture. Adds dimension to branding.",
-    image: "/puff.webp",
+    image: "/puff print.webp",
     icon: <Maximize />,
     color: "from-emerald-500/20 to-emerald-500/5",
     iconColor: "text-emerald-400"
@@ -132,7 +132,7 @@ const techniques = [
     id: "tech-04",
     title: "Foil & Metallic",
     desc: "Heat-pressed foil sheets create a mirror-like shiny finish. Ideal for fashion wear.",
-    image: "/foil.webp",
+    image: "/foil & metal.webp",
     icon: <Zap />,
     color: "from-amber-500/20 to-amber-500/5",
     iconColor: "text-amber-400"
@@ -141,7 +141,7 @@ const techniques = [
     id: "tech-05",
     title: "Glitter & Shimmer",
     desc: "Suspended metallic flakes in clear base ink. Catches light for a sparkling effect.",
-    image: "/gli.webp",
+    image: "/'glitter.webp",
     icon: <Sparkles />,
     color: "from-purple-500/20 to-purple-500/5",
     iconColor: "text-purple-400"
@@ -150,7 +150,7 @@ const techniques = [
     id: "tech-06",
     title: "Flock Prints",
     desc: "Velvet-like texture created by adhering small fibers to the ink surface.",
-    image: "/fl.webp",
+    image: "/flock.webp",
     icon: <Layers />,
     color: "from-pink-500/20 to-pink-500/5",
     iconColor: "text-pink-400"
@@ -409,7 +409,7 @@ export default function TechniquesPage() {
                 <div className="relative bg-slate-900/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-sky-500/30 transition-all duration-500 h-full flex flex-col">
                   
                   {/* Image */}
-                  <div className="relative h-48 w-full overflow-hidden">
+                  <div className="relative h-80 w-full overflow-hidden">
                     <Image 
                       src={tech.image} 
                       alt={tech.title} 

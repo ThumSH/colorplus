@@ -3,15 +3,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-// Optimized Base Grid (Static) - Kept as requested
+// 1. Optimized Base Grid (Static)
 export const BaseGrid = React.memo(() => (
   <div className="absolute inset-0 z-0 pointer-events-none select-none">
     <div 
-      className="absolute inset-0 opacity-[0.03]"
+      className="absolute inset-0 opacity-[0.02]" 
       style={{ 
           backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-          transform: 'translateZ(0)' // Force GPU
+          backgroundSize: '50px 50px',
+          transform: 'translateZ(0)'
       }} 
     />
     <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-transparent to-slate-950" />
@@ -19,110 +19,109 @@ export const BaseGrid = React.memo(() => (
 ));
 BaseGrid.displayName = "BaseGrid";
 
-// 2. Ambient Corners (Kept for deep color atmosphere)
-export const AmbientCorners = React.memo(() => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-900/05 blur-[80px] rounded-full mix-blend-screen" />
-    <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-cyan-900/05 blur-[80px] rounded-full mix-blend-screen" />
-  </div>
-));
-AmbientCorners.displayName = "AmbientCorners";
-
-// 3. NEW: DotsTexture (The "Unique Design")
-// Instead of filling the space, this creates a "Spotlight" and a "Floating Accent"
+// 2. DotsTexture (Services/Hero Section)
 export const DotsTexture = React.memo(() => (
-  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
+  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
     
-    {/* A. CENTRAL GLOW: Subtle dots behind the text, fading to black edges */}
+    {/* A. Ambient Glows */}
+    <div className="absolute -top-[30%] -left-[10%] w-[50%] h-[50%] bg-blue-900/10 blur-[150px] rounded-full mix-blend-screen" />
+    <div className="absolute -bottom-[30%] -right-[10%] w-[50%] h-[50%] bg-sky-900/10 blur-[150px] rounded-full mix-blend-screen" />
+
+    {/* B. The Dots */}
     <div 
-      className="absolute w-[120%] h-[120%] opacity-40"
+      className="absolute inset-0 w-full h-full"
       style={{
-        maskImage: "radial-gradient(circle at center, black 0%, transparent 60%)",
-        WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 60%)"
+        maskImage: `
+            radial-gradient(circle at 0% 0%, black 0%, transparent 60%),
+            radial-gradient(circle at 100% 100%, black 0%, transparent 60%)
+        `,
+        WebkitMaskImage: `
+            radial-gradient(circle at 0% 0%, black 0%, transparent 60%),
+            radial-gradient(circle at 100% 100%, black 0%, transparent 60%)
+        `
       }}
     >
-      <svg className="w-full h-full">
+      <svg className="w-full h-full opacity-40"> 
         <defs>
-          <pattern id="bg-micro-dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+          <pattern id="bg-micro-dots" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
             <rect width="100%" height="100%" fill="transparent" />
-            {/* Standard Micro Dot */}
-            <ellipse cx="7" cy="7" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.4" />
+            <circle cx="2" cy="2" r="1.5" fill="#38bdf8" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#bg-micro-dots)" />
       </svg>
     </div>
-
-    {/* B. FLOATING ACCENT: A denser, rotating ring to add uniqueness */}
-    <motion.div
-      className="absolute w-150 h-150 opacity-30"
-      initial={{ rotate: 0, scale: 1 }}
-      animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-      transition={{ 
-        rotate: { duration: 120, repeat: Infinity, ease: "linear" },
-        scale: { duration: 10, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }
-      }}
-      style={{
-        // Off-center positioning to look organic
-        top: "-10%",
-        right: "-5%",
-        maskImage: "radial-gradient(circle at 50% 50%, black 20%, transparent 70%)",
-        WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 20%, transparent 70%)"
-      }}
-    >
-      <svg className="w-full h-full">
-        <defs>
-          <pattern id="bg-micro-accent" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-             <rect width="100%" height="100%" fill="transparent" />
-             {/* Slightly brighter/denser dots for the accent */}
-             <ellipse cx="5" cy="5" rx="1.5" ry="2.5" fill="#0ea5e9" opacity="0.6" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#bg-micro-accent)" />
-      </svg>
-    </motion.div>
-
   </div>
 ));
 DotsTexture.displayName = "DotsTexture";
 
-// --- UPDATED: OvalHexMesh (Now uses the Micro Oval SVG Pattern) ---
+// 3. OvalHexMesh (How We Work Section)
+// FIX: Changed mask from Linear (vertical only) to Radial (fades all edges)
 export const OvalHexMesh = React.memo(() => {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
-      <motion.div 
-        className="w-full h-full absolute inset-0"
-        initial={{ scale: 1, opacity: 0.4 }}
-        animate={{ scale: 1.02, opacity: 0.5 }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        style={{
-          // Radial mask for the "spotlight" effect
-          maskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 50% at 50% 50%, black 30%, transparent 70%)"
-        }}
-      >
-        <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            {/* The Micro Oval Pattern (Animated Version) */}
-            <pattern 
-              id="bg-mesh-anim" 
-              x="0" 
-              y="0" 
-              width="14" 
-              height="14" 
-              patternUnits="userSpaceOnUse"
-              patternTransform="scale(1.2)"
-            >
-               <rect width="100%" height="100%" fill="transparent" />
-               {/* Slightly larger/brighter for the mesh spotlight */}
-               <ellipse cx="3.5" cy="3.5" rx="1.8" ry="3" fill="#0ea5e9" opacity="0.5" />
-               <ellipse cx="10.5" cy="10.5" rx="1.8" ry="3" fill="#0ea5e9" opacity="0.5" />
-            </pattern>
-          </defs>
-          <rect x="0" y="0" width="100%" height="100%" fill="url(#bg-mesh-anim)" />
-        </svg>
-      </motion.div>
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex justify-center">
+      
+      {/* Container */}
+      <div className="relative w-full max-w-4xl h-full">
+        
+        {/* Vertical Gradient Beam */}
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-sky-900/05 to-transparent blur-3xl" />
+
+        <div 
+          className="absolute inset-0 w-full h-full"
+          style={{
+            // CHANGED: Using a radial gradient to blur Left/Right edges as well as Top/Bottom
+            maskImage: "radial-gradient(ellipse 60% 80% at 50% 50%, black 40%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(ellipse 60% 80% at 50% 50%, black 40%, transparent 100%)"
+          }}
+        >
+          <motion.div 
+            className="w-full h-full"
+            animate={{ opacity: [0.2, 0.4, 0.2] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <MeshSVG patternId="mesh-center" opacity={0.9} />
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 });
 OvalHexMesh.displayName = "OvalHexMesh";
+
+// Helper
+const MeshSVG = ({ patternId, opacity }: { patternId: string, opacity: number }) => (
+  <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern 
+        id={patternId}
+        x="0" 
+        y="0" 
+        width="30" 
+        height="30" 
+        patternUnits="userSpaceOnUse"
+      >
+          <rect width="100%" height="100%" fill="transparent" />
+          <circle cx="2" cy="2" r="1.5" fill="#0ea5e9" opacity={opacity} />
+          <circle cx="17" cy="17" r="1.5" fill="#0ea5e9" opacity={opacity} />
+      </pattern>
+    </defs>
+    <rect x="0" y="0" width="100%" height="100%" fill={`url(#${patternId})`} />
+  </svg>
+);
+
+export const ButtonMeshBackdrop = React.memo(() => (
+  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 pointer-events-none z-0">
+    <div className="absolute inset-0 bg-radial-[closest-side] from-sky-500/10 via-transparent to-transparent opacity-50" />
+    <div 
+      className="absolute inset-0"
+      style={{
+        maskImage: "radial-gradient(closest-side, black 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(closest-side, black 40%, transparent 100%)"
+      }}
+    >
+      <MeshSVG patternId="mesh-button" opacity={0.5} />
+    </div>
+  </div>
+));
+ButtonMeshBackdrop.displayName = "ButtonMeshBackdrop";

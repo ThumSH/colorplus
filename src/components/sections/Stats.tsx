@@ -65,8 +65,8 @@ function MeshPatch({
             patternUnits="userSpaceOnUse"
           >
             <rect width="100%" height="100%" fill="transparent" />
-            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.3" />
-            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.3" />
+            <ellipse cx="3" cy="3" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.2" />
+            <ellipse cx="9" cy="9" rx="1.5" ry="2.5" fill="#38bdf8" opacity="0.1" />
           </pattern>
         </defs>
 
