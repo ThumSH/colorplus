@@ -16,16 +16,16 @@ export default function HeroSection() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+    <section ref={containerRef} className="relative h-[75vh] flex items-center justify-center overflow-hidden">
       <motion.div 
         className="absolute inset-0 z-0"
         style={{ scale: heroScale, opacity: heroOpacity }}
       >
         <Image
-          src="/ty.webp"
+          src="/qa.png"
           alt="Fabric Texture"
           fill
-          className="object-cover opacity-30"
+          className="object-cover opacity-40"
           priority
         />
       </motion.div>

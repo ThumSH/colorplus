@@ -15,7 +15,7 @@ export const VideoBanner = () => {
 
   return (
     // CHANGED: Increased height to h-[85vh] on mobile and h-screen on desktop for a "Bigger" look
-    <div ref={containerRef} className="relative w-full h-[85vh] md:h-screen z-0 overflow-hidden  group">
+    <div ref={containerRef} className="relative w-full h-[50vh] md:h-screen z-0 overflow-hidden  group">
       
       {/* Video with Parallax */}
       <motion.div 

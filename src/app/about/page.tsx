@@ -497,6 +497,11 @@ export default function AboutPage() {
           </motion.div>
 
         </div>
+              <motion.div
+                className="absolute inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-400/50 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.5)] z-10"
+                animate={{ top: ["0%", "100%"], opacity: [0, 0.5, 0] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              />
       </section>
 
       {/* --- GLOBAL REACH & SAFETY --- */}

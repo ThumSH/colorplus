@@ -79,10 +79,10 @@ const ServicesMeshBackground = React.memo(() => {
       <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-950/50 to-slate-950" />
       
       {/* Distributed Mesh Ovals */}
-      <MeshOval className="top-20 -left-32 w-112 h-112" opacity={0.6} rotate={-10} />
-      <MeshOval className="top-[20%] -right-40 w-128 h-128" opacity={0.5} rotate={15} />
+      <MeshOval className="top-20 -left-32 w-md h-112" opacity={0.6} rotate={-10} />
+      <MeshOval className="top-[20%] -right-40 w-lg h-128" opacity={0.5} rotate={15} />
       <MeshOval className="top-[45%] left-[-10%] w-96 h-96" opacity={0.55} rotate={30} />
-      <MeshOval className="top-[70%] right-[-5%] w-112 h-112" opacity={0.5} rotate={-20} />
+      <MeshOval className="top-[70%] right-[-5%] w-md h-112" opacity={0.5} rotate={-20} />
       <MeshOval className="-bottom-32 left-[20%] w-140 h-140" opacity={0.6} rotate={5} />
     </div>
   );
@@ -311,7 +311,13 @@ export default function ServicesPage() {
                 className="object-cover opacity-80 hover:scale-105 transition-transform duration-1000"
               />
               <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-transparent to-transparent" />
+                <motion.div
+                  className="absolute inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-400/50 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.5)] z-10"
+                  animate={{ top: ["0%", "100%"], opacity: [0, 2, 0] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                />
             </motion.div>
+            
 
           </div>
         </div>
