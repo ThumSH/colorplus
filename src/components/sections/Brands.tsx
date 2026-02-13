@@ -49,6 +49,7 @@ const BrandCard = React.memo(({ brand }: { brand: (typeof brands)[0] }) => (
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
             className="object-cover" 
+            unoptimized
           />
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FileText, PenTool, ArrowRight, Droplets, Factory, Globe } from "lucide-react";
 import Image from "next/image";
@@ -55,16 +55,14 @@ interface StepCardProps {
 }
 
 const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <motion.div
+  <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.2, duration: 0.6 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      // REMOVED: onMouseEnter and onMouseLeave
       className="group relative flex flex-col items-center text-center md:items-start md:text-left"
     >
       {/* Connecting Line (Desktop Only) with ink drops */}
@@ -99,19 +97,19 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
 
       {/* Icon Bubble */}
       <div className="relative z-10 mb-6">
-        <motion.div
-          className="w-16 h-16 rounded-2xl bg-[#0F172A] border border-white/10 flex items-center justify-center text-sky-200/50 group-hover:text-white group-hover:border-sky-400/50 transition-all duration-300 shadow-2xl relative overflow-hidden"
-          animate={isHovered ? { y: -5 } : { y: 0 }}
+       <div
+          // Replaced Framer Motion animate with Tailwind group-hover translate
+          className="w-16 h-16 rounded-2xl bg-[#0F172A] border border-white/10 flex items-center justify-center text-sky-200/50 group-hover:text-white group-hover:border-sky-400/50 transition-all duration-300 shadow-2xl relative overflow-hidden group-hover:-translate-y-1"
         >
           {/* Ink dot pattern on hover */}
           <div className="absolute inset-0 bg-[radial-gradient(#0ea5e9_0.5px,transparent_0.5px)] bg-size-[8px_8px] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
 
           <div className="absolute inset-0 bg-linear-to-br from-sky-500/80 to-sky-600/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-          <motion.div className="relative z-10" animate={isHovered ? { scale: 1.1 } : { scale: 1 }}>
+         <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">
             {step.icon}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         <div className="absolute -bottom-3 -right-3 bg-[#020617] border border-white/10 text-xs font-bold text-gray-500 py-1 px-2 rounded-md group-hover:text-sky-400 group-hover:border-sky-500/50 group-hover:shadow-[0_0_10px_rgba(14,165,233,0.3)] transition-all duration-300">
           {step.id}
@@ -122,9 +120,9 @@ const StepCard = ({ step, index, totalSteps }: StepCardProps) => {
       <div className="relative z-10 max-w-xs">
         <h3 className="text-xl font-black text-white uppercase tracking-wide mb-3 flex items-center gap-2 md:justify-start justify-center group-hover:text-sky-400 transition-colors duration-300">
           {step.title}
-          <motion.div animate={{ x: isHovered ? 5 : 0, opacity: isHovered ? 1 : 0 }}>
+          <div className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">
             <ArrowRight size={16} />
-          </motion.div>
+          </div>
         </h3>
 
         <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
@@ -312,9 +310,13 @@ const ProcessMeshBackground = React.memo(() => {
       />
 
       {/* 5. Scanning Line Animation */}
-      <motion.div
-        className="absolute inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-400/50 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.5)] z-10"
-        animate={{ top: ["0%", "100%"], opacity: [0, 1, 0] }}
+     <motion.div
+        className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-transparent via-sky-400/50 to-transparent shadow-[0_0_20px_rgba(14,165,233,0.5)] z-10 will-change-transform"
+        animate={{ 
+          // Animate 'y' using viewport height to prevent layout thrashing
+          y: ["0vh", "100vh"], 
+          opacity: [0, 1, 0] 
+        }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
       />
 

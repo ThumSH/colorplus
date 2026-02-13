@@ -42,13 +42,15 @@ const FloatingDotsBackgroundComponent = () => {
       {dots.map((dot, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-sky-500/30"
+          // OPTIMIZED: Added will-change-transform to lock these into GPU memory
+          className="absolute rounded-full bg-sky-500/30 will-change-transform"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
             width: `${dot.size}px`,
             height: `${dot.size}px`,
             opacity: dot.opacity,
+            // Kept blur, but since the dot size is small, it shouldn't lag the GPU
             filter: `blur(${dot.size / 3}px)`,
             boxShadow: `0 0 ${dot.size + 2}px rgba(14, 165, 233, ${dot.opacity * 0.8})`,
           }}

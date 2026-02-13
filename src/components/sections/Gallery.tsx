@@ -37,7 +37,7 @@ const projects: Project[] = [
     id: 3,
     client: "LILLY",
     desc: "Eye-catching reflective finishes for high-end streetwear utilizing premium heat-transfer foils.",
-    image: "/liu.webp",
+    image: "/lilx.webp",
     year: "2023",
     tags: ["Reflective", "Premium", "Transfer"],
   },
@@ -45,12 +45,19 @@ const projects: Project[] = [
     id: 4,
     client: "Hugo Boss",
     desc: "Sophisticated, sustainable pigment prints that combine luxury aesthetics with eco-conscious production.",
-    image: "/hs.webp",
+    image: "/hugoCar.webp",
     year: "2024",
     tags: ["Sustainable", "Luxury", "Pigment"],
   },
+    {
+    id: 5,
+    client: "Tommy Hilfiger",
+    desc: "Iconic American style meets precision  printing, delivering high-performance textiles with a timeless aesthetic",
+    image: "/mt.webp",
+    year: "2024",
+    tags: ["PREPPY", "Luxury", "PRECISION"],
+  },
 ];
-
 
 function MeshPatch({
   idSuffix,
@@ -69,17 +76,17 @@ function MeshPatch({
 
   return (
     <div
-      className={`absolute pointer-events-none ${className} will-change-transform`}
+      className={`absolute pointer-events-none ${className}`}
       style={{
         transform: `rotate(${rotate}deg) scale(${scale})`,
         maskImage: "radial-gradient(closest-side, black 20%, transparent 90%)",
         WebkitMaskImage: "radial-gradient(closest-side, black 20%, transparent 90%)",
-        filter: "blur(0.5px)",
+        filter: "blur(1px)",
         opacity,
       }}
       aria-hidden="true"
     >
-      <div className="absolute inset-0 bg-sky-500/10 blur-[60px]" />
+      <div className="absolute inset-0 bg-sky-500/10 blur-2xl" />
 
       <svg className="w-full h-full">
         <defs>
@@ -137,10 +144,13 @@ const GalleryItem = React.memo(({ item, index }: { item: Project; index: number 
     offset: ["start end", "end start"],
   });
   
-  const smoothY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, bounce: 0 });
+  // OPTIMIZED: Lower stiffness and higher damping means less CPU calculation per frame
+  const smoothY = useSpring(scrollYProgress, { stiffness: 50, damping: 20, bounce: 0 });
   
-  const y = useTransform(smoothY, [0, 1], [-30, 30]);
-  const scale = useTransform(smoothY, [0, 1], [1.01, 1]);
+  // OPTIMIZED: Reduced the parallax range slightly (-20 to 20 instead of -30 to 30) 
+  // This prevents the image from moving too far out of its container bounds, avoiding repaints.
+  const y = useTransform(smoothY, [0, 1], [-20, 20]);
+  const scale = useTransform(smoothY, [0, 1], [1.02, 1]);
 
   return (
     <div ref={containerRef} className="relative z-10 py-20 group">

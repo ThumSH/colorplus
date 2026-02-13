@@ -11,7 +11,7 @@ import { ArrowRight, Instagram, Linkedin, Facebook, MapPin, Phone, Mail } from "
 // This surrounds the button with a dot grid as shown in the image.
 const ButtonDotMatrix = React.memo(() => {
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none z-0">
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 pointer-events-none z-0">
       
       {/* Radial Mask to fade edges */}
       <div 
@@ -98,7 +98,7 @@ const HexMeshBackground = React.memo(() => {
       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-sky-600/10 via-sky-900/05 to-transparent blur-3xl pointer-events-none" />
       
       {/* D. Center "CP" Watermark (Kept from original) */}
-      <div className="absolute top-10 left-10 text-[20rem] font-black text-white/[0.02] leading-none select-none pointer-events-none z-0">
+      <div className="absolute top-10 left-10 text-[20rem] font-black text-white/2 leading-none select-none pointer-events-none z-0">
         CP
       </div>
     </div>

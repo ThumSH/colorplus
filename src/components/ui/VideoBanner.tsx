@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -23,11 +24,12 @@ export const VideoBanner = () => {
         className="absolute -top-[15%] left-0 w-full h-[130%] will-change-transform"
       >
         <video 
-          src="/sq.mp4" 
+          src="/sq.webm" 
           autoPlay 
           loop 
           muted 
           playsInline 
+          preload="auto"
           // object-cover ensures it fills the space without distortion
           className="w-full h-full object-cover opacity-500 group-hover:opacity-100 transition-opacity duration-700"
         />

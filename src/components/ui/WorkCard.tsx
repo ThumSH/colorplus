@@ -42,7 +42,7 @@ export const WorkCard = React.memo(({ step, isEven }: { step: WorkStep, index: n
       {/* --- IMAGE SECTION --- */}
       <div className="w-full lg:w-[60%] group perspective-1000">
         {/* Added 'will-change-transform' to force GPU layer promotion */}
-        <div className="relative h-100 lg:h-125 w-full transform-gpu will-change-transform transition-transform duration-500 ease-out group-hover:scale-[1.01]">
+       <div className="relative h-100 lg:h-125 w-full transform-gpu transition-transform duration-500 ease-out group-hover:scale-[1.01]">
           
           <div className="absolute inset-0 bg-slate-900 rounded-sm overflow-hidden border border-white/10 shadow-2xl group-hover:border-sky-500/40 transition-colors duration-500">
             {/* Static Corners (Cheap to render) */}
@@ -72,7 +72,7 @@ export const WorkCard = React.memo(({ step, isEven }: { step: WorkStep, index: n
       {/* --- TEXT SECTION --- */}
       <div className={`w-full lg:w-[40%] ${isEven ? "lg:text-left" : "lg:text-right"}`}>
         {/* Removed nested motion.divs to reduce React tree depth */}
-        <div className={`flex items-center gap-3 mb-6 ${!isEven && "justify-end"}`}>
+       <div className={`flex items-center gap-3 mb-6 ${!isEven ? "justify-end" : ""}`}>
             <div className="h-px w-12 bg-sky-500/50" />
             <span className="text-sky-500 font-mono text-sm tracking-widest uppercase">Step {step.id}</span>
         </div>

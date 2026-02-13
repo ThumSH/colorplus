@@ -25,7 +25,7 @@ const productSlides = [
   },
   { 
     id: 3, 
-    image: "/ty.webp", 
+    image: "/hero.webp", 
     label: "Global Export Quality",
     headline: ["TRUSTED BY", "ICONS."],
     description: "Become excellence in printing partnering through local base major apparel companies to global brands",
@@ -51,16 +51,17 @@ export default function Hero() {
       <div className="absolute inset-0 w-full h-full">
         {productSlides.map((slide, index) => {
           const isActive = index === currentSlide;
+          const isFirst = index === 0; // Identify first slide for LCP optimization
           return (
             <motion.div
               key={slide.id}
               initial={false}
               animate={{ 
                 opacity: isActive ? 1 : 0,
-                scale: isActive ? 1 : 1.1 
+                scale: isActive ? 1 : 1.05 // Reduced scale from 1.1 to 1.05 to reduce repainting area
               }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="absolute inset-0 w-full h-full will-change-transform"
+              className={`absolute inset-0 w-full h-full ${isActive ? 'will-change-transform' : ''}`} // Only apply will-change when active
               style={{ zIndex: isActive ? 1 : 0 }} 
             >
               <Image 
@@ -68,7 +69,8 @@ export default function Hero() {
                 alt={slide.label}
                 fill
                 className="object-cover"
-                priority={index === 0} 
+                priority={isFirst} 
+                fetchPriority={isFirst ? "high" : "auto"} // Forces immediate fetch for LCP
                 sizes="100vw"
                 quality={85}
               />
@@ -79,7 +81,7 @@ export default function Hero() {
 
       {/* --- 2. STATIC OVERLAYS --- */}
       {/* Texture */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay z-10 pointer-events-none" />
+     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat opacity-30 mix-blend-overlay z-10 pointer-events-none" />
       
       {/* Gradients */}
       <div className="absolute inset-0 bg-linear-to-br from-black/20 to-transparent z-10 pointer-events-none" />

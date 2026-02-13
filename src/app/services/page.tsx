@@ -186,13 +186,13 @@ export default function ServicesPage() {
       {/* --- HERO HEADER --- */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1766191327403-ac1f4947e8f8?q=80&w=1170&auto=format&fit=crop"
+          src="/ryo.webp"
           alt="Screen printing machine detail"
           fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-linear-to-b from-slate-950/60 via-slate-950/80 to-slate-950" />
+       <div className="absolute inset-0 bg-linear-to-b from-slate-900/30 to-slate-900/70" />
 
         {/* Adjusted globs to sit behind content but above background */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-600/20 rounded-full blur-[120px] pointer-events-none" />
@@ -324,8 +324,29 @@ export default function ServicesPage() {
       </section>
 
       {/* --- VALUE ADDED SERVICES --- */}
-      <section className="py-24 relative z-10">
-        <div className="container mx-auto px-6 md:px-12 text-center">
+{/* --- VALUE ADDED SERVICES --- */}
+      {/* Added overflow-hidden so the background image doesn't bleed outside the section */}
+      <section className="py-24 relative z-10 overflow-hidden">
+        
+        {/* --- SECTION BACKGROUND IMAGE --- */}
+        {/* mix-blend-luminosity and low opacity create the "transparent/see-through" watermark effect */}
+        <div className=" opacity-[1] pointer-events-none">
+          <Image
+            src="/pxl.jpg" // Replace with your desired background image
+            alt="Value Added Services"
+            fill
+            className="object-cover"
+            sizes="90vw"
+            quality={95}
+          />
+        </div>
+        
+        {/* Gradient Overlay: Fades the top and bottom edges into the slate-950 background so it blends seamlessly */}
+        <div className="absolute inset-0 bg-linear-to-b from-slate-900/40 via-slate-950/60 to-slate-950 z-0 pointer-events-none" />
+
+
+        {/* Added 'relative z-10' to the container so the content stays above the image and gradient */}
+        <div className="container mx-auto px-6 md:px-12 text-center relative z-10">
           
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -347,7 +368,9 @@ export default function ServicesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.2 }}
-                className="p-10 bg-slate-900/40 backdrop-blur-xl rounded-3xl border border-white/10 hover:border-sky-500/40 transition-all group hover:-translate-y-2"
+                // OPTIMIZATION NOTE: I removed backdrop-blur-xl here because blurring over an image background on 3 separate cards can cause scroll lag on mobile. 
+                // Increased the bg opacity from 40 to 60 (bg-slate-900/60) to compensate and keep text readable!
+                className="p-10 bg-slate-900/60 rounded-3xl border border-white/10 hover:border-sky-500/40 transition-all group hover:-translate-y-2 transform-gpu"
               >
                 <div className="w-20 h-20 mx-auto mb-8 bg-sky-500/10 rounded-2xl flex items-center justify-center text-sky-400 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
                   <service.icon size={36} />

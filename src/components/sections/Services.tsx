@@ -10,7 +10,6 @@ import { HowWeWork } from "../ui/HowWeWork";
 export default function Services() {
   return (
     <>
-      {/* Increased padding-top (pt-40) to reduce cramping */}
       <section id="services" className="bg-slate-950 relative overflow-hidden pt-40">
         <DotsTexture />
 
@@ -20,8 +19,12 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
+            // Optional: Add will-change-transform here to help the GPU prepare for the movement
+            className="will-change-transform" 
           >
-            <div className="inline-flex items-center gap-2 py-2 px-4 border border-sky-500/20 bg-sky-500/5 rounded-full mb-8 backdrop-blur-md">
+            {/* OPTIMIZED: Removed `backdrop-blur-md` to prevent heavy frame drops during the Y-axis animation. 
+                Increased the opacity of the background slightly to compensate (bg-sky-500/10 instead of 5) */}
+            <div className="inline-flex items-center gap-2 py-2 px-4 border border-sky-500/20 bg-sky-500/10 rounded-full mb-8">
               <Droplets size={16} className="text-sky-400 animate-pulse" />
               <span className="text-sky-300 text-xs font-bold tracking-[0.3em] uppercase">
                 Our Craft

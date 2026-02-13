@@ -18,12 +18,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-// --- REMOVED OLD MESH IMPORT ---
-// import ApparelMesh_stats from "@/components/ui/ApparelMesh_stats";
-
-/* ------------------------------------------------------------------ */
-/* NEW COMPONENT: MESH PATCH (Oval/Dot Structure)                     */
-/* ------------------------------------------------------------------ */
 
 function MeshPatch({
   idSuffix,
@@ -40,10 +34,9 @@ function MeshPatch({
 
   return (
     <div
-      className={`absolute pointer-events-none ${className} will-change-transform`}
+      className={`absolute pointer-events-none ${className}`}
       style={{
         transform: `rotate(${rotate}deg)`,
-        // Radial mask to fade edges
         maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
         WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
         opacity,
@@ -103,10 +96,6 @@ const CardMesh = ({ idSuffix }: { idSuffix: string | number }) => {
   );
 };
 
-/* ------------------------------------------------------------------ */
-/* DOT COMPONENT (Preserved - Ink Drops)                              */
-/* ------------------------------------------------------------------ */
-
 type CurveDot = {
   t: number;
   x: number;
@@ -133,8 +122,9 @@ const SCurveDot = ({ dot, progress }: DotProps) => {
   );
 
   return (
-    <motion.div
-      className="absolute rounded-full bg-sky-400"
+   <motion.div
+      // ADDED: will-change-transform to tell the browser these specific elements will animate heavily
+      className="absolute rounded-full bg-sky-400 will-change-transform"
       style={{
         left: `${dot.x}%`,
         top: `${dot.y}%`,
@@ -142,7 +132,9 @@ const SCurveDot = ({ dot, progress }: DotProps) => {
         height: dot.size,
         opacity,
         scale,
-        transform: "translate(-50%, -50%)",
+        // Using x and y instead of left/top inside translate keeps it entirely on the GPU
+        x: "-50%",
+        y: "-50%",
         boxShadow: `0 0 ${dot.size * 2}px rgba(56,189,248,0.3)`,
       }}
     />

@@ -8,8 +8,8 @@ import Image from "next/image";
 // Dummy data for the curated section
 const curatedItems = [
   { id: 1, title: "Summer Edition", image: "/qwe.webp" },
-  { id: 2, title: "Urban Tech", image: "/hs.webp" },
-  { id: 3, title: "Kids Holiday", image: "/liu.webp" },
+  { id: 2, title: "Urban Tech", image: "/hugoCar.webp" },
+  { id: 3, title: "Kids Holiday", image: "/lilx.webp" },
   { id: 4, title: "Classy", image: "/ed_a.webp" },
 ];
 

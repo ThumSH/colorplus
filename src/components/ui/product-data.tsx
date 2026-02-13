@@ -25,7 +25,7 @@ export const products = [
   {
     id: 3,
     category: "Men",
-    image: "/21.webp",
+    image: "/hugoCar.webp",
     features: ["Distressed Look", "Stone Wash Safe", "Pigment Ink"]
   },
   {
@@ -37,7 +37,7 @@ export const products = [
   {
     id: 5,
     category: "Men",
-    image: "/d.webp",
+    image: "/mkx2.webp",
     features: ["High Opacity", "Color Vibrancy", "Sharp Edges"]
   },
   {
@@ -56,7 +56,7 @@ export const products = [
   {
     id: 8,
     category: "Ladies",
-    image: "/20.webp",
+    image: "/lilx4.webp",
     features: ["Tonal Print", "Waistband Detail", "Minimalist"]
   },
   {
@@ -68,7 +68,7 @@ export const products = [
   {
     id: 10,
     category: "Ladies",
-    image: "/ck-l2.webp",
+    image: "/lilx2.webp",
     features: ["Precision Placement", "Glitter/Shimmer", "Fashion Accent"]
   },
   {
@@ -80,26 +80,26 @@ export const products = [
   {
     id: 12,
     category: "Ladies",
-    image: "/hg.webp",
+    image: "/lilx3.webp",
     features: ["Abrasion Resistant", "Technical Look", "Heavy Ink"]
   },
   // Kids Wear
   {
     id: 13,
     category: "Kids",
-    image: "/23.webp",
+    image: "/lilyx5.webp",
     features: ["Chemical-Free", "Soft Fabric", "Fun Designs"]
   },
   {
     id: 14,
     category: "Kids",
-    image: "/v.webp",
+    image: "/lilyx7.webp",
     features: ["Reinforced Seams", "Stretchable", "Easy Wash"]
   },
   {
     id: 15,
     category: "Kids",
-    image: "/x.webp",
+    image: "/lilyx9.webp",
     features: ["Reinforced Seams", "Stretchable", "Easy Wash"]
   },
   // Sports Wear
@@ -125,6 +125,30 @@ export const products = [
     id: 19,
     category: "Sports",
     image: "/G2.webp",
+    features: ["Full Set", "Team Branding", "Performance Fabric"]
+  },  
+    {
+    id: 20,
+    category: "Kids",
+    image: "/lilx.webp",
+    features: ["Full Set", "Team Branding", "Performance Fabric"]
+  }, 
+    {
+    id: 21,
+    category: "Men",
+    image: "/hf.webp",
+    features: ["High Opacity", "Color Vibrancy", "Sharp Edges"]
+  },
+      {
+    id: 22,
+    category: "Men",
+    image: "/ms.webp",
+    features: ["High Opacity", "Color Vibrancy", "Sharp Edges"]
+  },
+    {
+    id: 23,
+    category: "Sports",
+    image: "/tm2.webp",
     features: ["Full Set", "Team Branding", "Performance Fabric"]
   },  
 ];

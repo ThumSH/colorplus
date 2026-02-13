@@ -31,8 +31,8 @@ const SkillBar = ({ label, percentage, color, delay }: { label: string, percenta
       <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-white/5">
         <motion.div 
           className={`h-full ${color} relative`}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${percentage}%` }}
+          initial={{ scaleX: 0 }}
+          whileInView={{ width: percentage / 100 }}
           viewport={{ once: true }}
           transition={{ duration: 1.5, ease: "easeOut", delay: delay }}
         >
@@ -46,7 +46,7 @@ const SkillBar = ({ label, percentage, color, delay }: { label: string, percenta
 
 const FloatingMeshAccent = () => (
   <motion.div
-    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] -z-10 opacity-90 pointer-events-none"
+    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] -z-10 opacity-90 pointer-events-none will-change-transform"
     animate={{ rotate: 360 }}
     transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
   >

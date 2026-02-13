@@ -29,17 +29,18 @@ export default function ProductGrid({ products, activeCategory }: ProductGridPro
         >
           {products.map((product) => (
             <motion.div
-              layout
-              key={product.id}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.4 }}
-              whileHover={{ y: -8 }}
-              className="group relative"
-            >
+                layout
+                key={product.id}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4 }}
+                // OPTIMIZED: Removed whileHover. Handled by Tailwind now.
+                // Added Tailwind classes for hardware-accelerated hover translations
+                className="group relative transition-transform duration-500 hover:-translate-y-2 will-change-transform"
+              >
               {/* Card Background Glow */}
-              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-br from-sky-500/10 via-transparent to-violet-500/10 rounded-3xl blur-xl group-hover:scale-105 group-hover:opacity-100 opacity-70 transition-all duration-500 pointer-events-none" />
               
               {/* Product Card */}
               <div className="relative bg-slate-900/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-sky-500/30 transition-all duration-500 h-full">

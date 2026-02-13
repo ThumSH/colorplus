@@ -4,7 +4,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import StyledJsxRegistry from "./registry";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
-
 export const metadata: Metadata = {
   title: "Colour Plus Printing Systems",
   description: "Precise.Printing.Always.",

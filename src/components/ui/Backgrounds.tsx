@@ -76,7 +76,7 @@ export const OvalHexMesh = React.memo(() => {
           }}
         >
           <motion.div 
-            className="w-full h-full"
+           className="w-full h-full will-change-[opacity]"
             animate={{ opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           >
