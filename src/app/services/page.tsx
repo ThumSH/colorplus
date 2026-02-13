@@ -332,7 +332,7 @@ export default function ServicesPage() {
         {/* mix-blend-luminosity and low opacity create the "transparent/see-through" watermark effect */}
         <div className=" opacity-[1] pointer-events-none">
           <Image
-            src="/pxl.jpg" // Replace with your desired background image
+            src="/pxl.webp" // Replace with your desired background image
             alt="Value Added Services"
             fill
             className="object-cover"
