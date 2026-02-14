@@ -21,10 +21,10 @@ export const VideoBanner = () => {
       {/* Video with Parallax */}
       <motion.div 
         style={{ y }} 
-        className="absolute -top-[15%] left-0 w-full h-[130%] will-change-transform"
+        className="absolute -top-[15%] left-0 w-full h-[120%] will-change-transform"
       >
         <video 
-          src="/sq.webm" 
+          src="/printF.webm" 
           autoPlay 
           loop 
           muted 
