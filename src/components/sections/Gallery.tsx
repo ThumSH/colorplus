@@ -53,7 +53,7 @@ const projects: Project[] = [
     id: 5,
     client: "Tommy Hilfiger",
     desc: "Iconic American style meets precision  printing, delivering high-performance textiles with a timeless aesthetic",
-    image: "/mt.webp",
+    image: "/tm.webp",
     year: "2024",
     tags: ["PREPPY", "Luxury", "PRECISION"],
   },
