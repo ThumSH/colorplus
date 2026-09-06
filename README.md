@@ -241,7 +241,7 @@ Additional improvements may be introduced based on future business requirements.
 
 # 👨‍💻 Developer
 
-**Nadun Thushara Peiris**
+**Sithum Hemash**
 
 Full-Stack Developer & Software Engineering Undergraduate
 
