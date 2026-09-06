@@ -139,39 +139,30 @@ Add your screenshots here.
 
 ## 1. Homepage
 
-```html
+
 <img width="1920" height="864" alt="image" src="https://github.com/user-attachments/assets/2b0450ca-4d18-441d-a8ab-e407400f56f6" />
 
-```
 
----
+
 
 ## 2. Services Section
 
-```html
 <img width="1893" height="865" alt="image" src="https://github.com/user-attachments/assets/a82f6349-d00f-4ce7-ada0-a487ba726244" />
 
-```
 
----
 
 ## 3. About / Company Section
-
-```html
+l
 <img width="1900" height="885" alt="image" src="https://github.com/user-attachments/assets/731679f5-6fe8-49ac-9b5a-720d03083c91" />
 
-```
 
----
 
 ## 4. Additional View
 
-```html
+
 <img width="1916" height="883" alt="image" src="https://github.com/user-attachments/assets/e27e13f3-fa52-478d-aa8d-11f7e1b9e606" />
 
-```
 
----
 
 # 💼 Client Project
 
